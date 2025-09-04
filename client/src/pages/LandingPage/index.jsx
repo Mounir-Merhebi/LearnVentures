@@ -17,15 +17,16 @@ export default function LandingPage() {
 
   return (
     <>
-      <div className="container">
-          
-        {/* Header */}
-        <header className="header">
+      {/* Header */}
+      <header className="header">
+        <div className="container">
           <div className="header-logo">
-            <img src="https://placehold.co/40x40/34D399/FFFFFF?text=LV" alt="LearnVentures Logo" className="logo-image" />
+            <img src="/images/logo.png" alt="LearnVentures Logo" className="logo-image" />
             <span className="logo-text">LEARNVENTURES</span>
           </div>
-          <nav>
+          <nav className="header-nav">
+            <a href="#features" className="nav-link">Features</a>
+            <a href="#contact" className="nav-link">Contact</a>
             <button 
               onClick={() => navigate("/auth")}  // ✅ navigate to auth page
               className="sign-in-button"
@@ -33,8 +34,10 @@ export default function LandingPage() {
               Sign In
             </button>
           </nav>
-        </header>
+        </div>
+      </header>
 
+      <div className="container">
         <main className="main-content">
           {/* Hero Section */}
           <section className="hero-section">
@@ -64,7 +67,7 @@ export default function LandingPage() {
           </section>
 
           {/* Features Section */}
-          <section className="features-section">
+          <section id="features" className="features-section">
             <div className="features-header">
               <h2 className="features-title">Everything you need to succeed</h2>
               <p className="features-description">
@@ -134,7 +137,7 @@ export default function LandingPage() {
       </div>
 
       {/* Footer */}
-      <footer className="footer">
+      <footer id="contact" className="footer">
         <p>&copy; {new Date().getFullYear()} LearnVentures. All rights reserved.</p>
       </footer>
     </>
