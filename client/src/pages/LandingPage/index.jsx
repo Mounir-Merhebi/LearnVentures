@@ -12,8 +12,9 @@ import {
 } from '../../components/LandingPageComponents';
 
 
-// --- Main App Component --- //
 export default function LandingPage() {
+  const navigate = useNavigate(); 
+
   return (
     <>
       <div className="container">
@@ -25,9 +26,12 @@ export default function LandingPage() {
             <span className="logo-text">LEARNVENTURES</span>
           </div>
           <nav>
-            <a href="#" className="sign-in-button">
+            <button 
+              onClick={() => navigate("/auth")}  // ✅ navigate to auth page
+              className="sign-in-button"
+            >
               Sign In
-            </a>
+            </button>
           </nav>
         </header>
 
@@ -42,7 +46,10 @@ export default function LandingPage() {
                 <p className="hero-description">
                   Join our comprehensive educational platform that adapts to your learning style with AI-powered personalization and collaborative tools.
                 </p>
-                <button className="get-started-button">
+                <button 
+                  className="get-started-button"
+                  onClick={() => navigate("/auth")}  // ✅ navigate to auth page
+                >
                   Get Started
                 </button>
               </div>
@@ -114,7 +121,10 @@ export default function LandingPage() {
                     <FeatureListItem text="Interactive quizzes" />
                     <FeatureListItem text="Group Chat" />
                   </ul>
-                  <button className="join-now-button">
+                  <button 
+                    className="join-now-button"
+                    onClick={() => navigate("/auth")} // ✅ navigate to auth page
+                  >
                     Join now
                   </button>
               </div>
@@ -130,4 +140,3 @@ export default function LandingPage() {
     </>
   );
 }
-
