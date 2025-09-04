@@ -10,6 +10,7 @@ import {
   FeatureCard,
   FeatureListItem
 } from '../../components/LandingPageComponents';
+import Footer from '../../components/shared/footer';
 
 
 export default function LandingPage() {
@@ -58,7 +59,7 @@ export default function LandingPage() {
               </div>
               <div className="hero-image">
                 <img 
-                  src="/images/hero-image.svg" 
+                  src="/images/hero-image.png" 
                   alt="Modern classroom with educational imagery" 
                   onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/CCCCCC/FFFFFF?text=Image+Not+Found'; }}
                 />
@@ -103,7 +104,7 @@ export default function LandingPage() {
             <div className="student-grid">
               <div className="student-image">
                 <img 
-                  src="/images/students-image.svg" 
+                  src="/images/students-image.png" 
                   alt="Group of children learning together on a tablet" 
                   onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/CCCCCC/FFFFFF?text=Image+Not+Found'; }}
                 />
@@ -137,9 +138,7 @@ export default function LandingPage() {
       </div>
 
       {/* Footer */}
-      <footer id="contact" className="footer">
-        <p>&copy; {new Date().getFullYear()} LearnVentures. All rights reserved.</p>
-      </footer>
+      <Footer />
     </>
   );
 }
