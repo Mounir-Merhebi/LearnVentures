@@ -55,7 +55,7 @@ export default function LandingPage() {
               </div>
               <div className="hero-image">
                 <img 
-                  src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=2072&auto=format&fit=crop" 
+                  src="/images/hero-image.svg" 
                   alt="Modern classroom with educational imagery" 
                   onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/CCCCCC/FFFFFF?text=Image+Not+Found'; }}
                 />
@@ -100,7 +100,7 @@ export default function LandingPage() {
             <div className="student-grid">
               <div className="student-image">
                 <img 
-                  src="https://images.unsplash.com/photo-1571260899234-3c48a7a01d59?q=80&w=2070&auto=format&fit=crop" 
+                  src="/images/students-image.svg" 
                   alt="Group of children learning together on a tablet" 
                   onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/CCCCCC/FFFFFF?text=Image+Not+Found'; }}
                 />
