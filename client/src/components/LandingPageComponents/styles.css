@@ -1,0 +1,40 @@
+.icon-teal {
+    color: #34D399;
+}
+
+.icon-gray {
+    color: #6B7280;
+}
+
+.feature-card {
+    padding: 2rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card-icon {
+    margin-bottom: 1rem;
+}
+
+.feature-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.feature-card-description {
+    color: #6B7280;
+    line-height: 1.5;
+}
+
+.student-list-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.student-list-item-text {
+    color: #374151;
+}
