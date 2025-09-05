@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Services\Common;
+
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
+
+class AuthService {
+    public static function login(Request $request){
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+        
+        $credentials = $request->only('email', 'password');
+
+        if (!$token = JWTAuth::attempt($credentials)) {
+            return null;
+        }
+
+        $user = Auth::user();
+        $user->token = $token;
+        return $user;
+    }
+
+    public static function register(Request $request){
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'hobbies' => 'nullable|string',
+            'preferences' => 'nullable|string',
+            'bio' => 'nullable|string',
+            'role' => 'nullable|string|in:Student,Instructor,Moderator,Admin',
+        ]);
+
+        $user = new User;
+        $user->id = \Illuminate\Support\Str::uuid();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->role = $request->role ?? 'Student';
+        $user->hobbies = $request->hobbies;
+        $user->preferences = $request->preferences;
+        $user->bio = $request->bio;
+        $user->created_at = now();
+        $user->save();
+
+        $token = JWTAuth::fromUser($user);
+
+        $user->token = $token;
+        return $user;
+    }
+}
