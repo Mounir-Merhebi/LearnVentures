@@ -3,7 +3,7 @@ import Button from "../../../Button";
 import Input from "../../../Input";
 import { useNavigate } from "react-router-dom";
 import { useRegisterForm } from "./logic.js";
-import MyLogo from "../../../../Assets/Cedar.jpg";
+// Logo is now served from public/images folder
 
 const RegisterForm = ({ toggle }) => {
   const navigate = useNavigate();
