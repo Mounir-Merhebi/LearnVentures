@@ -3,7 +3,6 @@ import Button from "../../../Button";
 import Input from "../../../Input";
 import { useNavigate } from "react-router-dom";
 import { useRegisterForm } from "./logic.js";
-// Logo is now served from public/images folder
 
 const RegisterForm = ({ toggle }) => {
   const navigate = useNavigate();
@@ -23,7 +22,7 @@ const RegisterForm = ({ toggle }) => {
   return (
     <div className="auth-body">
       <div className="my-logo-container">
-        <img src={MyLogo} alt="Logo" className="my-logo-img" />
+        <img src="/images/Logo.png" alt="Logo" className="my-logo-img" />
         <h1>LEARNVENTURES</h1>
       </div>
       <div className="auth-container">

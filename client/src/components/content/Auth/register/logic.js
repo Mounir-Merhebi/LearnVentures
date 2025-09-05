@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import API from "../../../../Services/axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setField, setName, setEmail, setPassword, setHobbies, setPreferences, setBio, setErrorMessage, clearFields } from "../../../../Features/Register/registerSlice";
+import { setField, setName, setEmail, setPassword, setHobbies, setPreferences, setBio, setErrorMessage, clearFields } from "../../../../features/Register/registerSlice";
 
 export const useRegisterForm = () => {
   const navigate = useNavigate();
