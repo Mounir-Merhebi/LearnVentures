@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .auth-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .left-button {
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 10px;
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
+    cursor: pointer;
+  }
+  
+  .auth-container {
+    background-color: #f5f5f5;
+    padding: 40px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid #4a4545;
+    background-color: white;
+    margin-bottom: 20px;
+  }
+  
+  .auth-h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 28px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: #424242;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .auth-h1 span {
+    padding-bottom: 2px;
+  }
+  
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .auth-form > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .auth-label {
+    font-weight: bold;
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #424242;
+  }
+  
+  .auth-button {
+    padding: 8px 20px;
+    font-size: 18px;
+    align-self: center;
+    margin-bottom: 10px;
+    background-color: #14b8a6;
+    border-radius: 8px;
+    border-style: none;
+  }
+  
+  .auth-button:hover {
+    background-color: #0dc3ad69;
+  }
+  
+  .auth-link {
+    font-size: 14px;
+    margin-top: 20px;
+    font-weight: normal;
+  }
+  
+  .auth-link-span {
+    color: #14b8a6;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  
+  .auth-link-span:hover {
+    color: #0dc3ad69;
+    cursor: pointer;
+  }
+  
+  .auth-error {
+    color: red;
+    font-size: 14px;
+  }
+  
+  .my-logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+  
+  .my-logo-container h1 {
+    color: #14b8a6;
+  }
+  
+  .my-logo-img {
+    border-radius: 8px;
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+  
