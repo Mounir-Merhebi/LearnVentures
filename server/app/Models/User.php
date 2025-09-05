@@ -2,36 +2,44 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class User extends Model
-{
-    use HasFactory;
+class User extends Authenticatable implements JWTSubject {
+    use HasFactory, Notifiable;
 
-    // table is 'users' by default
+    // defaults are fine now (auto-increment int)
+    // public $incrementing = true; // default
+    // protected $keyType = 'int';   // default
 
-    // string/uuid PK
-    protected $keyType = 'string';
-    public $incrementing = false;
-
-    // timestamps: only created_at
     public $timestamps = false;
     const CREATED_AT = 'created_at';
     const UPDATED_AT = null;
 
     protected $fillable = [
-        'id',
-        'email',
+        'email','password','role','name',
+        'hobbies','preferences','bio','excel_sheet_path','created_at',
+    ];
+    // Or alternatively:
+    // protected $guarded = ['id'];
+
+    protected $hidden = [
         'password',
-        'role',
-        'name',
-        'hobbies',
-        'preferences',
-        'bio',
-        'excel_sheet_path',
-        'created_at',
+        'remember_token',
     ];
 
-    protected $hidden = ['password'];
+    protected function casts(): array
+    {
+        return ['password' => 'hashed'];
+    }
+
+    public function getJWTIdentifier() {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims() {
+        return [];
+    }
 }
