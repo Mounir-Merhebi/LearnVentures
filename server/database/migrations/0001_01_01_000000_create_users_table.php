@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id(); 
     
             $table->string('email')->unique();
             $table->string('password');
@@ -21,10 +21,10 @@ return new class extends Migration {
             $table->text('bio')->nullable();
             $table->string('excel_sheet_path')->nullable();
     
-            // created_at only (match your model)
             $table->timestamp('created_at')->useCurrent();
         });
     }
+    
     
     public function down(): void
     {
