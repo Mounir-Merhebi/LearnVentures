@@ -2,16 +2,66 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        $now = now();
+
+        DB::table('users')->insert([
+            [
+                'id' => (string) Str::uuid(),
+                'email' => 'student@example.com',
+                'password' => Hash::make('password123'),
+                'role' => 'Student',
+                'name' => 'Student One',
+                'hobbies' => 'Reading, Chess',
+                'preferences' => 'Dark mode; email alerts',
+                'bio' => 'Curious learner.',
+                'excel_sheet_path' => null,
+                'created_at' => $now,
+            ],
+            [
+                'id' => (string) Str::uuid(),
+                'email' => 'instructor@example.com',
+                'password' => Hash::make('password123'),
+                'role' => 'Instructor',
+                'name' => 'Instructor Jane',
+                'hobbies' => 'Hiking',
+                'preferences' => 'Light mode',
+                'bio' => 'Teaches math & physics.',
+                'excel_sheet_path' => 'storage/excels/instructor_jane.xlsx',
+                'created_at' => $now,
+            ],
+            [
+                'id' => (string) Str::uuid(),
+                'email' => 'moderator@example.com',
+                'password' => Hash::make('password123'),
+                'role' => 'Moderator',
+                'name' => 'Mod Mike',
+                'hobbies' => null,
+                'preferences' => null,
+                'bio' => 'Keeps things tidy.',
+                'excel_sheet_path' => null,
+                'created_at' => $now,
+            ],
+            [
+                'id' => (string) Str::uuid(),
+                'email' => 'admin@example.com',
+                'password' => Hash::make('password123'),
+                'role' => 'Admin',
+                'name' => 'Admin Amy',
+                'hobbies' => 'Running',
+                'preferences' => 'Email alerts only',
+                'bio' => 'System administrator.',
+                'excel_sheet_path' => null,
+                'created_at' => $now,
+            ],
+        ]);
     }
 }
