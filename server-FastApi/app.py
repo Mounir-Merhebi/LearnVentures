@@ -27,22 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class CareerPath(BaseModel):
-    title: str
-    description: str
 
-class CareerResponse(BaseModel):
-    career_paths: List[CareerPath] = Field(default_factory=list)
-
-class Quest(BaseModel):
-    path_name: str
-    title: str
-    subtitle: str
-    difficulty: str
-    duration: str
-
-class QuestResponse(BaseModel):
-    quests: List[Quest] = Field(default_factory=list)
 
 class WrongAnswer(BaseModel):
     question: str
