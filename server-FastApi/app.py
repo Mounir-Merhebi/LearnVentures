@@ -17,7 +17,7 @@ if not GEMINI_KEY:
 genai.configure(api_key=GEMINI_KEY)
 MODEL_NAME = "gemini-1.5-flash"
 
-app = FastAPI(title="AlignPath AI Agent")
+app = FastAPI(title="LearnVentures AI Agent")
 
 app.add_middleware(
     CORSMiddleware,

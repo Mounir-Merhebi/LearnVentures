@@ -20,6 +20,16 @@ class AIAgentController extends Controller
         $this->aiAgentService = $aiAgentService;
     }
 
+    public function getWrongAnswers($userId)
+{
+    $wrongAnswers = WrongAnswer::where('user_id', $userId)->get([
+        'question',
+        'user_answer',
+        'correct_answer',
+        'lesson_topic'
+    ]);
+    return response()->json($wrongAnswers);
+}
     /**
      * Analyze user performance based on wrong answers
      */

@@ -12,6 +12,7 @@ Route::group(["prefix" =>"v0.1"], function(){
             Route::post('/personalize-lesson', [AIAgentController::class, 'personalizeLesson']);
             Route::get('/analyses/{userId}', [AIAgentController::class, 'getUserAnalyses']);
             Route::get('/personalized-lessons/{userId}', [AIAgentController::class, 'getUserLessons']);
+            Route::get('/wrong-answers/{userId}', [AIAgentController::class, 'getWrongAnswers']);
         });
         
         // AI Agent health check
