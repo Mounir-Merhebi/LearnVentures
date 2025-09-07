@@ -44,7 +44,7 @@ export const useRegisterForm = () => {
       dispatch(setField({ field, value }));
     };
 
-  return {
+  return 
     name,
     setName,
     email,
