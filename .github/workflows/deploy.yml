@@ -1,0 +1,103 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18'
+  PHP_VERSION: '8.2'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: client/package-lock.json
+        
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: mbstring, dom, fileinfo, mysql, pdo_mysql, sqlite, pdo_sqlite
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install dependencies
+      run: |
+        # Frontend
+        cd client && npm ci && npm run build && cd ..
+        # Backend
+        cd server && composer install --no-dev --optimize-autoloader && cd ..
+        # FastAPI
+        cd server-FastApi && pip install -r requirements.txt && cd ..
+        
+    - name: Create deployment package
+      run: |
+        mkdir -p deployment
+        cp -r client/build deployment/frontend
+        cp -r server deployment/backend
+        cp -r server-FastApi deployment/fastapi
+        tar -czf deployment.tar.gz deployment/
+        
+    - name: Upload deployment artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: deployment-package
+        path: deployment.tar.gz
+        retention-days: 30
+        
+    # Add your deployment steps here based on your hosting provider
+    # Examples for common platforms:
+    
+    # For AWS S3 + EC2
+    # - name: Deploy to AWS
+    #   uses: aws-actions/configure-aws-credentials@v2
+    #   with:
+    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     aws-region: us-east-1
+    
+    # For DigitalOcean
+    # - name: Deploy to DigitalOcean
+    #   uses: appleboy/ssh-action@v0.1.5
+    #   with:
+    #     host: ${{ secrets.DROPLET_HOST }}
+    #     username: ${{ secrets.DROPLET_USERNAME }}
+    #     key: ${{ secrets.DROPLET_SSH_KEY }}
+    #     script: |
+    #       cd /var/www/learnventures
+    #       git pull origin main
+    #       # Add your deployment commands here
+    
+    # For Heroku
+    # - name: Deploy to Heroku
+    #   uses: akhileshns/heroku-deploy@v3.12.12
+    #   with:
+    #     heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+    #     heroku_app_name: "your-app-name"
+    #     heroku_email: "your-email@example.com"
+    
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Deployment successful!"
+        else
+          echo "❌ Deployment failed!"
+        fi
