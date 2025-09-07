@@ -23,7 +23,11 @@ jobs:
       - name: Create .env file
         working-directory: server
         run: |
-          cp .env.example .env || echo "APP_NAME=LearnVentures
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          else
+            cat > .env << 'EOF'
+          APP_NAME=LearnVentures
           APP_ENV=testing
           APP_KEY=
           APP_DEBUG=true
@@ -41,7 +45,16 @@ jobs:
           
           JWT_SECRET=test-jwt-secret-key-for-ci
           JWT_ALGO=HS256
-          JWT_TTL=60" > .env
+          JWT_TTL=60
+          EOF
+          fi
+      - name: Verify .env file
+        working-directory: server
+        run: |
+          echo "Checking if .env file exists:"
+          ls -la .env
+          echo "Contents of .env file:"
+          cat .env
       - name: Generate app key
         working-directory: server
         run: php artisan key:generate
