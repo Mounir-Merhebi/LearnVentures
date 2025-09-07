@@ -5,19 +5,17 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  laravel:
+  laravel-sqlite:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           extensions: mbstring, curl, dom, fileinfo, json, pdo_sqlite
 
-      - name: Cache composer
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
         with:
           path: ~/.composer/cache/files
           key: composer-${{ hashFiles('server/composer.lock') }}
@@ -26,15 +24,12 @@ jobs:
         working-directory: server
         run: composer install --no-interaction --prefer-dist
 
-      - name: App key
-        working-directory: server
-        run: php artisan key:generate --force
-
       - name: Run Laravel tests
         working-directory: server
         env:
           APP_ENV: testing
         run: php artisan test
+
 
       - name: Composer audit (optional)
         working-directory: server
