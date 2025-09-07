@@ -1,6 +1,6 @@
 .student-dashboard {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f5f5f5;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
@@ -231,7 +231,7 @@
 }
 
 .action-button.primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #5CB85C;
   color: white;
   box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
 }
