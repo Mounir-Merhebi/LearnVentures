@@ -3,4 +3,5 @@ uvicorn
 python-dotenv
 google-generativeai
 pydantic
+pytest
 
