@@ -9,31 +9,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           extensions: mbstring, curl, dom, fileinfo, json, pdo_sqlite
-
       - uses: actions/cache@v4
         with:
           path: ~/.composer/cache/files
           key: composer-${{ hashFiles('server/composer.lock') }}
-
       - name: Install deps
         working-directory: server
         run: composer install --no-interaction --prefer-dist
-
       - name: Run Laravel tests
         working-directory: server
         env:
           APP_ENV: testing
         run: php artisan test
 
-
-      - name: Composer audit (optional)
-        working-directory: server
-        run: composer audit || true
 
   react:
     runs-on: ubuntu-latest
