@@ -20,6 +20,34 @@ jobs:
       - name: Install deps
         working-directory: server
         run: composer install --no-interaction --prefer-dist
+      - name: Create .env file
+        working-directory: server
+        run: |
+          cp .env.example .env || echo "APP_NAME=LearnVentures
+          APP_ENV=testing
+          APP_KEY=
+          APP_DEBUG=true
+          APP_URL=http://localhost
+          
+          LOG_CHANNEL=stack
+          LOG_LEVEL=debug
+          
+          DB_CONNECTION=sqlite
+          DB_DATABASE=database/database.sqlite
+          
+          CACHE_DRIVER=file
+          SESSION_DRIVER=file
+          SESSION_LIFETIME=120
+          
+          JWT_SECRET=test-jwt-secret-key-for-ci
+          JWT_ALGO=HS256
+          JWT_TTL=60" > .env
+      - name: Generate app key
+        working-directory: server
+        run: php artisan key:generate
+      - name: Run migrations
+        working-directory: server
+        run: php artisan migrate --force
       - name: Run Laravel tests
         working-directory: server
         env:
