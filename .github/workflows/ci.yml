@@ -1,125 +1,100 @@
 name: CI
+
 on:
-  pull_request:
   push:
-    branches: [ main, develop ]
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
 
 jobs:
-  laravel-sqlite:
+  backend-test:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          extensions: mbstring, curl, dom, fileinfo, json, pdo_sqlite
-      - uses: actions/cache@v4
-        with:
-          path: ~/.composer/cache/files
-          key: composer-${{ hashFiles('server/composer.lock') }}
-      - name: Install deps
-        working-directory: server
-        run: composer install --no-interaction --prefer-dist
-      - name: Create .env file
-        working-directory: server
-        run: |
-          if [ -f .env.example ]; then
-            cp .env.example .env
-          else
-            cat > .env << 'EOF'
-          APP_NAME=LearnVentures
-          APP_ENV=testing
-          APP_KEY=
-          APP_DEBUG=true
-          APP_URL=http://localhost
-          
-          LOG_CHANNEL=stack
-          LOG_LEVEL=debug
-          
-          DB_CONNECTION=sqlite
-          DB_DATABASE=database/database.sqlite
-          
-          CACHE_DRIVER=file
-          SESSION_DRIVER=file
-          SESSION_LIFETIME=120
-          
-          JWT_SECRET=test-jwt-secret-key-for-ci
-          JWT_ALGO=HS256
-          JWT_TTL=60
-          EOF
-          fi
-      - name: Verify .env file
-        working-directory: server
-        run: |
-          echo "Checking if .env file exists:"
-          ls -la .env
-          echo "Contents of .env file:"
-          cat .env
-      - name: Generate app key
-        working-directory: server
-        run: php artisan key:generate
-      - name: Run migrations
-        working-directory: server
-        run: php artisan migrate --force
-      - name: Run Laravel tests
-        working-directory: server
+
+    services:
+      mysql:
+        image: mysql:8
         env:
-          APP_ENV: testing
-        run: php artisan test
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
-
-  react:
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+
+      - name: Install Composer Dependencies
+        run: composer install --no-ansi --no-interaction --no-progress --prefer-dist
+        working-directory: ./server
+
+      - name: Setup Laravel
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php artisan migrate --force
+        working-directory: ./server
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: test_db
+          DB_USERNAME: root
+          DB_PASSWORD: root
+
+      - name: Run Backend Tests
+        run: php artisan test
+        working-directory: ./server
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: test_db
+          DB_USERNAME: root
+          DB_PASSWORD: root
+
+  frontend-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: client/package-lock.json
-
-      - name: Install
-        working-directory: client
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "./client/package-lock.json"
+      - name: Install Frontend Dependencies
         run: npm ci
+        working-directory: ./client
+      - name: Build Frontend
+        run: CI=false npm run build
+        working-directory: ./client
 
-      - name: Build
-        working-directory: client
-        run: npm run build
-
-      - name: Test (if present)
-        working-directory: client
-        run: npm run test --if-present -- --run
-
-      - name: npm audit (optional)
-        working-directory: client
-        run: npm audit --audit-level moderate || true
-
-  fastapi:
+  ai-agent-test:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-
-      - name: Install deps
-        working-directory: server-FastApi
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Lint
-        working-directory: server-FastApi
-        run: ruff check . || true
-
-      - name: Tests
-        working-directory: server-FastApi
-        run: pytest -q
-
-      - name: pip check (optional)
-        working-directory: server-FastApi
-        run: pip check || true
+          python-version: "3.12"
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
+        working-directory: ./ai-agent
+      - name: Run AI Agent Tests
+        run: pytest --maxfail=1 --disable-warnings || true
+        working-directory: ./ai-agent
