@@ -123,7 +123,17 @@ const StudentDashboard = () => {
           <h2 className="section-title">Your Subjects</h2>
           <div className="subjects-grid">
             {dashboardData.subjects.map((subject) => (
-              <div key={subject.id} className="subject-card">
+              <div 
+                key={subject.id} 
+                className="subject-card"
+                onClick={() => {
+                  if (subject.name === 'Mathematics') {
+                    navigate('/mathematics');
+                  }
+                  // Add navigation for other subjects as needed
+                }}
+                style={{ cursor: subject.name === 'Mathematics' ? 'pointer' : 'default' }}
+              >
                 <div className="subject-header">
                   <div className="subject-icon">{subject.icon}</div>
                   <div className="subject-info">

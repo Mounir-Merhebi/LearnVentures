@@ -1,0 +1,363 @@
+.lesson-content-page {
+  min-height: 100vh;
+  background: #f5f5f5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.lesson-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  padding-top: 100px; /* Account for navbar */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Lesson Header */
+.lesson-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.lesson-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.breadcrumb-item {
+  color: #6B7280;
+}
+
+.breadcrumb-item.current {
+  color: #1F2937;
+  font-weight: 500;
+}
+
+.breadcrumb-separator {
+  color: #D1D5DB;
+}
+
+.progress-indicator {
+  font-size: 14px;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+/* Main Content Area */
+.lesson-main-content {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+  min-height: 500px;
+}
+
+/* Observation Content */
+.observation-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  height: 100%;
+}
+
+.content-image-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 40px;
+  min-height: 300px;
+}
+
+.pattern-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.pattern-row {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.pattern-figure {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot-grid {
+  display: grid;
+  gap: 3px;
+  align-items: center;
+  justify-items: center;
+}
+
+/* Different grid sizes for each pattern */
+.pattern-figure:nth-child(1) .dot-grid { grid-template-columns: repeat(3, 1fr); }
+.pattern-figure:nth-child(2) .dot-grid { grid-template-columns: repeat(4, 1fr); }
+.pattern-figure:nth-child(3) .dot-grid { grid-template-columns: repeat(5, 1fr); }
+
+.pattern-row:nth-child(2) .pattern-figure:nth-child(1) .dot-grid { grid-template-columns: repeat(6, 1fr); }
+.pattern-row:nth-child(2) .pattern-figure:nth-child(2) .dot-grid { grid-template-columns: repeat(7, 1fr); }
+.pattern-row:nth-child(2) .pattern-figure:nth-child(3) .dot-grid { grid-template-columns: repeat(8, 1fr); }
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #10B981;
+  border-radius: 50%;
+}
+
+/* Observation Section */
+.observation-section {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.observation-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0 0 16px 0;
+}
+
+.observation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.observation-item {
+  font-size: 15px;
+  color: #374151;
+  line-height: 1.5;
+  padding-left: 24px;
+  position: relative;
+}
+
+.observation-item::before {
+  content: counter(list-item, decimal) '.';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #10B981;
+  font-weight: 600;
+}
+
+.observation-list {
+  counter-reset: list-item;
+}
+
+.observation-item {
+  counter-increment: list-item;
+}
+
+/* Generic Content */
+.generic-content {
+  padding: 40px;
+  text-align: center;
+}
+
+.generic-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0 0 16px 0;
+}
+
+.generic-content p {
+  font-size: 1rem;
+  color: #6B7280;
+  line-height: 1.6;
+}
+
+/* Bottom Navigation */
+.lesson-navigation {
+  background: #10B981;
+  border-radius: 12px;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  margin-top: auto;
+}
+
+.nav-menu-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-icon {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.nav-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.nav-controls {
+  display: flex;
+  gap: 12px;
+}
+
+.nav-button {
+  background: white;
+  color: #10B981;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 70px;
+}
+
+.nav-button:hover:not(:disabled) {
+  background: #f0fdf4;
+  transform: translateY(-1px);
+}
+
+.nav-button:disabled {
+  background: rgba(255, 255, 255, 0.5);
+  color: rgba(16, 185, 129, 0.5);
+  cursor: not-allowed;
+}
+
+.home-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.home-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .pattern-row {
+    gap: 16px;
+  }
+  
+  .pattern-figure {
+    padding: 12px;
+  }
+  
+  .dot {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+@media (max-width: 768px) {
+  .lesson-container {
+    padding: 16px;
+    padding-top: 80px;
+  }
+
+  .lesson-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .lesson-main-content {
+    padding: 24px;
+  }
+
+  .content-image-area {
+    padding: 24px;
+    min-height: 250px;
+  }
+
+  .pattern-grid {
+    gap: 16px;
+  }
+
+  .pattern-row {
+    gap: 12px;
+  }
+
+  .pattern-figure {
+    padding: 8px;
+  }
+
+  .dot {
+    width: 5px;
+    height: 5px;
+    gap: 2px;
+  }
+
+  .lesson-navigation {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .nav-controls {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav-button {
+    flex: 1;
+    max-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pattern-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .breadcrumb-item {
+    font-size: 12px;
+  }
+
+  .observation-section {
+    padding: 16px;
+  }
+
+  .observation-title {
+    font-size: 1rem;
+  }
+
+  .observation-item {
+    font-size: 14px;
+  }
+
+  .nav-text {
+    font-size: 12px;
+  }
+}

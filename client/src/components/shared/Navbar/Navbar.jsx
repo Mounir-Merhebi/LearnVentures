@@ -69,17 +69,12 @@ const Navbar = () => {
           
           {showDropdown && (
             <div className="user-dropdown">
+
               <button 
                 className="dropdown-item"
-                onClick={() => handleNavigation('/dashboard')}
+                onClick={() => handleNavigation('/Profile')}
               >
-                Dashboard
-              </button>
-              <button 
-                className="dropdown-item"
-                onClick={() => handleNavigation('/settings')}
-              >
-                Settings
+                Profile
               </button>
               <button 
                 className="dropdown-item logout"
