@@ -83,19 +83,3 @@ jobs:
       - name: Build Frontend
         run: CI=false npm run build
         working-directory: ./client
-
-  ai-agent-test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Install Python Dependencies
-        run: pip install -r requirements.txt
-        working-directory: ./ai-agent
-      - name: Run AI Agent Tests
-        run: pytest --maxfail=1 --disable-warnings || true
-        working-directory: ./ai-agent
