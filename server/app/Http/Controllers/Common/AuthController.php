@@ -8,6 +8,7 @@ use  App\Services\Common\AuthService;
 
 class AuthController extends Controller {
 
+
     public function login(Request $request){
         try {
             $user = AuthService::login($request);

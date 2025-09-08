@@ -10,6 +10,7 @@
         "darkaonline/l5-swagger": "^9.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "php-gemini/generative-ai": "^1.1",
         "php-open-source-saver/jwt-auth": "^2.8"
     },
     "require-dev": {
