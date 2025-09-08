@@ -169,6 +169,12 @@ return [
          * API security definitions. Will be generated into documentation file.
         */
         'securityDefinitions' => [
+        'bearerAuth' => [
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'JWT',
+            'description' => 'Enter token as: Bearer <token>',
+        ],
             'securitySchemes' => [
                 /*
                  * Examples of Security schemes
