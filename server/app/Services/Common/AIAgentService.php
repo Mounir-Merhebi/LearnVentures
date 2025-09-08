@@ -3,25 +3,19 @@
 namespace App\Services\Common;
 
 use Illuminate\Support\Facades\Log;
-use Gemini\Client;
-use Gemini\Data\GenerationConfig;
-use Gemini\Enums\ModelName;
-use Gemini\Enums\ResponseMimeType;
+use Illuminate\Support\Facades\Http;
 
 class AIAgentService
 {
-    private $client;
-    private $modelName;
+    private $apiKey;
+    private $baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
     public function __construct()
     {
-        $apiKey = env('GEMINI_API_KEY');
-        if (!$apiKey) {
+        $this->apiKey = env('GEMINI_API_KEY');
+        if (!$this->apiKey) {
             throw new \RuntimeException('GEMINI_API_KEY not set in environment variables');
         }
-
-        $this->client = new Client($apiKey);
-        $this->modelName = ModelName::GEMINI_1_5_FLASH;
     }
 
     /**
@@ -82,31 +76,89 @@ Respond in pure JSON matching this schema:
   \"study_plan\": \"A step-by-step study plan to address the identified weaknesses\"
 }";
 
-            $config = new GenerationConfig(
-                responseMimeType: ResponseMimeType::APPLICATION_JSON
-            );
+            try {
+                Log::info('Sending performance analysis prompt to Gemini API', [
+                    'prompt_length' => strlen($prompt)
+                ]);
 
-            $response = $this->client->generateContent($this->modelName, $prompt, $config);
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                ])->post($this->baseUrl . '?key=' . $this->apiKey, [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt]
+                            ]
+                        ]
+                    ],
+                    'generationConfig' => [
+                        'temperature' => 0.7,
+                        'maxOutputTokens' => 2048,
+                    ]
+                ]);
 
-            $jsonResponse = json_decode($response->text(), true);
+                if ($response->successful()) {
+                    $data = $response->json();
 
-            if ($jsonResponse) {
+                    if (isset($data['candidates'][0]['content']['parts'][0]['text'])) {
+                        $textResponse = $data['candidates'][0]['content']['parts'][0]['text'];
+
+                        // Clean the response by removing markdown code blocks if present
+                        $cleanText = trim($textResponse);
+                        if (str_starts_with($cleanText, '```json')) {
+                            $cleanText = substr($cleanText, 7); // Remove ```json
+                        }
+                        if (str_starts_with($cleanText, '```')) {
+                            $cleanText = substr($cleanText, 3); // Remove ```
+                        }
+                        if (str_ends_with($cleanText, '```')) {
+                            $cleanText = substr($cleanText, 0, -3); // Remove ```
+                        }
+                        $cleanText = trim($cleanText);
+
+                        // Try to parse JSON from the cleaned response
+                        $jsonResponse = json_decode($cleanText, true);
+
+                        if ($jsonResponse) {
+                            return [
+                                'success' => true,
+                                'data' => $jsonResponse
+                            ];
+                        } else {
+                            // Fallback response if JSON parsing fails
+                            return [
+                                'success' => true,
+                                'data' => [
+                                    'overall_performance' => 'Analysis completed but response format unexpected',
+                                    'weak_areas' => [],
+                                    'recommendations' => [],
+                                    'study_plan' => $cleanText
+                                ]
+                            ];
+                        }
+                    } else {
+                        throw new \Exception('No valid response from Gemini API');
+                    }
+                } else {
+                    Log::error('Gemini API HTTP error', [
+                        'status' => $response->status(),
+                        'body' => $response->body()
+                    ]);
+                    throw new \Exception('Gemini API returned error: ' . $response->status());
+                }
+
+            } catch (\Exception $e) {
+                Log::error('Gemini API call failed: ' . $e->getMessage());
+
+                // Fallback response
                 return [
                     'success' => true,
-                    'data' => $jsonResponse
-                ];
-            } else {
-                // Fallback response if JSON parsing fails
-                $fallbackData = [
-                    'overall_performance' => 'Analysis could not be completed',
-                    'weak_areas' => [],
-                    'recommendations' => [],
-                    'study_plan' => 'Please try again with more specific wrong answers'
-                ];
-
-                return [
-                    'success' => true,
-                    'data' => $fallbackData
+                    'data' => [
+                        'overall_performance' => 'Analysis could not be completed due to API error',
+                        'weak_areas' => [],
+                        'recommendations' => [],
+                        'study_plan' => 'Please try again later'
+                    ]
                 ];
             }
 
@@ -163,34 +215,82 @@ Respond in pure JSON matching this schema:
   }
 }";
 
-            $config = new GenerationConfig(
-                responseMimeType: ResponseMimeType::APPLICATION_JSON
-            );
+            try {
+                Log::info('Sending lesson personalization prompt to Gemini API', [
+                    'prompt_length' => strlen($prompt)
+                ]);
 
-            $response = $this->client->generateContent($this->modelName, $prompt, $config);
-
-            $jsonResponse = json_decode($response->text(), true);
-
-            if ($jsonResponse && isset($jsonResponse['lesson'])) {
-                return [
-                    'success' => true,
-                    'data' => $jsonResponse
-                ];
-            } else {
-                // Fallback response if JSON parsing fails
-                $fallbackData = [
-                    'lesson' => [
-                        'title' => 'Personalized Lesson',
-                        'personalized_content' => 'Content could not be personalized',
-                        'learning_approach' => 'Standard approach',
-                        'practical_examples' => [],
-                        'next_steps' => []
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                ])->post($this->baseUrl . '?key=' . $this->apiKey, [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt]
+                            ]
+                        ]
+                    ],
+                    'generationConfig' => [
+                        'temperature' => 0.7,
+                        'maxOutputTokens' => 2048,
                     ]
-                ];
+                ]);
 
+                if ($response->successful()) {
+                    $data = $response->json();
+
+                    if (isset($data['candidates'][0]['content']['parts'][0]['text'])) {
+                        $textResponse = $data['candidates'][0]['content']['parts'][0]['text'];
+
+                        // Try to parse JSON from the response
+                        $jsonResponse = json_decode($textResponse, true);
+
+                        if ($jsonResponse && isset($jsonResponse['lesson'])) {
+                            return [
+                                'success' => true,
+                                'data' => $jsonResponse
+                            ];
+                        } else {
+                            // Fallback response if JSON parsing fails
+                            return [
+                                'success' => true,
+                                'data' => [
+                                    'lesson' => [
+                                        'title' => 'Personalized Lesson',
+                                        'personalized_content' => $textResponse ?: 'Content could not be personalized',
+                                        'learning_approach' => 'Standard approach',
+                                        'practical_examples' => [],
+                                        'next_steps' => []
+                                    ]
+                                ]
+                            ];
+                        }
+                    } else {
+                        throw new \Exception('No valid response from Gemini API');
+                    }
+                } else {
+                    Log::error('Gemini API HTTP error for personalization', [
+                        'status' => $response->status(),
+                        'body' => $response->body()
+                    ]);
+                    throw new \Exception('Gemini API returned error: ' . $response->status());
+                }
+
+            } catch (\Exception $e) {
+                Log::error('Gemini API call failed for personalization: ' . $e->getMessage());
+
+                // Fallback response
                 return [
                     'success' => true,
-                    'data' => $fallbackData
+                    'data' => [
+                        'lesson' => [
+                            'title' => 'Personalized Lesson',
+                            'personalized_content' => 'Content could not be personalized due to API error',
+                            'learning_approach' => 'Standard approach',
+                            'practical_examples' => [],
+                            'next_steps' => []
+                        ]
+                    ]
                 ];
             }
 
@@ -209,12 +309,46 @@ Respond in pure JSON matching this schema:
     public function healthCheck()
     {
         try {
+            Log::info('Testing Gemini API health check');
+
             // Simple health check by making a basic request to Gemini
             $testPrompt = "Say 'ok' if you can understand this message.";
-            $response = $this->client->generateContent($this->modelName, $testPrompt);
-            return !empty($response->text());
+
+            $response = Http::timeout(10)->withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post($this->baseUrl . '?key=' . $this->apiKey, [
+                'contents' => [
+                    [
+                        'parts' => [
+                            ['text' => $testPrompt]
+                        ]
+                    ]
+                ],
+                'generationConfig' => [
+                    'temperature' => 0.1,
+                    'maxOutputTokens' => 50,
+                ]
+            ]);
+
+            Log::info('Gemini API response', [
+                'status' => $response->status(),
+                'successful' => $response->successful()
+            ]);
+
+            if ($response->successful()) {
+                Log::info('Gemini API health check successful');
+                return true;
+            } else {
+                Log::error('Gemini API health check failed', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                return false;
+            }
         } catch (\Exception $e) {
-            Log::error('AI Agent health check failed: ' . $e->getMessage());
+            Log::error('AI Agent health check exception: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             return false;
         }
     }

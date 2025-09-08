@@ -20,6 +20,47 @@ class AIAgentController extends Controller
         $this->aiAgentService = $aiAgentService;
     }
 
+    /**
+     * Test method without service dependency
+     */
+    public function testHealth()
+    {
+        try {
+            // Test Gemini API directly
+            $apiKey = env('GEMINI_API_KEY');
+            $baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+
+            $response = \Illuminate\Support\Facades\Http::timeout(10)->withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post($baseUrl . '?key=' . $apiKey, [
+                'contents' => [
+                    [
+                        'parts' => [
+                            ['text' => 'Say ok']
+                        ]
+                    ]
+                ],
+                'generationConfig' => [
+                    'temperature' => 0.1,
+                    'maxOutputTokens' => 10,
+                ]
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'ai_agent_status' => $response->successful() ? 'healthy' : 'unavailable',
+                'response_status' => $response->status(),
+                'api_key_exists' => !empty($apiKey)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'error' => $e->getMessage(),
+                'api_key_exists' => !empty(env('GEMINI_API_KEY'))
+            ], 500);
+        }
+    }
+
     public function getWrongAnswers($userId)
 {
     $wrongAnswers = WrongAnswer::where('user_id', $userId)->get([
@@ -45,73 +86,36 @@ class AIAgentController extends Controller
                 'wrong_answers.*.correct_answer' => 'required|string',
             ]);
 
-            $userId = $request->user_id;
-            $lessonTopic = $request->lesson_topic;
-            $wrongAnswersData = $request->wrong_answers;
-
-            // Save wrong answers to database
-            $wrongAnswers = [];
-            foreach ($wrongAnswersData as $answerData) {
-                $wrongAnswer = WrongAnswer::create([
-                    'user_id' => $userId,
-                    'lesson_topic' => $lessonTopic,
-                    'question' => $answerData['question'],
-                    'user_answer' => $answerData['user_answer'],
-                    'correct_answer' => $answerData['correct_answer'],
-                    'analyzed' => false
-                ]);
-                $wrongAnswers[] = $wrongAnswer;
-            }
-
-            // Format data for AI agent
-            $aiPayload = [];
-            foreach ($wrongAnswersData as $answerData) {
-                $aiPayload[] = [
-                    'question' => $answerData['question'],
-                    'user_answer' => $answerData['user_answer'],
-                    'correct_answer' => $answerData['correct_answer'],
-                    'lesson_topic' => $lessonTopic
+            // Format data for the service (add lesson_topic to each answer)
+            $formattedAnswers = [];
+            foreach ($request->wrong_answers as $answer) {
+                $formattedAnswers[] = [
+                    'lesson_topic' => $request->lesson_topic,
+                    'question' => $answer['question'],
+                    'user_answer' => $answer['user_answer'],
+                    'correct_answer' => $answer['correct_answer']
                 ];
             }
 
-            // Call AI agent
-            $result = $this->aiAgentService->analyzePerformance($aiPayload);
+            // Call the service method - this will use the detailed prompt
+            $result = $this->aiAgentService->analyzePerformance($formattedAnswers);
 
-            if (!$result['success']) {
+            if ($result['success']) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Performance analysis completed',
+                    'data' => [
+                        'analysis' => $result['data'],
+                        'lesson_topic' => $request->lesson_topic,
+                        'questions_analyzed' => count($request->wrong_answers)
+                    ]
+                ], 200);
+            } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'AI analysis failed',
-                    'error' => $result['error']
+                    'message' => 'Analysis failed: ' . $result['error']
                 ], 500);
             }
-
-            // Save analysis results to database
-            $analysisData = $result['data'];
-            $performanceAnalysis = PerformanceAnalysis::create([
-                'user_id' => $userId,
-                'lesson_topic' => $lessonTopic,
-                'overall_performance' => $analysisData['overall_performance'],
-                'weak_areas' => $analysisData['weak_areas'],
-                'recommendations' => $analysisData['recommendations'],
-                'study_plan' => $analysisData['study_plan'],
-            ]);
-
-            // Update wrong answers as analyzed
-            foreach ($wrongAnswers as $wrongAnswer) {
-                $wrongAnswer->update([
-                    'analyzed' => true,
-                    'performance_analysis_id' => $performanceAnalysis->id
-                ]);
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Performance analysis completed',
-                'data' => [
-                    'analysis_id' => $performanceAnalysis->id,
-                    'analysis' => $analysisData
-                ]
-            ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -238,10 +242,38 @@ class AIAgentController extends Controller
      */
     public function healthCheck()
     {
-        $isHealthy = $this->aiAgentService->healthCheck();
-        
-        return response()->json([
-            'ai_agent_status' => $isHealthy ? 'healthy' : 'unavailable'
-        ], $isHealthy ? 200 : 503);
+        try {
+            // Test Gemini API directly
+            $apiKey = env('GEMINI_API_KEY');
+            $baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+
+            $response = \Illuminate\Support\Facades\Http::timeout(10)->withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post($baseUrl . '?key=' . $apiKey, [
+                'contents' => [
+                    [
+                        'parts' => [
+                            ['text' => 'Say ok']
+                        ]
+                    ]
+                ],
+                'generationConfig' => [
+                    'temperature' => 0.1,
+                    'maxOutputTokens' => 10,
+                ]
+            ]);
+
+            $isHealthy = $response->successful();
+
+            return response()->json([
+                'ai_agent_status' => $isHealthy ? 'healthy' : 'unavailable',
+                'response_status' => $response->status()
+            ], $isHealthy ? 200 : 503);
+        } catch (\Exception $e) {
+            return response()->json([
+                'ai_agent_status' => 'error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
