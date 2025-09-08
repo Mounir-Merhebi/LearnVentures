@@ -242,8 +242,21 @@ Respond in pure JSON matching this schema:
                     if (isset($data['candidates'][0]['content']['parts'][0]['text'])) {
                         $textResponse = $data['candidates'][0]['content']['parts'][0]['text'];
 
-                        // Try to parse JSON from the response
-                        $jsonResponse = json_decode($textResponse, true);
+                        // Clean the response by removing markdown code blocks if present
+                        $cleanText = trim($textResponse);
+                        if (str_starts_with($cleanText, '```json')) {
+                            $cleanText = substr($cleanText, 7); // Remove ```json
+                        }
+                        if (str_starts_with($cleanText, '```')) {
+                            $cleanText = substr($cleanText, 3); // Remove ```
+                        }
+                        if (str_ends_with($cleanText, '```')) {
+                            $cleanText = substr($cleanText, 0, -3); // Remove ```
+                        }
+                        $cleanText = trim($cleanText);
+
+                        // Try to parse JSON from the cleaned response
+                        $jsonResponse = json_decode($cleanText, true);
 
                         if ($jsonResponse && isset($jsonResponse['lesson'])) {
                             return [
@@ -257,7 +270,7 @@ Respond in pure JSON matching this schema:
                                 'data' => [
                                     'lesson' => [
                                         'title' => 'Personalized Lesson',
-                                        'personalized_content' => $textResponse ?: 'Content could not be personalized',
+                                        'personalized_content' => $cleanText ?: 'Content could not be personalized',
                                         'learning_approach' => 'Standard approach',
                                         'practical_examples' => [],
                                         'next_steps' => []
