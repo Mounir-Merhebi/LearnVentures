@@ -14,15 +14,14 @@ return new class extends Migration
         Schema::create('personalized_lessons', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('original_lesson_title');
-            $table->text('original_lesson_content');
+            $table->foreignId('lesson_id')->constrained('lessons')->onDelete('cascade');
             $table->string('personalized_title');
             $table->text('personalized_content');
-            $table->text('learning_approach');
-            $table->json('practical_examples'); // Array of examples
-            $table->json('next_steps'); // Array of next steps
             $table->timestamp('generated_at')->useCurrent();
             $table->timestamps();
+
+            // Add unique constraint on user_id and lesson_id
+            $table->unique(['user_id', 'lesson_id']);
         });
     }
 

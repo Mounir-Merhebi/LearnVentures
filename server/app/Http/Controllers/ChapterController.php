@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Chapter;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class ChapterController extends Controller
 {
     //
 }

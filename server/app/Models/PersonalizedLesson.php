@@ -11,24 +11,24 @@ class PersonalizedLesson extends Model
 
     protected $fillable = [
         'user_id',
-        'original_lesson_title',
-        'original_lesson_content',
+        'lesson_id',
         'personalized_title',
         'personalized_content',
-        'learning_approach',
-        'practical_examples',
-        'next_steps',
         'generated_at'
     ];
 
     protected $casts = [
-        'practical_examples' => 'array',
-        'next_steps' => 'array',
         'generated_at' => 'datetime'
     ];
 
+    // Relationships
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function lesson()
+    {
+        return $this->belongsTo(Lesson::class, 'lesson_id');
     }
 }

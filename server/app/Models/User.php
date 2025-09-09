@@ -10,20 +10,10 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject {
     use HasFactory, Notifiable;
 
-    // defaults are fine now (auto-increment int)
-    // public $incrementing = true; // default
-    // protected $keyType = 'int';   // default
-
-    public $timestamps = false;
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = null;
-
     protected $fillable = [
         'email','password','role','name',
-        'hobbies','preferences','bio','excel_sheet_path','created_at',
+        'hobbies','preferences','bio',
     ];
-    // Or alternatively:
-    // protected $guarded = ['id'];
 
     protected $hidden = [
         'password',
@@ -41,5 +31,21 @@ class User extends Authenticatable implements JWTSubject {
 
     public function getJWTCustomClaims() {
         return [];
+    }
+
+    // Relationships
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class, 'instructor_id');
+    }
+
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class, 'instructor_id');
+    }
+
+    public function personalizedLessons()
+    {
+        return $this->hasMany(PersonalizedLesson::class, 'user_id');
     }
 }

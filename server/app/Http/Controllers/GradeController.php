@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Grade;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class GradeController extends Controller
 {
     //
 }
