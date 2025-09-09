@@ -29,16 +29,6 @@ class AuthService {
     }
 
     public static function register(Request $request){
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'hobbies' => 'nullable|string',
-            'preferences' => 'nullable|string',
-            'bio' => 'nullable|string',
-            'role' => 'nullable|string|in:Student,Instructor,Moderator,Admin',
-        ]);
-
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;

@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Common;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use  App\Services\Common\AuthService;
+use App\Services\Common\AuthService;
+use App\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller {
 
@@ -35,10 +36,10 @@ class AuthController extends Controller {
         }
     }
 
-    public function register(Request $request){
+    public function register(RegisterRequest $request){
         try {
             $user = AuthService::register($request);
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Registration successful',
