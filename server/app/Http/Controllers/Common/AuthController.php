@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\Common\AuthService;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 
 class AuthController extends Controller {
 
 
-    public function login(Request $request){
+    public function login(LoginRequest $request){
         try {
             $user = AuthService::login($request);
             

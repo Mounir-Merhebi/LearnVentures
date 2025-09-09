@@ -8,20 +8,19 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id(); 
-    
+            $table->id();
+
             $table->string('email')->unique();
             $table->string('password');
-    
-            $table->enum('role', ['Student','Instructor','Moderator','Admin'])->index();
-    
+
+            $table->enum('role', ['Student','Instructor','Moderator','Admin'])->default('Student')->index();
+
             $table->string('name');
-            $table->text('hobbies')->nullable();
-            $table->text('preferences')->nullable();
-            $table->text('bio')->nullable();
-            $table->string('excel_sheet_path')->nullable();
-    
-            $table->timestamp('created_at')->useCurrent();
+            $table->string('hobbies')->nullable();
+            $table->string('preferences')->nullable();
+            $table->string('bio')->nullable();
+
+            $table->timestamps(); // This creates both created_at and updated_at
         });
     }
     
