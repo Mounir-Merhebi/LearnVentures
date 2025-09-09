@@ -21,8 +21,7 @@ class UserFactory extends Factory
             'hobbies' => $this->faker->optional()->words(3, true),
             'preferences' => $this->faker->optional()->sentence(6),
             'bio' => $this->faker->optional()->sentence(12),
-            'excel_sheet_path' => null,
-            'created_at' => now(),  // you only have created_at
+            'created_at' => now(),
         ];
     }
 

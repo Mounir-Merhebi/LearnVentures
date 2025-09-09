@@ -82,8 +82,8 @@ class AuthTest extends TestCase
     {
         $response = $this->postJson('/api/v0.1/guest/register', []);
 
-        $response->assertStatus(400)
-                 ->assertJsonPath('success', false);
+        $response->assertStatus(422) // Laravel FormRequest returns 422 for validation errors
+                 ->assertJsonValidationErrors(['name', 'email', 'password']);
     }
 
     #[Test]
