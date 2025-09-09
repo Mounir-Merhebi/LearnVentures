@@ -1,0 +1,75 @@
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: LearnVentures-server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./server:/var/www/html
+    working_dir: /var/www/html
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: learnventures
+      DB_USERNAME: root
+      DB_PASSWORD: ""
+    command: php artisan serve --host=0.0.0.0 --port=8000
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: learnventures-client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app:delegated
+      - /app/node_modules
+    working_dir: /app
+    command: npm start
+    stdin_open: true
+    tty: true
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+      FAST_REFRESH: "false"
+
+  db:
+    image: mysql:8.0
+    container_name: db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: learnventures
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ""
+    depends_on:
+      - db
+
+  n8n:
+    image: n8nio/n8n
+    container_name: learnventures-n8n
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+
+volumes:
+  db_data: {}

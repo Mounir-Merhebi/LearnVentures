@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\WrongAnswer;
 use App\Models\PerformanceAnalysis;
 use App\Models\PersonalizedLesson;
+use App\Models\Lesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -133,10 +134,13 @@ class AIAgentController extends Controller
         try {
             $request->validate([
                 'user_id' => 'required|exists:users,id',
-                'original_lesson_title' => 'required|string',
-                'original_lesson_content' => 'required|string',
+                'lesson_id' => 'required|exists:lessons,id',
             ]);
 
+            // Fetch the lesson from database
+            $lesson = Lesson::findOrFail($request->lesson_id);
+
+            // Fetch user data
             $user = User::findOrFail($request->user_id);
 
             // Prepare user preferences from user profile
@@ -146,10 +150,10 @@ class AIAgentController extends Controller
                 'bio' => $user->bio ?? 'learner'
             ];
 
-            // Call AI agent
+            // Call AI agent to personalize the lesson
             $result = $this->aiAgentService->personalizeLesson(
                 $preferences,
-                $request->original_lesson_content
+                $lesson->content
             );
 
             if (!$result['success']) {
@@ -164,21 +168,31 @@ class AIAgentController extends Controller
             $lessonData = $result['data']['lesson'];
             $personalizedLesson = PersonalizedLesson::create([
                 'user_id' => $request->user_id,
-                'original_lesson_title' => $request->original_lesson_title,
-                'original_lesson_content' => $request->original_lesson_content,
-                'personalized_title' => $lessonData['title'],
+                'lesson_id' => $request->lesson_id,
+                'personalized_title' => $lessonData['title'] ?? $lesson->title . ' (Personalized)',
                 'personalized_content' => $lessonData['personalized_content'],
-                'learning_approach' => $lessonData['learning_approach'],
-                'practical_examples' => $lessonData['practical_examples'],
-                'next_steps' => $lessonData['next_steps'],
+                'practical_examples' => $lessonData['practical_examples'] ?? [],
+                'generated_at' => now(),
             ]);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Lesson personalized successfully',
                 'data' => [
-                    'lesson_id' => $personalizedLesson->id,
-                    'lesson' => $lessonData
+                    'personalized_lesson_id' => $personalizedLesson->id,
+                    'original_lesson' => [
+                        'id' => $lesson->id,
+                        'title' => $lesson->title,
+                        'content' => $lesson->content,
+                    ],
+                    'user' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'hobbies' => $user->hobbies,
+                        'preferences' => $user->preferences,
+                        'bio' => $user->bio,
+                    ],
+                    'personalized_lesson' => $lessonData
                 ]
             ], 200);
 

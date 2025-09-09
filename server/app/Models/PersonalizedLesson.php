@@ -14,11 +14,13 @@ class PersonalizedLesson extends Model
         'lesson_id',
         'personalized_title',
         'personalized_content',
+        'practical_examples',
         'generated_at'
     ];
 
     protected $casts = [
-        'generated_at' => 'datetime'
+        'generated_at' => 'datetime',
+        'practical_examples' => 'array'
     ];
 
     // Relationships
