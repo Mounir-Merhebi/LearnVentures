@@ -33,4 +33,9 @@ class Lesson extends Model
     {
         return $this->hasMany(PersonalizedLesson::class, 'lesson_id');
     }
+
+    public function kbChunks()
+    {
+        return $this->hasMany(KbChunk::class, 'lesson_id');
+    }
 }

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Common\AuthController;
 use App\Http\Controllers\Common\AIAgentController;
+use App\Http\Controllers\ChatController;
 
 Route::group(["prefix" =>"v0.1"], function(){
     Route::group(["middleware" => "auth:api"], function(){
@@ -18,6 +19,10 @@ Route::group(["prefix" =>"v0.1"], function(){
         // AI Agent health check
         Route::get('/ai-health', [AIAgentController::class, 'healthCheck']);
         Route::get('/test-health', [AIAgentController::class, 'testHealth']);
+
+        // Chat endpoints
+        Route::post('/chat/sessions', [ChatController::class, 'createSession']);
+        Route::post('/chat/messages', [ChatController::class, 'sendMessage']);
 
         // Direct health check route
         Route::get('/direct-health', function () {

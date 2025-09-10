@@ -9,7 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('personalized_lessons', function (Blueprint $table) {
-            $table->json('practical_examples')->nullable()->after('personalized_content');
+            if (!Schema::hasColumn('personalized_lessons', 'practical_examples')) {
+                $table->json('practical_examples')->nullable()->after('personalized_content');
+            }
         });
     }
 

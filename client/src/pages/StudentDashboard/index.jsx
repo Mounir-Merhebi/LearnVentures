@@ -2,14 +2,24 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './StudentDashboard.css';
 import Navbar from '../../components/shared/Navbar/Navbar';
+import {
+  Calculator,
+  FlaskConical,
+  BookOpen,
+  Palette,
+  Music2,
+  Target,
+  Flame,
+  Bot,
+  BarChart3,
+  Settings,
+} from 'lucide-react';
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
-  
-  // Get user data from localStorage
+
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-  // Static data for demonstration
   const dashboardData = {
     overallProgress: 60,
     completedLessons: 240,
@@ -21,58 +31,58 @@ const StudentDashboard = () => {
       {
         id: 1,
         name: 'Mathematics',
-        icon: '📐',
+        icon: <Calculator size={28} />,
         chapters: '6 of 8 chapters',
         progress: 75,
-        color: '#10B981'
+        color: '#10B981',
       },
       {
         id: 2,
         name: 'Science',
-        icon: '🔬',
+        icon: <FlaskConical size={28} />,
         chapters: '3 of 6 chapters',
         progress: 45,
-        color: '#3B82F6'
+        color: '#3B82F6',
       },
       {
         id: 3,
         name: 'History',
-        icon: '📚',
+        icon: <BookOpen size={28} />,
         chapters: '6 of 10 chapters',
         progress: 60,
-        color: '#8B5CF6'
+        color: '#8B5CF6',
       },
       {
         id: 4,
         name: 'Art',
-        icon: '🎨',
+        icon: <Palette size={28} />,
         chapters: '2 of 5 chapters',
         progress: 30,
-        color: '#F59E0B'
+        color: '#F59E0B',
       },
       {
         id: 5,
         name: 'Literature',
-        icon: '📖',
+        icon: <BookOpen size={28} />,
         chapters: '6 of 7 chapters',
         progress: 85,
-        color: '#EF4444'
+        color: '#EF4444',
       },
       {
         id: 6,
         name: 'Music',
-        icon: '🎵',
+        icon: <Music2 size={28} />,
         chapters: '1 of 4 chapters',
         progress: 20,
-        color: '#06B6D4'
-      }
-    ]
+        color: '#06B6D4',
+      },
+    ],
   };
 
   return (
     <div className="student-dashboard">
       <Navbar />
-      
+
       <div className="dashboard-container">
         {/* Welcome Section */}
         <div className="welcome-section">
@@ -88,10 +98,10 @@ const StudentDashboard = () => {
               <span className="progress-percentage">{dashboardData.overallProgress}%</span>
             </div>
             <div className="progress-bar">
-              <div 
-                className="progress-fill" 
+              <div
+                className="progress-fill"
                 style={{ width: `${dashboardData.overallProgress}%` }}
-              ></div>
+              />
             </div>
             <p className="progress-text">
               {dashboardData.completedLessons}/{dashboardData.totalLessons} lessons
@@ -104,7 +114,9 @@ const StudentDashboard = () => {
               <span className="progress-number">{dashboardData.completedSubjects}</span>
             </div>
             <p className="progress-text">of {dashboardData.totalSubjects}</p>
-            <div className="progress-icon">🎯</div>
+            <div className="progress-icon">
+              <Target size={24} />
+            </div>
           </div>
 
           <div className="progress-card">
@@ -114,7 +126,9 @@ const StudentDashboard = () => {
             </div>
             <p className="progress-text">days</p>
             <p className="streak-message">Keep it up!</p>
-            <div className="progress-icon">🔥</div>
+            <div className="progress-icon">
+              <Flame size={24} />
+            </div>
           </div>
         </div>
 
@@ -123,38 +137,39 @@ const StudentDashboard = () => {
           <h2 className="section-title">Your Subjects</h2>
           <div className="subjects-grid">
             {dashboardData.subjects.map((subject) => (
-              <div 
-                key={subject.id} 
+              <div
+                key={subject.id}
                 className="subject-card"
                 onClick={() => {
                   if (subject.name === 'Mathematics') {
                     navigate('/mathematics');
                   }
-                  // Add navigation for other subjects as needed
                 }}
                 style={{ cursor: subject.name === 'Mathematics' ? 'pointer' : 'default' }}
               >
                 <div className="subject-header">
-                  <div className="subject-icon">{subject.icon}</div>
+                  <div className="subject-icon" aria-hidden="true">
+                    {subject.icon}
+                  </div>
                   <div className="subject-info">
                     <h3 className="subject-name">{subject.name}</h3>
                     <p className="subject-chapters">{subject.chapters}</p>
                   </div>
                 </div>
-                
+
                 <div className="subject-progress">
                   <div className="progress-info">
                     <span className="progress-label">Progress</span>
                     <span className="progress-percentage">{subject.progress}%</span>
                   </div>
                   <div className="progress-bar">
-                    <div 
-                      className="progress-fill" 
-                      style={{ 
+                    <div
+                      className="progress-fill"
+                      style={{
                         width: `${subject.progress}%`,
-                        backgroundColor: subject.color 
+                        backgroundColor: subject.color,
                       }}
-                    ></div>
+                    />
                   </div>
                 </div>
               </div>
@@ -166,26 +181,34 @@ const StudentDashboard = () => {
         <div className="quick-actions">
           <h2 className="section-title">Quick Actions</h2>
           <div className="actions-grid">
-            <button 
+            <button
               className="action-button primary"
               onClick={() => navigate('/optimus')}
             >
-              <div className="action-icon">📚</div>
+              <div className="action-icon" aria-hidden="true">
+                <BookOpen size={20} />
+              </div>
               <span>Continue Learning</span>
             </button>
-            <button 
+            <button
               className="action-button secondary"
               onClick={() => navigate('/optimus')}
             >
-              <div className="action-icon">🤖</div>
+              <div className="action-icon" aria-hidden="true">
+                <Bot size={20} />
+              </div>
               <span>Chat with Optimus</span>
             </button>
             <button className="action-button secondary">
-              <div className="action-icon">📊</div>
+              <div className="action-icon" aria-hidden="true">
+                <BarChart3 size={20} />
+              </div>
               <span>View Analytics</span>
             </button>
             <button className="action-button secondary">
-              <div className="action-icon">⚙️</div>
+              <div className="action-icon" aria-hidden="true">
+                <Settings size={20} />
+              </div>
               <span>Settings</span>
             </button>
           </div>
