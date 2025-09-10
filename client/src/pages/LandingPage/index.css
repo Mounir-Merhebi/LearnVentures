@@ -51,14 +51,16 @@
           color: #14b8a6;
         }
 
-        .sign-in-button {
-          background-color: #14b8a6; /* bg-teal-500 */
-          color: white;
-          font-weight: 600; /* font-semibold */
-          padding: 0.5rem 1.5rem;
-          border-radius: 0.5rem; /* rounded-lg */
-          text-decoration: none;
-          transition: background-color 0.3s;
+        .sign-in-button {      
+            background-color: #14b8a6;
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 1.125rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;  
         }
 
         .sign-in-button:hover {
