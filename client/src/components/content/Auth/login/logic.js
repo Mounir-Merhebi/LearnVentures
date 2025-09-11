@@ -26,7 +26,12 @@ export const useLoginForm = () => {
 
       dispatch(clearFields());
 
-      navigate("/student_dashboard");
+      // Redirect based on user role
+      if (user.role === 'Admin') {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/student_dashboard");
+      }
     } catch (error) {
       if (error.response) {
         dispatch(setErrorMessage(error.response.data.message || "Incorrect Email or Password"));

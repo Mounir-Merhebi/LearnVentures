@@ -32,42 +32,50 @@ const MyRoutes = () => {
           </ProtectedRoute>
         } 
       />
-      <Route 
-        path="/dashboard" 
+      <Route
+        path="/dashboard"
         element={
           <ProtectedRoute>
             <StudentDashboard />
           </ProtectedRoute>
-        } 
+        }
       />
-      <Route 
-        path="/mathematics" 
+      <Route
+        path="/student_dashboard"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['Student']}>
+            <StudentDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/mathematics"
+        element={
+          <ProtectedRoute allowedRoles={['Student', 'Instructor', 'Moderator']}>
             <Mathematics />
           </ProtectedRoute>
-        } 
+        }
       />
-      <Route 
-        path="/mathematics/chapter/:chapterId" 
+      <Route
+        path="/mathematics/chapter/:chapterId"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['Student', 'Instructor', 'Moderator']}>
             <Chapter />
           </ProtectedRoute>
-        } 
+        }
       />
-      <Route 
-        path="/mathematics/chapter/:chapterId/lesson/:lessonId" 
+      <Route
+        path="/mathematics/chapter/:chapterId/lesson/:lessonId"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['Student', 'Instructor', 'Moderator']}>
             <LessonContent />
           </ProtectedRoute>
-        } 
+        }
       />
       <Route
         path="/mathematics/chapter/:chapterId/quiz"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['Student', 'Instructor', 'Moderator']}>
             <Quiz />
           </ProtectedRoute>
         }

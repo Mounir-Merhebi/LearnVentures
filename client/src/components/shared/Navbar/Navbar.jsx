@@ -13,7 +13,16 @@ const Navbar = () => {
   const userInitials = userName.split(' ').map(n => n[0]).join('').toUpperCase() || "ST";
 
   const handleNavigation = (path) => {
-    navigate(path);
+    // If path is "dashboard", redirect based on user role
+    if (path === '/dashboard' || path === '/student_dashboard') {
+      if (userRole === 'Admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/student_dashboard');
+      }
+    } else {
+      navigate(path);
+    }
     setShowDropdown(false);
   };
 
@@ -35,19 +44,21 @@ const Navbar = () => {
 
         {/* Navigation Items */}
         <div className="navbar-nav">
-          <button 
-            className="nav-item"
-            onClick={() => handleNavigation('/dashboard')}
-          >
-            Dashboard
-          </button>
-          <button 
+          {userRole !== 'Admin' && (
+            <button
+              className="nav-item"
+              onClick={() => handleNavigation('/dashboard')}
+            >
+              Dashboard
+            </button>
+          )}
+          <button
             className="nav-item"
             onClick={() => handleNavigation('/optimus')}
           >
             Optimus
           </button>
-          <button 
+          <button
             className="nav-item"
             onClick={() => handleNavigation('/group-chat')}
           >
