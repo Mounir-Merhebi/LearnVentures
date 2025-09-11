@@ -9,6 +9,7 @@ const Navbar = () => {
   // Get user data from localStorage
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const userName = user.name || "Student";
+  const userRole = user.role || "Student";
   const userInitials = userName.split(' ').map(n => n[0]).join('').toUpperCase() || "ST";
 
   const handleNavigation = (path) => {
@@ -69,14 +70,21 @@ const Navbar = () => {
           
           {showDropdown && (
             <div className="user-dropdown">
-
-              <button 
+              {userRole === 'Admin' && (
+                <button
+                  className="dropdown-item"
+                  onClick={() => handleNavigation('/admin/dashboard')}
+                >
+                  🛡️ Admin Dashboard
+                </button>
+              )}
+              <button
                 className="dropdown-item"
                 onClick={() => handleNavigation('/Profile')}
               >
                 Profile
               </button>
-              <button 
+              <button
                 className="dropdown-item logout"
                 onClick={handleLogout}
               >

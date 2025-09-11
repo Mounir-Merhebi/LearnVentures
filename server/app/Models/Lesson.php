@@ -38,4 +38,14 @@ class Lesson extends Model
     {
         return $this->hasMany(KbChunk::class, 'lesson_id');
     }
+
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class, 'lesson_id');
+    }
+
+    public function quizFeedback()
+    {
+        return $this->hasMany(PostQuizFeedback::class, 'lesson_id');
+    }
 }

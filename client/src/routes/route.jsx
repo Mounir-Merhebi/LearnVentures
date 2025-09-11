@@ -8,6 +8,7 @@ import Mathematics from "../pages/Mathematics";
 import Chapter from "../pages/Chapter";
 import LessonContent from "../pages/LessonContent";
 import Quiz from "../pages/Quiz";
+import AdminDashboard from "../pages/AdminDashboard";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 const MyRoutes = () => {
@@ -63,13 +64,21 @@ const MyRoutes = () => {
           </ProtectedRoute>
         } 
       />
-      <Route 
-        path="/mathematics/chapter/:chapterId/quiz" 
+      <Route
+        path="/mathematics/chapter/:chapterId/quiz"
         element={
           <ProtectedRoute>
             <Quiz />
           </ProtectedRoute>
-        } 
+        }
+      />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
       />
     </Routes>
   );
