@@ -6,6 +6,7 @@ use App\Http\Controllers\Common\AIAgentController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ModeratorExcelController;
 use App\Http\Controllers\AdminChangeProposalController;
+use App\Http\Controllers\DashboardController;
 
 Route::group(["prefix" =>"v0.1"], function(){
     // Guest routes (no auth required)
@@ -32,6 +33,9 @@ Route::group(["prefix" =>"v0.1"], function(){
         // Chat endpoints
         Route::post('/chat/sessions', [ChatController::class, 'createSession']);
         Route::post('/chat/messages', [ChatController::class, 'sendMessage']);
+
+        // Dashboard
+        Route::get('/dashboard', [DashboardController::class, 'index']);
 
         // Quiz performance analysis endpoints
         Route::post('/quiz/analyze-performance', [AIAgentController::class, 'analyzeQuizPerformance']);

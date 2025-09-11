@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './StudentDashboard.css';
 import Navbar from '../../components/shared/Navbar/Navbar';
+import API from '../../services/axios';
 import {
   Calculator,
   FlaskConical,
@@ -20,64 +21,80 @@ const StudentDashboard = () => {
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-  const dashboardData = {
-    overallProgress: 60,
-    completedLessons: 240,
-    totalLessons: 400,
+  const [dashboardData, setDashboardData] = useState({
+    overallProgress: 0,
+    completedLessons: 0,
+    totalLessons: 0,
     completedSubjects: 0,
-    totalSubjects: 6,
-    studyStreak: 12,
-    subjects: [
-      {
-        id: 1,
-        name: 'Mathematics',
-        icon: <Calculator size={28} />,
-        chapters: '6 of 8 chapters',
-        progress: 75,
-        color: '#10B981',
-      },
-      {
-        id: 2,
-        name: 'Science',
-        icon: <FlaskConical size={28} />,
-        chapters: '3 of 6 chapters',
-        progress: 45,
-        color: '#3B82F6',
-      },
-      {
-        id: 3,
-        name: 'History',
-        icon: <BookOpen size={28} />,
-        chapters: '6 of 10 chapters',
-        progress: 60,
-        color: '#8B5CF6',
-      },
-      {
-        id: 4,
-        name: 'Art',
-        icon: <Palette size={28} />,
-        chapters: '2 of 5 chapters',
-        progress: 30,
-        color: '#F59E0B',
-      },
-      {
-        id: 5,
-        name: 'Literature',
-        icon: <BookOpen size={28} />,
-        chapters: '6 of 7 chapters',
-        progress: 85,
-        color: '#EF4444',
-      },
-      {
-        id: 6,
-        name: 'Music',
-        icon: <Music2 size={28} />,
-        chapters: '1 of 4 chapters',
-        progress: 20,
-        color: '#06B6D4',
-      },
-    ],
+    totalSubjects: 0,
+    averageScore: 0,
+    subjects: [],
+  });
+
+  // local defaults for icons/colors when API doesn't provide them
+  const subjectDefaults = {
+    Mathematics: { icon: <Calculator size={28} />, color: '#10B981' },
+    Science: { icon: <FlaskConical size={28} />, color: '#3B82F6' },
+    History: { icon: <BookOpen size={28} />, color: '#8B5CF6' },
+    Art: { icon: <Palette size={28} />, color: '#F59E0B' },
+    Literature: { icon: <BookOpen size={28} />, color: '#EF4444' },
+    Music: { icon: <Music2 size={28} />, color: '#06B6D4' },
   };
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        console.log('Fetching dashboard data...');
+
+        const response = await API.get('/dashboard');
+        const data = response.data;
+
+        console.log('Dashboard data received:', data);
+
+        // Map subjects to include icon/color fallbacks and chapters string
+        const subjects = (data.subjects || []).map((s) => {
+          const defaults = subjectDefaults[s.name] || {};
+          return {
+            id: s.id,
+            name: s.name,
+            icon: defaults.icon || <BookOpen size={28} />,
+            chapters: s.chapters || `${s.chapters || '0'} chapters`,
+            progress: s.progress ?? 0,
+            color: s.color || defaults.color || '#6B7280',
+          };
+        });
+
+        console.log('Mapped subjects:', subjects);
+
+        const newDashboardData = {
+          overallProgress: data.overallProgress ?? 0,
+          completedLessons: data.completedLessons ?? 0,
+          totalLessons: data.totalLessons ?? 0,
+          completedSubjects: data.completedSubjects ?? 0,
+          totalSubjects: data.totalSubjects ?? 0,
+          averageScore: data.averageScore ?? 0,
+          subjects,
+        };
+
+        console.log('Setting dashboard data:', newDashboardData);
+        setDashboardData(newDashboardData);
+
+      } catch (err) {
+        console.error('Dashboard fetch error:', err);
+        console.error('Error details:', err.response?.data || err.message);
+
+        // For debugging, show some fallback data if API fails
+        setDashboardData(prev => ({
+          ...prev,
+          averageScore: prev.averageScore || 0,
+        }));
+      }
+    };
+
+    fetchDashboard();
+    // subjectDefaults is stable (declared inside component) and safe to omit from deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="student-dashboard">
@@ -121,11 +138,11 @@ const StudentDashboard = () => {
 
           <div className="progress-card">
             <div className="progress-card-header">
-              <h3>Study Streak</h3>
-              <span className="progress-number">{dashboardData.studyStreak}</span>
+              <h3>Average Quiz Score</h3>
+              <span className="progress-number">{dashboardData.averageScore}%</span>
             </div>
-            <p className="progress-text">days</p>
-            <p className="streak-message">Keep it up!</p>
+            <p className="progress-text">average across completed quizzes</p>
+            <p className="streak-message">Keep improving!</p>
             <div className="progress-icon">
               <Flame size={24} />
             </div>
@@ -177,42 +194,7 @@ const StudentDashboard = () => {
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="quick-actions">
-          <h2 className="section-title">Quick Actions</h2>
-          <div className="actions-grid">
-            <button
-              className="action-button primary"
-              onClick={() => navigate('/optimus')}
-            >
-              <div className="action-icon" aria-hidden="true">
-                <BookOpen size={20} />
-              </div>
-              <span>Continue Learning</span>
-            </button>
-            <button
-              className="action-button secondary"
-              onClick={() => navigate('/optimus')}
-            >
-              <div className="action-icon" aria-hidden="true">
-                <Bot size={20} />
-              </div>
-              <span>Chat with Optimus</span>
-            </button>
-            <button className="action-button secondary">
-              <div className="action-icon" aria-hidden="true">
-                <BarChart3 size={20} />
-              </div>
-              <span>View Analytics</span>
-            </button>
-            <button className="action-button secondary">
-              <div className="action-icon" aria-hidden="true">
-                <Settings size={20} />
-              </div>
-              <span>Settings</span>
-            </button>
-          </div>
-        </div>
+        {/* Quick Actions removed */}
       </div>
     </div>
   );
