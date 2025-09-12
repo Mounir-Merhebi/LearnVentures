@@ -19,56 +19,53 @@ const Chapter = () => {
   const navigate = useNavigate();
   const { chapterId } = useParams();
 
-  const chapterData = {
-    subject: 'Mathematics',
-    chapterTitle: 'Algebra',
-    chapterNumber: 1,
-    totalLessons: 15,
-    completedLessons: 8,
-    totalQuizes: 4,
-    totalQuiz: 1,
-    topics: [
-      {
-        id: 1,
-        title: 'Topic 1: Multiplication',
-        description: 'Learn multiplications between numbers',
-        totalEpisodes: 6,
-        totalVideos: 2,
-        totalQuiz: 1,
-        progress: 100,
-        isCompleted: true,
-        lessons: [
-          { id: 1, title: 'Introduction to Algebra', type: 'video', isCompleted: true, duration: '12 min' },
-          { id: 2, title: 'What is multiplication', type: 'lesson', isCompleted: true, duration: '8 min' },
-          { id: 3, title: 'Introduction to Algebra', type: 'video', isCompleted: true, duration: '15 min' },
-          { id: 4, title: 'What is multiplication', type: 'lesson', isCompleted: true, duration: '10 min' },
-        ],
-      },
-      {
-        id: 2,
-        title: 'Topic 2: Division',
-        description: 'Learn multiplications between numbers',
-        totalEpisodes: 4,
-        totalVideos: 2,
-        totalQuiz: 1,
-        progress: 60,
-        isCompleted: false,
-        lessons: [
-          { id: 5, title: 'Introduction to Division', type: 'video', isCompleted: true, duration: '14 min' },
-          { id: 6, title: 'What is Division', type: 'lesson', isCompleted: true, duration: '9 min' },
-          { id: 7, title: 'more into Division', type: 'video', isCompleted: false, duration: '16 min' },
-          { id: 8, title: 'What is multiplication', type: 'lesson', isCompleted: false, duration: '11 min' },
-        ],
-      },
-    ],
-    learningObjectives: [
-      'Introduction to multiplication',
-      'Introduction to multiplication',
-      'Introduction to multiplication',
-      'Introduction to multiplication',
-      'Introduction to multiplication',
-    ],
-  };
+  const [chapterData, setChapterData] = React.useState({
+    chapterTitle: '',
+    totalLessons: 0,
+    totalVideos: 0,
+    totalQuiz: 0,
+    topics: [],
+    learningObjectives: [],
+  });
+
+  React.useEffect(() => {
+    const fetchChapter = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem('user') || '{}').token;
+        const res = await fetch(`http://127.0.0.1:8002/api/v0.1/chapters/${chapterId}`, {
+          headers: { Authorization: token ? `Bearer ${token}` : '' },
+        });
+        if (!res.ok) throw new Error('Failed to load chapter');
+        const data = await res.json();
+
+        // Convert lessons into a single topic for now
+        const topic = {
+          id: data.id,
+          title: data.title,
+          description: '',
+          totalEpisodes: data.lessons.length,
+          totalVideos: 0,
+          totalQuiz: 0,
+          progress: 0,
+          isCompleted: false,
+          lessons: data.lessons,
+        };
+
+        setChapterData({
+          chapterTitle: data.title,
+          totalLessons: data.lessons.length,
+          totalVideos: 0,
+          totalQuiz: 0,
+          topics: [topic],
+          learningObjectives: [],
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchChapter();
+  }, [chapterId]);
 
   const handleBackToMathematics = () => {
     navigate('/mathematics');

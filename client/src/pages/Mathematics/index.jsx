@@ -1,74 +1,52 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import './Mathematics.css';
 import Navbar from '../../components/shared/Navbar/Navbar';
+import API from '../../services/axios';
 
 const Mathematics = () => {
   const navigate = useNavigate();
 
-  // Mock data for mathematics chapters
-  const mathData = {
-    subject: 'Mathematics',
+  const { subjectId } = useParams();
+
+  const [subjectData, setSubjectData] = useState({
+    subject: subjectId ? `Subject ${subjectId}` : 'Subject',
     icon: '📐',
-    totalChapters: 8,
-    completedChapters: 6,
-    chapters: [
-      {
-        id: 1,
-        title: 'Algebra',
-        chapterNumber: 1,
-        isCompleted: true,
-        thumbnail: '/images/math-video-thumbnail.jpg', // You can replace with actual thumbnails
-        duration: '45 min',
-        lessons: 12
-      },
-      {
-        id: 2,
-        title: 'Algebra',
-        chapterNumber: 1,
-        isCompleted: true,
-        thumbnail: '/images/math-video-thumbnail.jpg',
-        duration: '38 min',
-        lessons: 10
-      },
-      {
-        id: 3,
-        title: 'Algebra',
-        chapterNumber: 1,
-        isCompleted: false,
-        thumbnail: '/images/math-video-thumbnail.jpg',
-        duration: '42 min',
-        lessons: 15
-      },
-      {
-        id: 4,
-        title: 'Geometry',
-        chapterNumber: 2,
-        isCompleted: false,
-        thumbnail: '/images/math-video-thumbnail.jpg',
-        duration: '50 min',
-        lessons: 18
-      },
-      {
-        id: 5,
-        title: 'Trigonometry',
-        chapterNumber: 3,
-        isCompleted: false,
-        thumbnail: '/images/math-video-thumbnail.jpg',
-        duration: '55 min',
-        lessons: 14
-      },
-      {
-        id: 6,
-        title: 'Calculus',
-        chapterNumber: 4,
-        isCompleted: false,
-        thumbnail: '/images/math-video-thumbnail.jpg',
-        duration: '60 min',
-        lessons: 20
+    totalChapters: 0,
+    completedChapters: 0,
+    chapters: [],
+  });
+
+  useEffect(() => {
+    const fetchChapters = async () => {
+      if (!subjectId) return;
+      try {
+        const res = await API.get(`/subjects/${subjectId}/chapters`);
+        const data = res.data || {};
+        const chapters = (data.chapters || []).map((c, idx) => ({
+          id: c.id,
+          title: c.title,
+          chapterNumber: c.order ?? idx + 1,
+          isCompleted: false,
+          thumbnail: '/images/math-video-thumbnail.jpg',
+          duration: null,
+          lessons: 0,
+        }));
+
+        setSubjectData({
+          subject: data.subject_name ?? `Subject ${subjectId}`,
+          icon: '📐',
+          totalChapters: chapters.length,
+          completedChapters: chapters.filter(ch => ch.isCompleted).length,
+          chapters,
+        });
+      } catch (err) {
+        console.error('Failed to fetch chapters for subject', err);
       }
-    ]
-  };
+    };
+
+    fetchChapters();
+  }, [subjectId]);
 
   const handleBackToDashboard = () => {
     navigate('/student_dashboard');
@@ -95,11 +73,11 @@ const Mathematics = () => {
           </button>
           
           <div className="subject-info">
-            <div className="subject-icon-large">{mathData.icon}</div>
+            <div className="subject-icon-large">{subjectData.icon}</div>
             <div className="subject-details">
-              <h1 className="subject-title">{mathData.subject}</h1>
+              <h1 className="subject-title">{subjectData.subject}</h1>
               <p className="subject-progress">
-                {mathData.completedChapters} of {mathData.totalChapters} chapters completed
+                {subjectData.completedChapters} of {subjectData.totalChapters} chapters completed
               </p>
             </div>
           </div>
@@ -108,7 +86,7 @@ const Mathematics = () => {
         {/* Chapters Grid */}
         <div className="chapters-container">
           <div className="chapters-grid">
-            {mathData.chapters.map((chapter, index) => (
+            {subjectData.chapters.map((chapter, index) => (
               <div 
                 key={chapter.id} 
                 className={`chapter-card ${chapter.isCompleted ? 'completed' : ''}`}

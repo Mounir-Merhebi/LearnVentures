@@ -37,6 +37,10 @@ Route::group(["prefix" =>"v0.1"], function(){
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index']);
 
+        // Chapter
+        Route::get('/chapters/{id}', [\App\Http\Controllers\ChapterController::class, 'show']);
+        Route::get('/subjects/{id}/chapters', [\App\Http\Controllers\ChapterController::class, 'forSubject']);
+
         // Quiz performance analysis endpoints
         Route::post('/quiz/analyze-performance', [AIAgentController::class, 'analyzeQuizPerformance']);
         Route::get('/quiz/feedback/{studentQuizId}', [AIAgentController::class, 'getQuizFeedback']);

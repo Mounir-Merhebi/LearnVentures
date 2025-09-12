@@ -11,9 +11,6 @@ import {
   Music2,
   Target,
   Flame,
-  Bot,
-  BarChart3,
-  Settings,
 } from 'lucide-react';
 
 const StudentDashboard = () => {
@@ -157,12 +154,8 @@ const StudentDashboard = () => {
               <div
                 key={subject.id}
                 className="subject-card"
-                onClick={() => {
-                  if (subject.name === 'Mathematics') {
-                    navigate('/mathematics');
-                  }
-                }}
-                style={{ cursor: subject.name === 'Mathematics' ? 'pointer' : 'default' }}
+                onClick={() => navigate(`/subjects/${subject.id}`)}
+                style={{ cursor: 'pointer' }}
               >
                 <div className="subject-header">
                   <div className="subject-icon" aria-hidden="true">

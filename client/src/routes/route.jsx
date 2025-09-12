@@ -57,6 +57,14 @@ const MyRoutes = () => {
         }
       />
       <Route
+        path="/subjects/:subjectId"
+        element={
+          <ProtectedRoute allowedRoles={['Student', 'Instructor', 'Moderator']}>
+            <Mathematics />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/mathematics/chapter/:chapterId"
         element={
           <ProtectedRoute allowedRoles={['Student', 'Instructor', 'Moderator']}>
