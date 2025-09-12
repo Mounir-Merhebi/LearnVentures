@@ -176,8 +176,9 @@
   top: 16px;
   left: 16px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
 }
 
 .chapter-status {
@@ -195,28 +196,31 @@
 }
 
 .completion-status {
-  background: rgba(16, 185, 129, 0.9);
-  color: white;
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 10px;
-  font-weight: 600;
+  background: white;
+  color: #10B981;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: 0.5px;
+  border: 2px solid rgba(16, 185, 129, 0.15);
 }
 
 .completion-status.pending {
-  background: rgba(107, 114, 128, 0.9);
+  background: white;
+  color: #6B7280;
+  border: 2px solid rgba(107, 114, 128, 0.12);
 }
 
 /* Chapter Info */
 .chapter-info {
-  padding: 20px;
+  padding: 18px 20px 12px 20px;
 }
 
 .chapter-title {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  color: #1F2937;
+  color: #059669; /* teal/green */
   margin: 0 0 8px 0;
 }
 
@@ -231,29 +235,24 @@
 /* Continue Button */
 .continue-button {
   width: 100%;
-  background: #10B981;
-  color: white;
+  background: white;
+  color: #10B981;
   border: none;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px 12px;
+  border-top: 1px solid #eef2f6;
   font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .continue-button:hover {
-  background: #059669;
+  background: #f8fafc;
 }
 
 .chapter-card.completed .continue-button {
-  background: #6B7280;
-}
-
-.chapter-card.completed .continue-button:hover {
-  background: #4B5563;
+  color: #6B7280;
 }
 
 /* Navigation Arrows */

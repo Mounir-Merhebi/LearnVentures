@@ -98,8 +98,8 @@ class KbReindexGrade extends Command
             $this->info("Deleted existing chunks for lesson {$lesson->id}");
         }
 
-        // Create new chunks
-        $chunks = $this->chunkerService->chunkContent($lesson->content, $lesson->version);
+        // Create new chunks (use lower minimum for smaller lessons)
+        $chunks = $this->chunkerService->chunkContent($lesson->content, $lesson->version, 100, 500, 0.15);
 
         foreach ($chunks as $chunkData) {
             $chunk = KbChunk::create([

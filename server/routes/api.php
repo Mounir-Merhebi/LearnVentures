@@ -39,6 +39,8 @@ Route::group(["prefix" =>"v0.1"], function(){
 
         // Chapter
         Route::get('/chapters/{id}', [\App\Http\Controllers\ChapterController::class, 'show']);
+        // Lesson details (returns lesson and any personalized lesson for the authenticated user)
+        Route::get('/lessons/{id}', [\App\Http\Controllers\LessonController::class, 'show']);
         Route::get('/subjects/{id}/chapters', [\App\Http\Controllers\ChapterController::class, 'forSubject']);
 
         // Quiz performance analysis endpoints

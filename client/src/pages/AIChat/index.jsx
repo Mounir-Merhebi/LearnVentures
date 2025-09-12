@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/shared/Navbar';
 import './AIChat.css';
-import { Bot, ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft, Send } from 'lucide-react';
 
 const AIChat = () => {
   const navigate = useNavigate();
@@ -41,14 +41,54 @@ const AIChat = () => {
 
     try {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      const response = await callGeminiAPI(userMessage.content, user);
+      const token = localStorage.getItem('token') || user.token || '';
+      const API_BASE = process.env.REACT_APP_API_BASE || 'http://127.0.0.1:8000';
+
+      // Ensure we have a chat session for this user/grade
+      let sessionId = localStorage.getItem('chat_session_id');
+      if (!sessionId) {
+        const gradeId = user.grade_id || 2; // default fallback
+        const sessionRes = await fetch(`${API_BASE}/api/v0.1/chat/sessions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          },
+          body: JSON.stringify({ grade_id: gradeId })
+        });
+
+        if (!sessionRes.ok) throw new Error('Failed to create chat session');
+        const sessionData = await sessionRes.json();
+        sessionId = sessionData?.data?.session_id;
+        if (sessionId) localStorage.setItem('chat_session_id', sessionId);
+      }
+
+      // Send message to backend chat API
+      const msgRes = await fetch(`${API_BASE}/api/v0.1/chat/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({ session_id: Number(sessionId), message: userMessage.content })
+      });
+
+      if (!msgRes.ok) {
+        const txt = await msgRes.text();
+        console.error('Chat API error', msgRes.status, txt);
+        throw new Error('Chat API error');
+      }
+      const msgData = await msgRes.json();
+      const aiText = msgData?.data?.response || "I'm sorry, I couldn't get an answer right now.";
+
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         type: 'ai',
-        content: response,
+        content: aiText,
         timestamp: new Date(),
       }]);
-    } catch {
+    } catch (err) {
+      console.error(err);
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         type: 'ai',
@@ -60,52 +100,9 @@ const AIChat = () => {
     }
   };
 
-  const callGeminiAPI = async (message, user) => {
-    const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
-    if (!GEMINI_API_KEY) throw new Error('Gemini API key not configured');
-
-    const userName = user.name || 'Moon';
-    const userHobbies = user.hobbies || 'gaming';
-    const userPreferences = user.preferences || 'interactive learning';
-    const userBio = user.bio || 'i love programming and playing games';
-
-    const systemPrompt = `You are Optimus, an AI learning assistant for LearnVentures. You are chatting with ${userName}.
-
-User Profile:
-- Name: ${userName}
-- Hobbies: ${userHobbies}
-- Learning Preferences: ${userPreferences}
-- Bio: ${userBio}
-
-Your personality:
-- Friendly and encouraging
-- Educational and helpful
-- Personalized responses based on user's interests
-- Focus on learning and academic growth
-- Incorporate user's hobbies into explanations when relevant
-
-Respond to the user's message in a helpful, personalized way. Keep responses conversational but educational.`;
-
-    const prompt = `${systemPrompt}\n\nUser message: ${message}\n\nResponse:`;
-
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7, topK: 40, topP: 0.95, maxOutputTokens: 1000 },
-        safetySettings: [
-          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }
-        ]
-      }),
-    });
-    if (!res.ok) throw new Error(`Gemini API error: ${res.status}`);
-    const data = await res.json();
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text ?? ' ';
-  };
+  // The client no longer calls Gemini directly — requests go through the backend
+  // which handles embeddings, retrieval and Gemini calls. This keeps the API key
+  // and context management secure on the server.
 
   return (
     <div className="ai-chat-page">

@@ -165,7 +165,12 @@ const Chapter = () => {
                         <div className="lesson-type-icon">
                           {lesson.type === 'video' ? <Video size={16} /> : <FileText size={16} />}
                         </div>
-                        <span className="lesson-title">{lesson.title}</span>
+                        <span className="lesson-title">
+                          {lesson.personalized ? lesson.personalized.personalized_title : lesson.title}
+                        </span>
+                        {lesson.personalized && (
+                          <span className="personalized-badge">Personalized</span>
+                        )}
                       </div>
                       <div className="lesson-duration">{lesson.duration}</div>
                     </div>

@@ -4,18 +4,27 @@ namespace App\Services;
 
 use App\Models\KbEmbedding;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class EmbeddingService
 {
     private string $modelName;
     private int $dimensions;
     private int $batchSize;
+    private string $apiKey;
+    private string $embeddingModel;
 
     public function __construct()
     {
-        $this->modelName = env('EMBED_MODEL_NAME', 'local-embedding-model');
-        $this->dimensions = (int) env('EMBED_DIM', 384);
+        $this->modelName = env('EMBED_MODEL_NAME', 'gemini-embedding-model');
+        $this->dimensions = (int) env('EMBED_DIM', 768); // Gemini embeddings are 768 dimensions
         $this->batchSize = (int) env('EMBED_BATCH_SIZE', 64);
+        $this->apiKey = env('GEMINI_API_KEY');
+        $this->embeddingModel = env('GEMINI_EMBEDDING_MODEL', 'text-embedding-004');
+
+        if (!$this->apiKey) {
+            throw new \RuntimeException('GEMINI_API_KEY not set in environment variables');
+        }
     }
 
     /**
@@ -50,39 +59,65 @@ class EmbeddingService
     }
 
     /**
-     * Embed a single batch of texts
+     * Embed a single batch of texts using Gemini API
      */
     private function embedBatch(array $texts): array
     {
-        // This is a placeholder for the actual local embedding model call
-        // In a real implementation, you would call your local embedding service here
-        // For now, we'll generate random vectors for demonstration
-
-        $embeddings = [];
-        foreach ($texts as $text) {
-            $embeddings[] = $this->generateMockEmbedding($text);
+        if (empty($texts)) {
+            return [];
         }
 
-        return $embeddings;
-    }
+        try {
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/{$this->embeddingModel}:embedContent?key={$this->apiKey}";
 
-    /**
-     * Generate a mock embedding vector (replace with actual model call)
-     */
-    private function generateMockEmbedding(string $text): array
-    {
-        // Generate a deterministic but random-looking vector based on text hash
-        // This is just for demonstration - replace with actual embedding model call
-        $hash = hash('sha256', $text);
-        $vector = [];
+            // Gemini embedding API expects individual requests for each text
+            $embeddings = [];
+            foreach ($texts as $text) {
+                $response = Http::timeout(30)->post($url, [
+                    'content' => [
+                        'parts' => [
+                            ['text' => $text]
+                        ]
+                    ]
+                ]);
 
-        for ($i = 0; $i < $this->dimensions; $i++) {
-            $hashPart = substr($hash, $i % 64, 2);
-            $value = hexdec($hashPart) / 255.0; // Normalize to 0-1
-            $vector[] = $value * 2 - 1; // Convert to -1 to 1 range
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (isset($data['embedding']['values'])) {
+                        $embeddings[] = $data['embedding']['values'];
+                    } else {
+                        Log::error('Invalid Gemini embedding response format', [
+                            'response' => $data,
+                            'text_preview' => substr($text, 0, 100)
+                        ]);
+                        // Fallback to zero vector if embedding fails
+                        $embeddings[] = array_fill(0, $this->dimensions, 0.0);
+                    }
+                } else {
+                    Log::error('Gemini embedding API error', [
+                        'status' => $response->status(),
+                        'body' => $response->body(),
+                        'text_preview' => substr($text, 0, 100)
+                    ]);
+                    // Fallback to zero vector if API fails
+                    $embeddings[] = array_fill(0, $this->dimensions, 0.0);
+                }
+
+                // Small delay to avoid rate limits
+                usleep(100000); // 100ms delay
+            }
+
+            return $embeddings;
+
+        } catch (\Exception $e) {
+            Log::error('Gemini embedding API call failed', [
+                'error' => $e->getMessage(),
+                'texts_count' => count($texts)
+            ]);
+
+            // Return zero vectors as fallback
+            return array_fill(0, count($texts), array_fill(0, $this->dimensions, 0.0));
         }
-
-        return $vector;
     }
 
     /**
