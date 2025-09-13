@@ -18,11 +18,17 @@ app.add_middleware(
 )
 
 # Choose a model: "base" (fast), "small" (better), "medium" (heavier)
-try:
-    model = WhisperModel("base", compute_type="int8")  # may auto-download model files
-except Exception as e:
-    logger.exception("Failed to load WhisperModel: %s", e)
+# Allow opting out of model init (e.g., for CI) via STT_SKIP_MODEL_INIT=1
+_skip_model_init = os.getenv("STT_SKIP_MODEL_INIT", "0") in {"1", "true", "True"}
+if _skip_model_init:
     model = None
+    logger.info("Skipping WhisperModel initialization due to STT_SKIP_MODEL_INIT")
+else:
+    try:
+        model = WhisperModel("base", compute_type="int8")  # may auto-download model files
+    except Exception as e:
+        logger.exception("Failed to load WhisperModel: %s", e)
+        model = None
 
 
 @app.get("/health")
