@@ -54,6 +54,14 @@ jobs:
               echo "APP_DEBUG=true"
               echo "APP_URL=http://localhost"
               echo "APP_KEY="
+              echo "QUEUE_CONNECTION=sync"
+              echo "CACHE_DRIVER=array"
+              echo "SESSION_DRIVER=array"
+              echo "MAIL_MAILER=array"
+              # Dummy AI keys to satisfy services that check presence
+              echo "GEMINI_API_KEY=test_dummy"
+              echo "GEMINI_MODEL=gemini-1.5-flash"
+              echo "GEMINI_EMBEDDING_MODEL=text-embedding-004"
             } > .env
           else
             echo "Using existing .env"
