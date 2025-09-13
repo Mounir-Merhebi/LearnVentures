@@ -1,4 +1,5 @@
 // src/pages/AIChat/index.jsx
+//trying the ci
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/shared/Navbar';
