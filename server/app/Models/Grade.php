@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Database\Factories\GradeFactory;
 
 class Grade extends Model
 {
@@ -12,6 +13,7 @@ class Grade extends Model
     protected $fillable = [
         'name',
         'description',
+        'level',
     ];
 
     // Relationships
@@ -28,5 +30,10 @@ class Grade extends Model
     public function chatSessions()
     {
         return $this->hasMany(ChatSession::class, 'grade_id');
+    }
+
+    protected static function newFactory()
+    {
+        return GradeFactory::new();
     }
 }

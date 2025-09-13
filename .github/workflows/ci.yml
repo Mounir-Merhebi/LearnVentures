@@ -41,6 +41,10 @@ jobs:
         run: composer install --no-ansi --no-interaction --no-progress --prefer-dist
         working-directory: ./server
 
+      - name: Refresh Composer autoload
+        run: composer dump-autoload -o
+        working-directory: ./server
+
       - name: Setup Laravel
         run: |
           if [ ! -f .env ]; then
