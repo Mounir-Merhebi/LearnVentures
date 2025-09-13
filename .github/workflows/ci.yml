@@ -43,8 +43,18 @@ jobs:
 
       - name: Setup Laravel
         run: |
-          cp .env.example .env
-          php artisan key:generate
+          if [ ! -f .env ]; then
+            echo "Creating minimal .env for CI"
+            {
+              echo "APP_ENV=testing"
+              echo "APP_DEBUG=true"
+              echo "APP_URL=http://localhost"
+              echo "APP_KEY="
+            } > .env
+          else
+            echo "Using existing .env"
+          fi
+          php artisan key:generate --force
           php artisan migrate --force
         working-directory: ./server
         env:
