@@ -88,6 +88,66 @@
 .send-btn:hover:not(:disabled){ transform: scale(1.05); box-shadow: 0 4px 12px rgba(30,161,127,.3); }
 .send-btn:disabled{ opacity:.5; cursor:not-allowed; transform:none; box-shadow:none; }
 
+/* Mic select and custom record/send styles */
+.mic-select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #1EA17F;
+  background: #fff;
+  min-width: 120px;
+  max-width: 140px;
+  font-size: 12px;
+}
+
+.record-btn-custom {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #1EA17F;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.record-btn-custom.recording { 
+  background: #e74c3c; 
+  animation: pulse 1.5s infinite;
+}
+.record-btn-custom:disabled { opacity: .6; cursor: not-allowed; }
+.record-btn-custom:hover:not(:disabled) { transform: scale(1.02); box-shadow: 0 4px 12px rgba(30,161,127,.3); }
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.send-btn-rect {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #1EA17F;
+  color: white;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.send-btn-rect:hover:not(:disabled) { 
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(30,161,127,.3);
+}
+.send-btn-rect:disabled { 
+  opacity: .5; 
+  cursor: not-allowed; 
+  transform: none; 
+  box-shadow: none; 
+}
+
 /* Floating robot image (PNG) */
 .robot-follower{
   position: absolute;
@@ -96,7 +156,7 @@
   width: 64px; height: 64px;
   pointer-events: none;
   animation: robot-vertical 9s ease-in-out infinite, robot-sway 3.5s ease-in-out infinite;
-  z-index: 1000;
+  z-index: 9999;
   filter: drop-shadow(0 6px 16px rgba(0,0,0,0.2));
 }
 .robot-img{ width: 100%; height: 100%; object-fit: contain; }
@@ -115,6 +175,7 @@
   .message { max-width: 85%; }
   .message-content { padding: 10px 14px; }
   .input-wrapper { gap: 8px; }
+  .mic-select { min-width: 100px; max-width: 120px; font-size: 11px; }
 }
 
 /* Scrollbar */
