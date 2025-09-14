@@ -12,6 +12,8 @@ class Chapter extends Model
     protected $fillable = [
         'subject_id',
         'title',
+        'description',
+        'cover_photo',
         'order',
     ];
 

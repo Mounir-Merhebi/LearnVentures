@@ -237,7 +237,24 @@
   font-size: 1.1rem;
   font-weight: 600;
   color: #059669; /* teal/green */
-  margin: 0 0 8px 0;
+  margin: 0 0 2px 0; /* reduced gap to lessons */
+  line-height: 1.15;
+}
+
+.chapter-description {
+  color: #6B7280;
+  margin: 8px 0 12px 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  max-height: 2.8rem;
+  overflow: hidden;
+}
+
+.chapter-lessons-top {
+  margin: 2px 0; /* reduced space between title and lessons */
+  color: #6B7280;
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .chapter-meta {

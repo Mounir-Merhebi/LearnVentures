@@ -79,6 +79,8 @@ class ChapterController extends Controller
         return response()->json([
             'id' => $chapter->id,
             'title' => $chapter->title,
+            'description' => $chapter->description ?? null,
+            'cover_photo' => $chapter->cover_photo ?? null,
             'subject_id' => $chapter->subject_id,
             'lessons' => $lessons,
         ]);
@@ -100,6 +102,8 @@ class ChapterController extends Controller
                     'title' => $chapter->title,
                     'order' => $chapter->order,
                     'lessons_count' => $chapter->lessons_count,
+                    'description' => $chapter->description ?? null,
+                    'cover_photo' => $chapter->cover_photo ?? null,
                 ];
             });
 

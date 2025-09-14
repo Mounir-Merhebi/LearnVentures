@@ -41,6 +41,8 @@ const Subject = () => {
           chapterNumber: c.order ?? c.chapter_number ?? idx + 1,
           isCompleted: false,
           thumbnail: c.thumbnail || '/images/math-video-thumbnail.jpg',
+          description: c.description ?? null,
+          cover_photo: c.cover_photo ?? null,
           duration: c.duration ?? null,
           // prefer lessons array length, fall back to lessons_count fields
           lessons: Array.isArray(c.lessons) ? c.lessons.length : (c.lessons_count ?? c.lessonsCount ?? 0),
@@ -129,7 +131,11 @@ const Subject = () => {
               >
                 {/* Video Thumbnail */}
                 <div className="chapter-thumbnail">
-                  <img className="chapter-image" src={chapter.thumbnail} alt={chapter.title} />
+                  {chapter.cover_photo ? (
+                    <img className="chapter-image" src={chapter.cover_photo} alt={chapter.title} />
+                  ) : (
+                    <img className="chapter-image" src="/images/default-chapter-cover.jpg" alt={chapter.title} />
+                  )}
                 </div>
 
                 {/* Chapter Info */}
@@ -144,9 +150,17 @@ const Subject = () => {
                   </div>
 
                   <h3 className="chapter-title">{chapter.title}</h3>
+
+                  <div className="chapter-lessons-top">
+                    <span className="chapter-lessons">{chapter.lessons} lessons</span>
+                  </div>
+
+                  {chapter.description && (
+                    <p className="chapter-description">{chapter.description}</p>
+                  )}
+
                   <div className="chapter-meta">
                     <span className="chapter-duration">{chapter.duration}</span>
-                    <span className="chapter-lessons">{chapter.lessons} lessons</span>
                   </div>
                 </div>
 
