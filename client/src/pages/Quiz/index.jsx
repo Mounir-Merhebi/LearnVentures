@@ -50,6 +50,18 @@ const Quiz = () => {
 
       // If user has previous attempt, show results
       if (quiz.previousAttempt) {
+        // Load feedback for previous attempt
+        let feedback = null;
+        try {
+          const feedbackResponse = await API.get(`/quiz/feedback/${quiz.previousAttempt.id}`);
+          if (feedbackResponse.data.success) {
+            feedback = feedbackResponse.data.data;
+            console.log('Previous attempt feedback loaded:', feedback);
+          }
+        } catch (feedbackErr) {
+          console.warn('Failed to load previous attempt feedback:', feedbackErr);
+        }
+
         setQuizResults({
           score: quiz.previousAttempt.score,
           totalQuestions: quiz.questions.length,
@@ -64,7 +76,8 @@ const Quiz = () => {
             correctAnswer: q.correctAnswer,
             isCorrect: quiz.previousAttempt.answers.find(a => a.questionId === q.id)?.isCorrect || false,
             options: q.options
-          }))
+          })),
+          feedback: feedback
         });
         setShowReview(true);
       }
@@ -83,9 +96,9 @@ const Quiz = () => {
     try {
       const duration = startTime ? Math.floor((new Date() - startTime) / 1000) : 0;
 
-      const answers = Object.entries(selectedAnswers).map(([questionId, selectedIndex]) => ({
-        questionId: parseInt(questionId),
-        selectedAnswer: quizData.questions[selectedIndex]?.options[selectedIndex] || ''
+      const answers = Object.entries(selectedAnswers).map(([questionIndex, selectedIndex]) => ({
+        questionId: quizData.questions[questionIndex]?.id,
+        selectedAnswer: quizData.questions[questionIndex]?.options[selectedIndex] || ''
       }));
 
       const response = await API.post(`/quiz/${quizData.id}/submit`, {
@@ -94,9 +107,64 @@ const Quiz = () => {
       });
 
       if (response.data.success) {
-        setQuizResults(response.data.results);
-        setShowReview(true);
-        setQuizStarted(false);
+        const attemptId = response.data.results.attemptId;
+
+        // Fetch detailed results after successful submission
+        try {
+          const resultsResponse = await API.get(`/quiz/attempt/${attemptId}`);
+          if (resultsResponse.data.success) {
+            // Trigger performance analysis immediately after quiz submission
+            let feedback = null;
+            try {
+              console.log('Triggering performance analysis...');
+              await API.post('/quiz/analyze-performance', {
+                student_quiz_id: attemptId
+              });
+              console.log('Performance analysis triggered successfully');
+
+              // Wait a moment for analysis to complete, then fetch feedback
+              await new Promise(resolve => setTimeout(resolve, 3000));
+
+              const feedbackResponse = await API.get(`/quiz/feedback/${attemptId}`);
+              if (feedbackResponse.data.success) {
+                feedback = feedbackResponse.data.data;
+                console.log('Feedback generated and loaded:', feedback);
+              } else {
+                console.log('Feedback generation may still be in progress');
+              }
+            } catch (analysisErr) {
+              console.warn('Performance analysis failed:', analysisErr);
+              // Try to fetch existing feedback anyway
+              try {
+                const feedbackResponse = await API.get(`/quiz/feedback/${attemptId}`);
+                if (feedbackResponse.data.success) {
+                  feedback = feedbackResponse.data.data;
+                  console.log('Existing feedback loaded:', feedback);
+                }
+              } catch (feedbackErr) {
+                console.warn('Failed to load feedback:', feedbackErr);
+              }
+            }
+
+            setQuizResults({
+              score: resultsResponse.data.results.score,
+              totalQuestions: resultsResponse.data.results.totalQuestions,
+              correctAnswers: resultsResponse.data.results.correctAnswers,
+              startedAt: resultsResponse.data.results.startedAt,
+              completedAt: resultsResponse.data.results.completedAt,
+              duration: resultsResponse.data.results.duration,
+              questions: resultsResponse.data.results.questions,
+              feedback: feedback
+            });
+            setShowReview(true);
+            setQuizStarted(false);
+          } else {
+            setError('Failed to load quiz results');
+          }
+        } catch (resultsErr) {
+          console.error('Error fetching quiz results:', resultsErr);
+          setError('Quiz submitted but failed to load results');
+        }
       } else {
         setError(response.data.message || 'Failed to submit quiz');
       }
@@ -130,20 +198,70 @@ const Quiz = () => {
 
 
   const handleStartQuiz = async () => {
+    // quick client-side checks
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('You are not authenticated. Please login and try again.');
+      return;
+    }
+
     try {
       const response = await API.post(`/quiz/${quizData.id}/start`);
 
-      if (response.data.success) {
+      if (response.data && response.data.success) {
         setQuizAttempt(response.data.attempt);
         setQuizStarted(true);
         setStartTime(new Date());
         setShowReview(false);
+        setError(null);
       } else {
-        setError(response.data.message || 'Failed to start quiz');
+        // backend returned success=false
+        const msg = response.data?.message || 'Failed to start quiz';
+        console.warn('Start quiz - backend:', response.data);
+        setError(msg);
       }
     } catch (err) {
+      // surface server response body when available for debugging
       console.error('Error starting quiz:', err);
-      setError(err.response?.data?.message || 'Failed to start quiz');
+      const status = err.response?.status;
+      const body = err.response?.data;
+      // If server says there's an active attempt, resume it instead of blocking
+      if (status === 400 && body && body.attempt) {
+        console.warn('Resuming active attempt from server response', body.attempt);
+        // ensure quiz questions are loaded before switching into attempt mode
+        try {
+          await fetchQuizData();
+        } catch (e) {
+          console.warn('Failed to reload quiz data while resuming attempt', e);
+        }
+
+        setQuizAttempt(body.attempt);
+        // only start if quiz data is available
+        if (quizData && quizData.questions && quizData.questions.length > 0) {
+          setQuizStarted(true);
+        }
+        // try to set startTime from server attempt if provided
+        try {
+          if (body.attempt.startedAt) {
+            setStartTime(new Date(body.attempt.startedAt));
+          } else {
+            setStartTime(new Date());
+          }
+        } catch (e) {
+          setStartTime(new Date());
+        }
+        setShowReview(false);
+        setError(null);
+        return;
+      }
+
+      if (body && body.message) {
+        setError(`Server: ${body.message}`);
+      } else if (body) {
+        setError(`Server error (${status}): ${JSON.stringify(body)}`);
+      } else {
+        setError('Network or server error while starting quiz');
+      }
     }
   };
 
@@ -334,11 +452,84 @@ const Quiz = () => {
           })}
         </div>
 
+        {/* Post-Quiz Feedback Section */}
+        <div className="post-quiz-feedback">
+          <h3>AI Performance Analysis</h3>
+          {quizResults.feedback ? (
+            <div className="feedback-content">
+              <div className="feedback-section">
+                <h4>Overall Performance</h4>
+                <p>{quizResults.feedback.overall_performance || 'Performance analysis not available.'}</p>
+              </div>
+
+              {quizResults.feedback.weak_areas && quizResults.feedback.weak_areas.length > 0 && (
+                <div className="feedback-section">
+                  <h4>Areas for Improvement</h4>
+                  <ul>
+                    {quizResults.feedback.weak_areas.map((area, index) => (
+                      <li key={index}>
+                        <strong>{area.concept}</strong>: {area.description || 'Needs improvement'}
+                        {area.missed && area.total && ` (${area.missed}/${area.total} missed)`}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {quizResults.feedback.recommendations && quizResults.feedback.recommendations.length > 0 && (
+                <div className="feedback-section">
+                  <h4>Study Recommendations</h4>
+                  <ul>
+                    {quizResults.feedback.recommendations.map((rec, index) => (
+                      <li key={index}>
+                        <strong>{rec.type || 'General'}</strong>: {rec.description || 'Study recommendation'}
+                        {rec.priority && ` (Priority: ${rec.priority})`}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {quizResults.feedback.study_plan && (
+                <div className="feedback-section">
+                  <h4>Personalized Study Plan</h4>
+                  <p><strong>Duration:</strong> {quizResults.feedback.study_plan.duration_weeks} weeks</p>
+                  <p><strong>Daily Study Time:</strong> {quizResults.feedback.study_plan.daily_study_time} minutes</p>
+                  {quizResults.feedback.study_plan.schedule && quizResults.feedback.study_plan.schedule.length > 0 && (
+                    <div>
+                      <p><strong>Schedule:</strong></p>
+                      <ul>
+                        {quizResults.feedback.study_plan.schedule.map((day, index) => (
+                          <li key={index}>
+                            <strong>{day.day}</strong>: {day.focus} ({day.estimated_time} min)
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {quizResults.feedback.encouragement_message && (
+                <div className="feedback-section">
+                  <h4>Encouragement</h4>
+                  <p><em>{quizResults.feedback.encouragement_message}</em></p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="feedback-loading">
+              <p>Analysis not available for this attempt.</p>
+              <p className="feedback-note">AI performance analysis is generated after completing new quiz attempts.</p>
+            </div>
+          )}
+        </div>
+
         <div className="review-actions">
-          <button className="action-button primary" onClick={handleHome}>
+          <button className="action-buttons primary" onClick={handleHome}>
             Back to Chapter
           </button>
-          <button className="action-button secondary" onClick={handleRetakeQuiz}>
+          <button className="action-buttons secondary" onClick={handleRetakeQuiz}>
             Retake Quiz
           </button>
         </div>
@@ -357,8 +548,11 @@ const Quiz = () => {
     );
   }
 
-  const currentQuestionData = quizData.questions[currentQuestion];
-  const progress = ((currentQuestion + 1) / quizData.questions.length) * 100;
+  // defensive: ensure questions array exists before accessing
+  const questionsArray = (quizData && Array.isArray(quizData.questions)) ? quizData.questions : [];
+  const totalQuestions = questionsArray.length;
+  const currentQuestionData = questionsArray[currentQuestion] || { question: '', options: [] };
+  const progress = totalQuestions ? ((currentQuestion + 1) / totalQuestions) * 100 : 0;
 
   return (
     <div className="quiz-page">

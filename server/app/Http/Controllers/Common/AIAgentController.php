@@ -470,7 +470,7 @@ class AIAgentController extends Controller
             if (!$feedback) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Quiz feedback not found or access denied'
+                    'message' => 'Quiz feedback not available. Analysis may still be processing.'
                 ], 404);
             }
 

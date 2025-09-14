@@ -1,4 +1,5 @@
-INFO:     127.0.0.1:61679 - "POST /transcribe HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49989 - "POST /transcribe HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60388 - "POST /transcribe HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49679 - "POST /transcribe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51719 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51808 - "POST /transcribe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51847 - "POST /transcribe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51854 - "POST /transcribe HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51854 - "POST /transcribe HTTP/1.1" 200 OK
