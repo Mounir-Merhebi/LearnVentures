@@ -5,7 +5,6 @@ import Navbar from '../../components/shared/Navbar/Navbar';
 import API from '../../services/axios';
 import {
   ArrowLeft,
-  Play,
   BookOpen,
   Video,
   HelpCircle,
@@ -57,6 +56,7 @@ const Chapter = () => {
           totalQuiz: 0,
           topics: [topic],
           learningObjectives: [],
+          cover_photo: data.cover_photo ?? null,
         });
       } catch (err) {
         console.error(err);
@@ -79,6 +79,14 @@ const Chapter = () => {
 
     fetchSubject();
   }, [chapterId, subjectId]);
+
+  const getCoverSrc = (cover) => {
+    if (!cover) return '/images/default-chapter-cover.jpg';
+    // if already a data URL or an http(s) url, return as-is
+    if (/^data:|^https?:\/\//i.test(cover)) return cover;
+    // otherwise assume it's base64 and prefix as png
+    return `data:image/png;base64,${cover}`;
+  };
 
   const handleBackToMathematics = () => {
     navigate(`/subjects/${subjectId}`);
@@ -107,21 +115,13 @@ const Chapter = () => {
         <div className="chapter-header">
           <div className="chapter-video-section">
             <div className="video-thumbnail">
-              <div className="chapter-badge">chapter</div>
-              <div className="video-placeholder">
-                <div className="play-button">
-                  <Play size={28} />
-                </div>
-              </div>
+              <img className="chapter-image" src={getCoverSrc(chapterData.cover_photo)} alt={chapterData.chapterTitle} />
             </div>
             <div className="chapter-info">
               <h1 className="chapter-title">{chapterData.chapterTitle}</h1>
               <div className="chapter-stats">
                 <span className="stat-item">
                   <BookOpen size={16} /> {chapterData.totalLessons} lessons
-                </span>
-                <span className="stat-item">
-                  <Video size={16} /> {chapterData.totalVideos} videos
                 </span>
                 <span className="stat-item">
                   <HelpCircle size={16} /> {chapterData.totalQuiz} quiz
@@ -147,9 +147,6 @@ const Chapter = () => {
                         <List size={16} /> {topic.totalEpisodes} Episodes
                       </span>
                       <span>
-                        <Video size={16} /> {topic.totalVideos} videos
-                      </span>
-                      <span>
                         <HelpCircle size={16} /> {topic.totalQuiz} quiz
                       </span>
                     </div>
@@ -171,7 +168,7 @@ const Chapter = () => {
                     >
                       <div className="lesson-status">
                         <div className={`status-icon ${lesson.isCompleted ? 'completed' : 'pending'}`}>
-                          {lesson.isCompleted ? <CheckCircle size={16} /> : <Circle size={16} />}
+                          {lesson.isCompleted ? <CheckCircle size={16} /> : <Circle size={20} />}
                         </div>
                       </div>
                       <div className="lesson-content">
