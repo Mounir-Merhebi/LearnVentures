@@ -49,6 +49,7 @@ Route::group(["prefix" =>"v0.1"], function(){
         // Lesson details (returns lesson and any personalized lesson for the authenticated user)
         Route::get('/lessons/{id}', [\App\Http\Controllers\LessonController::class, 'show']);
         Route::get('/subjects/{id}/chapters', [\App\Http\Controllers\ChapterController::class, 'forSubject']);
+        Route::get('/subjects/{id}', [\App\Http\Controllers\SubjectController::class, 'show']);
 
         // Quiz performance analysis endpoints
         Route::post('/quiz/analyze-performance', [AIAgentController::class, 'analyzeQuizPerformance']);

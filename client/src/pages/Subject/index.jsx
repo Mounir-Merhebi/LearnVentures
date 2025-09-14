@@ -11,7 +11,6 @@ const Subject = () => {
 
   const [subjectData, setSubjectData] = useState({
     subject: subjectId ? `Subject ${subjectId}` : 'Subject',
-    icon: '📐',
     totalChapters: 0,
     completedChapters: 0,
     chapters: [],
@@ -21,6 +20,14 @@ const Subject = () => {
     const fetchChapters = async () => {
       if (!subjectId) return;
       try {
+        // fetch subject metadata to display proper subject title
+        try {
+          const metaRes = await API.get(`/subjects/${subjectId}`);
+          const meta = metaRes.data || {};
+          if (meta.title) setSubjectData(prev => ({ ...prev, subject: meta.title }));
+        } catch (e) {
+          // ignore
+        }
         // fetch subject metadata first to display the proper name as soon as possible
         let subjectName = null;
         try {
@@ -50,7 +57,6 @@ const Subject = () => {
 
         setSubjectData({
           subject: subjectName ?? `Subject ${subjectId}`,
-          icon: '📐',
           totalChapters: chapters.length,
           completedChapters: chapters.filter(ch => ch.isCompleted).length,
           chapters,
@@ -101,21 +107,21 @@ const Subject = () => {
       <div className="subject-container">
         {/* Header Section */}
         <div className="subject-header">
-          <button 
-            className="back-button"
-            onClick={handleBackToDashboard}
-          >
-            <span className="back-arrow">←</span>
-            Back to Dashboard
-          </button>
-          
-          <div className="subject-info">
-            <div className="subject-icon-large">{subjectData.icon}</div>
-            <div className="subject-details">
-              <h1 className="subject-title">{subjectData.subject}</h1>
-              <p className="subject-progress">
-                {subjectData.completedChapters} of {subjectData.totalChapters} chapters completed
-              </p>
+          <div className="subject-header-row">
+            <button 
+              className="back-button"
+              onClick={handleBackToDashboard}
+            >
+              <span className="back-arrow">←</span>
+              Back to Dashboard
+            </button>
+            <div className="subject-info" style={{flex: 1}}>
+              <div className="subject-details">
+                <h1 className="subject-title">{subjectData.subject}</h1>
+                <p className="subject-progress">
+                  {subjectData.completedChapters} of {subjectData.totalChapters} chapters completed
+                </p>
+              </div>
             </div>
           </div>
         </div>

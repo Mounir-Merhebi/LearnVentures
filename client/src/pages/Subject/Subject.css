@@ -13,11 +13,15 @@
 
 /* Header Section */
 .subject-header {
-  margin-bottom: 40px;
+  display: flex;
+  align-items: flex-start; /* align title with top of cards */
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-left: 40px; /* align title start with chapters grid left edge */
 }
 
 .back-button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   background: none;
   border: none;
@@ -25,9 +29,10 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  margin-bottom: 24px;
+  margin: 0; /* remove bottom spacing so it's inline with title */
   padding: 8px 0;
   transition: color 0.2s ease;
+  margin-right: 12px;
 }
 
 .back-button:hover {
