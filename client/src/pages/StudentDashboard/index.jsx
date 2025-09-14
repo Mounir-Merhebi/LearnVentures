@@ -54,6 +54,7 @@ const StudentDashboard = () => {
           return {
             id: s.id,
             name: s.name,
+            description: s.description || '',
             icon: defaults.icon || <BookOpen size={28} />,
             chapters: s.chapters || `${s.chapters || '0'} chapters`,
             progress: s.progress ?? 0,
@@ -168,6 +169,9 @@ const StudentDashboard = () => {
                 </div>
 
                 <div className="subject-progress">
+                  {subject.description && (
+                    <p className="subject-description">{subject.description}</p>
+                  )}
                   <div className="progress-info">
                     <span className="progress-label">Progress</span>
                     <span className="progress-percentage">{subject.progress}%</span>

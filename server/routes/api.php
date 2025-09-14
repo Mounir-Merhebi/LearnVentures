@@ -7,6 +7,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ModeratorExcelController;
 use App\Http\Controllers\AdminChangeProposalController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DailyChatReportController;
 
 Route::group(["prefix" =>"v0.1"], function(){
     // Guest routes (no auth required)
@@ -36,6 +37,12 @@ Route::group(["prefix" =>"v0.1"], function(){
 
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index']);
+
+        // Daily chat reports
+        Route::group(["prefix" => "reports"], function(){
+            Route::post('/daily', [DailyChatReportController::class, 'upsert']);
+            Route::get('/daily', [DailyChatReportController::class, 'index']);
+        });
 
         // Chapter
         Route::get('/chapters/{id}', [\App\Http\Controllers\ChapterController::class, 'show']);

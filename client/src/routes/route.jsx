@@ -4,7 +4,7 @@ import LandingPage from "../pages/LandingPage";
 import Auth from "../pages/Auth";
 import AIChat from "../pages/AIChat";
 import StudentDashboard from "../pages/StudentDashboard";
-import Mathematics from "../pages/Mathematics";
+import Subject from "../pages/Subject";
 import Chapter from "../pages/Chapter";
 import LessonContent from "../pages/LessonContent";
 import Quiz from "../pages/Quiz";
@@ -49,10 +49,10 @@ const MyRoutes = () => {
         }
       />
       <Route
-        path="/mathematics"
+        path="/subjects"
         element={
           <ProtectedRoute allowedRoles={['Student', 'Instructor', 'Moderator']}>
-            <Mathematics />
+            <Subject />
           </ProtectedRoute>
         }
       />
@@ -60,12 +60,12 @@ const MyRoutes = () => {
         path="/subjects/:subjectId"
         element={
           <ProtectedRoute allowedRoles={['Student', 'Instructor', 'Moderator']}>
-            <Mathematics />
+            <Subject />
           </ProtectedRoute>
         }
       />
       <Route
-        path="/mathematics/chapter/:chapterId"
+        path="/subjects/:subjectId/chapter/:chapterId"
         element={
           <ProtectedRoute allowedRoles={['Student', 'Instructor', 'Moderator']}>
             <Chapter />
@@ -73,7 +73,7 @@ const MyRoutes = () => {
         }
       />
       <Route
-        path="/mathematics/chapter/:chapterId/lesson/:lessonId"
+        path="/subjects/:subjectId/chapter/:chapterId/lesson/:lessonId"
         element={
           <ProtectedRoute allowedRoles={['Student', 'Instructor', 'Moderator']}>
             <LessonContent />
@@ -81,7 +81,7 @@ const MyRoutes = () => {
         }
       />
       <Route
-        path="/mathematics/chapter/:chapterId/quiz"
+        path="/subjects/:subjectId/chapter/:chapterId/quiz"
         element={
           <ProtectedRoute allowedRoles={['Student', 'Instructor', 'Moderator']}>
             <Quiz />

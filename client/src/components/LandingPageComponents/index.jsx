@@ -9,7 +9,6 @@ import {
   CheckCircle as CheckCircleLucide,
 } from "lucide-react";
 
-// --- Lucide wrappers matching your old exports --- //
 export const BookOpenIcon = ({ className = "icon-teal", size = 48, strokeWidth = 1 }) => (
   <BookOpen className={className} size={size} strokeWidth={strokeWidth} />
 );

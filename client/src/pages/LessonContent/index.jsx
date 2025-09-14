@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './LessonContent.css';
 import Navbar from '../../components/shared/Navbar/Navbar';
+import API from '../../services/axios';
 
 const LessonContent = () => {
   const navigate = useNavigate();
@@ -14,12 +15,8 @@ const LessonContent = () => {
   useEffect(() => {
     const fetchLesson = async () => {
       try {
-        const token = JSON.parse(localStorage.getItem('user') || '{}').token;
-        const res = await fetch(`http://127.0.0.1:8002/api/v0.1/lessons/${lessonId}`, {
-          headers: { Authorization: token ? `Bearer ${token}` : '' },
-        });
-        if (!res.ok) throw new Error('Failed to load lesson');
-        const data = await res.json();
+        const res = await API.get(`/lessons/${lessonId}`);
+        const data = res.data;
 
         setLesson({ title: data.title, content: data.content, chapter: data.chapter_id });
         setPersonalized(data.personalized_lesson);
@@ -34,7 +31,7 @@ const LessonContent = () => {
   }, [lessonId]);
 
   const handleHome = () => {
-    navigate(`/mathematics/chapter/${chapterId}`);
+    navigate(`/subjects/chapter/${chapterId}`);
   };
 
   if (loading) {
@@ -54,7 +51,7 @@ const LessonContent = () => {
         {/* Lesson Header */}
         <div className="lesson-header">
           <div className="lesson-breadcrumb">
-            <span className="breadcrumb-item">{subject || 'Mathematics'}</span>
+            <span className="breadcrumb-item">{subject || 'Subject'}</span>
             <span className="breadcrumb-separator">›</span>
             <span className="breadcrumb-item">{lesson?.chapter || 'Chapter'}</span>
             <span className="breadcrumb-separator">›</span>

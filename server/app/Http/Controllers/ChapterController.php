@@ -89,7 +89,9 @@ class ChapterController extends Controller
      */
     public function forSubject(Request $request, $subjectId)
     {
+        // include lessons_count so frontend can show lesson numbers without extra requests
         $chapters = Chapter::where('subject_id', $subjectId)
+            ->withCount('lessons')
             ->orderBy('order')
             ->get()
             ->map(function ($chapter) {
@@ -97,6 +99,7 @@ class ChapterController extends Controller
                     'id' => $chapter->id,
                     'title' => $chapter->title,
                     'order' => $chapter->order,
+                    'lessons_count' => $chapter->lessons_count,
                 ];
             });
 

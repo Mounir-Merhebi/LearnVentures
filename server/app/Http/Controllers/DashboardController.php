@@ -56,6 +56,7 @@ class DashboardController extends Controller
             return [
                 'id' => $subject->id,
                 'name' => $subject->title,
+                'description' => $subject->description ?? null,
                 'chapters' => "$totalLessonsInSubject chapters",
                 'progress' => $progressPercent,
             ];

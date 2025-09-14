@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/shared/Navbar';
 import './AIChat.css';
 import { ArrowLeft, Send, Mic, MicOff } from 'lucide-react';
+import API from '../../services/axios';
+import axios from 'axios';
 
 const AIChat = () => {
   const navigate = useNavigate();
@@ -77,44 +79,20 @@ const AIChat = () => {
 
     try {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      const token = localStorage.getItem('token') || user.token || '';
-      const API_BASE = process.env.REACT_APP_API_BASE || 'http://127.0.0.1:8000';
 
       // Ensure we have a chat session for this user/grade
       let sessionId = localStorage.getItem('chat_session_id');
       if (!sessionId) {
         const gradeId = user.grade_id || 2; // default fallback
-        const sessionRes = await fetch(`${API_BASE}/api/v0.1/chat/sessions`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {})
-          },
-          body: JSON.stringify({ grade_id: gradeId })
-        });
-
-        if (!sessionRes.ok) throw new Error('Failed to create chat session');
-        const sessionData = await sessionRes.json();
+        const sessionRes = await API.post('/chat/sessions', { grade_id: gradeId });
+        const sessionData = sessionRes.data;
         sessionId = sessionData?.data?.session_id;
         if (sessionId) localStorage.setItem('chat_session_id', sessionId);
       }
 
       // Send message to backend chat API
-      const msgRes = await fetch(`${API_BASE}/api/v0.1/chat/messages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {})
-        },
-        body: JSON.stringify({ session_id: Number(sessionId), message: userMessage.content })
-      });
-
-      if (!msgRes.ok) {
-        const txt = await msgRes.text();
-        console.error('Chat API error', msgRes.status, txt);
-        throw new Error('Chat API error');
-      }
-      const msgData = await msgRes.json();
+      const msgRes = await API.post('/chat/messages', { session_id: Number(sessionId), message: userMessage.content });
+      const msgData = msgRes.data;
       const aiText = msgData?.data?.response || "I'm sorry, I couldn't get an answer right now.";
 
       setMessages(prev => [...prev, {
@@ -190,17 +168,10 @@ const AIChat = () => {
       const form = new FormData();
       form.append('audio', blob, 'recording.webm');
 
-      const res = await fetch(`${API_BASE}/transcribe`, {
-        method: 'POST',
-        body: form,
+      const res = await axios.post(`${API_BASE}/transcribe`, form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-
-      if (!res.ok) {
-        const txt = await res.text().catch(() => '');
-        console.error('STT service error', res.status, txt);
-        throw new Error('STT service error');
-      }
-      const data = await res.json();
+      const data = res.data;
       const text = data.text || data.transcription || '';
       if (text.trim()) {
         // append transcription to existing input instead of replacing and do NOT auto-send

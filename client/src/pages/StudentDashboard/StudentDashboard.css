@@ -195,6 +195,17 @@
   margin-top: 16px;
 }
 
+.subject-description {
+  text-align: center;
+  color: #6B7280;
+  margin: 12px 0; /* equal space above and below */
+  font-size: 0.95rem;
+  line-height: 1.4;
+  max-height: 2.8rem; /* roughly two lines */
+  overflow: hidden;
+  display: block;
+}
+
 .progress-info {
   display: flex;
   justify-content: space-between;

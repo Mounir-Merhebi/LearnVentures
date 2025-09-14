@@ -1,0 +1,18 @@
+C:\Users\(TECH MART)\Desktop\LearnVentures\stt_server\stt-service\.venv\Lib\site-packages\ctranslate2\__init__.py:8: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+INFO:     Started server process [5628]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:6060 (Press CTRL+C to quit)
+INFO:faster_whisper:Processing audio with duration 00:02.460
+INFO:faster_whisper:VAD filter removed 00:02.460 of audio
+INFO:faster_whisper:Detected language 'en' with probability 0.62
+INFO:faster_whisper:Processing audio with duration 00:05.760
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Detected language 'en' with probability 0.78
+INFO:faster_whisper:Processing audio with duration 00:02.820
+INFO:faster_whisper:VAD filter removed 00:02.820 of audio
+INFO:faster_whisper:Detected language 'en' with probability 0.62
+INFO:faster_whisper:Processing audio with duration 00:02.700
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Detected language 'en' with probability 0.85

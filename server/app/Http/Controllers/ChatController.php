@@ -102,6 +102,7 @@ class ChatController extends Controller
         // Save user message
         $userChatMessage = ChatMessage::create([
             'session_id' => $sessionId,
+            'user_id' => $user->id,
             'role' => 'user',
             'content' => $userMessage,
         ]);

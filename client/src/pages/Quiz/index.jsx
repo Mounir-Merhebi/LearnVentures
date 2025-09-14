@@ -9,7 +9,7 @@ const Quiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
-  const [quizStarted, setQuizStarted] = useState(true);
+  const [quizStarted] = useState(true);
   const [showReview, setShowReview] = useState(false);
 
   // Mock quiz data
@@ -153,7 +153,7 @@ const Quiz = () => {
 
   // Handle navigation
   const handleHome = () => {
-    navigate(`/mathematics/chapter/${chapterId}`);
+    navigate(`/subjects/chapter/${chapterId}`);
   };
 
   // Render quiz review

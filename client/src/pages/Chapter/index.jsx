@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './Chapter.css';
 import Navbar from '../../components/shared/Navbar/Navbar';
+import API from '../../services/axios';
 import {
   ArrowLeft,
   Play,
@@ -17,7 +18,9 @@ import {
 
 const Chapter = () => {
   const navigate = useNavigate();
-  const { chapterId } = useParams();
+  const { subjectId, chapterId } = useParams();
+
+  const [subjectName, setSubjectName] = React.useState(null);
 
   const [chapterData, setChapterData] = React.useState({
     chapterTitle: '',
@@ -31,12 +34,8 @@ const Chapter = () => {
   React.useEffect(() => {
     const fetchChapter = async () => {
       try {
-        const token = JSON.parse(localStorage.getItem('user') || '{}').token;
-        const res = await fetch(`http://127.0.0.1:8002/api/v0.1/chapters/${chapterId}`, {
-          headers: { Authorization: token ? `Bearer ${token}` : '' },
-        });
-        if (!res.ok) throw new Error('Failed to load chapter');
-        const data = await res.json();
+        const res = await API.get(`/chapters/${chapterId}`);
+        const data = res.data;
 
         // Convert lessons into a single topic for now
         const topic = {
@@ -65,18 +64,32 @@ const Chapter = () => {
     };
 
     fetchChapter();
-  }, [chapterId]);
+    // fetch subject name for breadcrumb/back link
+    const fetchSubject = async () => {
+      if (!subjectId) return;
+      try {
+        const res = await API.get(`/subjects/${subjectId}`);
+        const data = res.data || {};
+        const name = data.subject_name || data.name || data.title;
+        setSubjectName(name || `Subject ${subjectId}`);
+      } catch (err) {
+        console.warn('Failed to fetch subject name', err);
+      }
+    };
+
+    fetchSubject();
+  }, [chapterId, subjectId]);
 
   const handleBackToMathematics = () => {
-    navigate('/mathematics');
+    navigate(`/subjects/${subjectId}`);
   };
 
   const handleLessonClick = (lesson) => {
-    navigate(`/mathematics/chapter/${chapterId}/lesson/${lesson.id}`);
+    navigate(`/subjects/${subjectId}/chapter/${chapterId}/lesson/${lesson.id}`);
   };
 
   const handleQuizClick = () => {
-    navigate(`/mathematics/chapter/${chapterId}/quiz`);
+    navigate(`/subjects/${subjectId}/chapter/${chapterId}/quiz`);
   };
 
   return (
@@ -87,7 +100,7 @@ const Chapter = () => {
         {/* Back Button */}
         <button className="back-button" onClick={handleBackToMathematics}>
           <ArrowLeft className="back-arrow" size={18} />
-          Back to Mathematics
+          {subjectName ? `Back to ${subjectName}` : 'Back to Subjects'}
         </button>
 
         {/* Chapter Header */}

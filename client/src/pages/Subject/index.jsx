@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import './Mathematics.css';
+import './Subject.css';
 import Navbar from '../../components/shared/Navbar/Navbar';
 import API from '../../services/axios';
 
-const Mathematics = () => {
+const Subject = () => {
   const navigate = useNavigate();
 
   const { subjectId } = useParams();
@@ -21,25 +21,60 @@ const Mathematics = () => {
     const fetchChapters = async () => {
       if (!subjectId) return;
       try {
+        // fetch subject metadata first to display the proper name as soon as possible
+        let subjectName = null;
+        try {
+          const metaRes = await API.get(`/subjects/${subjectId}`);
+          const meta = metaRes.data || {};
+          subjectName = meta.subject_name || meta.name || meta.title || null;
+        } catch (metaErr) {
+          // ignore meta fetch error and continue to chapters
+        }
+
         const res = await API.get(`/subjects/${subjectId}/chapters`);
         const data = res.data || {};
+        // try to get subject name from chapters response if available
+        subjectName = subjectName || data.subject_name || (data.subject && (data.subject.name || data.subject.title)) || data.name || data.title;
         const chapters = (data.chapters || []).map((c, idx) => ({
           id: c.id,
           title: c.title,
-          chapterNumber: c.order ?? idx + 1,
+          chapterNumber: c.order ?? c.chapter_number ?? idx + 1,
           isCompleted: false,
-          thumbnail: '/images/math-video-thumbnail.jpg',
-          duration: null,
-          lessons: 0,
+          thumbnail: c.thumbnail || '/images/math-video-thumbnail.jpg',
+          duration: c.duration ?? null,
+          // prefer lessons array length, fall back to lessons_count fields
+          lessons: Array.isArray(c.lessons) ? c.lessons.length : (c.lessons_count ?? c.lessonsCount ?? 0),
         }));
 
         setSubjectData({
-          subject: data.subject_name ?? `Subject ${subjectId}`,
+          subject: subjectName ?? `Subject ${subjectId}`,
           icon: '📐',
           totalChapters: chapters.length,
           completedChapters: chapters.filter(ch => ch.isCompleted).length,
           chapters,
         });
+
+        // If API didn't include lesson counts, fetch per-chapter details for missing counts
+        const chaptersMissingCounts = chapters.filter(ch => !ch.lessons || ch.lessons === 0);
+        if (chaptersMissingCounts.length > 0) {
+          try {
+            const counts = await Promise.all(chaptersMissingCounts.map(async (ch) => {
+              const r = await API.get(`/chapters/${ch.id}`);
+              const d = r.data || {};
+              return { id: ch.id, lessons: Array.isArray(d.lessons) ? d.lessons.length : (d.lessons_count ?? d.lessonsCount ?? 0) };
+            }));
+
+            setSubjectData(prev => ({
+              ...prev,
+              chapters: prev.chapters.map(ch => {
+                const found = counts.find(c => c.id === ch.id);
+                return found ? { ...ch, lessons: found.lessons } : ch;
+              }),
+            }));
+          } catch (err) {
+            console.warn('Failed to fetch per-chapter lesson counts', err);
+          }
+        }
       } catch (err) {
         console.error('Failed to fetch chapters for subject', err);
       }
@@ -53,17 +88,17 @@ const Mathematics = () => {
   };
 
   const handleChapterClick = (chapter) => {
-    // Navigate to specific chapter
-    navigate(`/mathematics/chapter/${chapter.id}`);
+    // Navigate to specific chapter within this subject
+    navigate(`/subjects/${subjectId}/chapter/${chapter.id}`);
   };
 
   return (
-    <div className="mathematics-page">
+    <div className="subject-page">
       <Navbar />
       
-      <div className="mathematics-container">
+      <div className="subject-container">
         {/* Header Section */}
-        <div className="mathematics-header">
+        <div className="subject-header">
           <button 
             className="back-button"
             onClick={handleBackToDashboard}
@@ -94,10 +129,12 @@ const Mathematics = () => {
               >
                 {/* Video Thumbnail */}
                 <div className="chapter-thumbnail">
-                  <div className="video-placeholder">
-                    <div className="play-button">▶</div>
-                  </div>
-                  <div className="chapter-badge">
+                  <img className="chapter-image" src={chapter.thumbnail} alt={chapter.title} />
+                </div>
+
+                {/* Chapter Info */}
+                <div className="chapter-info">
+                  <div className="chapter-meta-top">
                     <span className={`chapter-status ${chapter.isCompleted ? 'completed' : 'pending'}`}>
                       CHAPTER {chapter.chapterNumber}
                     </span>
@@ -105,10 +142,7 @@ const Mathematics = () => {
                       {chapter.isCompleted ? 'COMPLETED' : 'PENDING'}
                     </span>
                   </div>
-                </div>
 
-                {/* Chapter Info */}
-                <div className="chapter-info">
                   <h3 className="chapter-title">{chapter.title}</h3>
                   <div className="chapter-meta">
                     <span className="chapter-duration">{chapter.duration}</span>
@@ -137,4 +171,6 @@ const Mathematics = () => {
   );
 };
 
-export default Mathematics;
+export default Subject;
+
+
