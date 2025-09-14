@@ -8,6 +8,7 @@ use App\Http\Controllers\ModeratorExcelController;
 use App\Http\Controllers\AdminChangeProposalController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DailyChatReportController;
+use App\Http\Controllers\QuizController;
 
 Route::group(["prefix" =>"v0.1"], function(){
     // Guest routes (no auth required)
@@ -50,6 +51,15 @@ Route::group(["prefix" =>"v0.1"], function(){
         Route::get('/lessons/{id}', [\App\Http\Controllers\LessonController::class, 'show']);
         Route::get('/subjects/{id}/chapters', [\App\Http\Controllers\ChapterController::class, 'forSubject']);
         Route::get('/subjects/{id}', [\App\Http\Controllers\SubjectController::class, 'show']);
+
+        // Quiz endpoints
+        Route::group(["prefix" => "quiz"], function(){
+            Route::get('/lesson/{lessonId}', [QuizController::class, 'getByLesson']);
+            Route::post('/{quizId}/start', [QuizController::class, 'startQuiz']);
+            Route::post('/{quizId}/submit', [QuizController::class, 'submitQuiz']);
+            Route::get('/attempt/{attemptId}', [QuizController::class, 'getResults']);
+            Route::get('/attempts', [QuizController::class, 'getUserAttempts']);
+        });
 
         // Quiz performance analysis endpoints
         Route::post('/quiz/analyze-performance', [AIAgentController::class, 'analyzeQuizPerformance']);
