@@ -356,7 +356,7 @@ class AIAgentController extends Controller
             // Store the feedback
             $feedback = PostQuizFeedback::create([
                 'student_quiz_id' => $studentQuizId,
-                'lesson_id' => $studentQuiz->quiz->lesson_id,
+                'chapter_id' => $studentQuiz->quiz->chapter_id,
                 'overall_performance' => $result['data']['overall_performance'],
                 'weak_areas' => $result['data']['weak_areas'],
                 'recommendations' => $result['data']['recommendations'],
@@ -464,7 +464,7 @@ class AIAgentController extends Controller
                 ->whereHas('studentQuiz', function ($query) use ($user) {
                     $query->where('user_id', $user->id);
                 })
-                ->with(['studentQuiz.quiz', 'lesson'])
+                ->with(['studentQuiz.quiz', 'chapter'])
                 ->first();
 
             if (!$feedback) {

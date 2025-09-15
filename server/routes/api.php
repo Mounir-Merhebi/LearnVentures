@@ -79,12 +79,15 @@ Route::group(["prefix" =>"v0.1"], function(){
 
         // Admin routes
         Route::group(["prefix" => "admin", "middleware" => function ($request, $next) {
-            if (auth()->user()->role !== 'Admin') {
+            $user = auth()->user();
+            if (!$user || $user->role !== 'Admin') {
                 return response()->json(['message' => 'Access denied'], 403);
             }
             return $next($request);
         }], function(){
             // Content management routes
+            Route::get('/grades', [\App\Http\Controllers\AdminContentController::class, 'getGrades']);
+            Route::get('/instructors', [\App\Http\Controllers\AdminContentController::class, 'getInstructors']);
             Route::group(["prefix" => "content"], function(){
                 // Subjects
                 Route::get('/subjects', [\App\Http\Controllers\AdminContentController::class, 'getSubjects']);

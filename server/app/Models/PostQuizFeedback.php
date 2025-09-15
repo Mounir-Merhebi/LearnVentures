@@ -11,7 +11,7 @@ class PostQuizFeedback extends Model
 
     protected $fillable = [
         'student_quiz_id',
-        'lesson_id',
+        'chapter_id',
         'overall_performance',
         'weak_areas',
         'recommendations',
@@ -34,8 +34,8 @@ class PostQuizFeedback extends Model
         return $this->belongsTo(StudentQuiz::class, 'student_quiz_id');
     }
 
-    public function lesson()
+    public function chapter()
     {
-        return $this->belongsTo(Lesson::class, 'lesson_id');
+        return $this->belongsTo(Chapter::class, 'chapter_id');
     }
 }

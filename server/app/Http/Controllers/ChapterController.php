@@ -35,21 +35,22 @@ class ChapterController extends Controller
             $personalizedMap = $personalized;
         }
 
-        $lessons = $chapter->lessons->map(function ($lesson) use ($userId, $personalizedMap) {
+        $lessons = $chapter->lessons->map(function ($lesson) use ($userId, $personalizedMap, $chapter) {
             // determine type roughly from content
             $type = 'lesson';
             if (!empty($lesson->content) && (stripos($lesson->content, '<iframe') !== false || stripos($lesson->content, '<video') !== false)) {
                 $type = 'video';
             }
 
-            // check if user completed any quiz associated with this lesson
+            // check if user completed the chapter quiz (quizzes are now per chapter, not per lesson)
             $completed = false;
             if ($userId) {
-                $quizIds = Quiz::where('lesson_id', $lesson->id)->pluck('id');
-                if ($quizIds->isNotEmpty()) {
+                // Check if there's a completed quiz for this chapter
+                $quiz = Quiz::where('chapter_id', $chapter->id)->first();
+                if ($quiz) {
                     $completed = StudentQuiz::where('user_id', $userId)
+                        ->where('quiz_id', $quiz->id)
                         ->whereNotNull('completed_at')
-                        ->whereIn('quiz_id', $quizIds)
                         ->exists();
                 }
             }

@@ -7,6 +7,8 @@ use App\Models\Chapter;
 use App\Models\Lesson;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
+use App\Models\Grade;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +17,56 @@ use Illuminate\Support\Facades\DB;
 
 class AdminContentController extends Controller
 {
+    /**
+     * Get all grades
+     */
+    public function getGrades(): JsonResponse
+    {
+        try {
+            if (Auth::user()->role !== 'Admin') {
+                return response()->json(['message' => 'Access denied'], 403);
+            }
+
+            $grades = Grade::all();
+
+            return response()->json([
+                'success' => true,
+                'data' => $grades
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch grades',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get all instructors
+     */
+    public function getInstructors(): JsonResponse
+    {
+        try {
+            if (Auth::user()->role !== 'Admin') {
+                return response()->json(['message' => 'Access denied'], 403);
+            }
+
+            $instructors = User::where('role', 'Instructor')->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $instructors
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch instructors',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     /**
      * Get all subjects with their chapters and lessons
      */
@@ -51,6 +103,8 @@ class AdminContentController extends Controller
             }
 
             $validator = Validator::make($request->all(), [
+                'grade_id' => 'required|exists:grades,id',
+                'instructor_id' => 'required|exists:users,id',
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string'
             ]);
@@ -64,6 +118,8 @@ class AdminContentController extends Controller
             }
 
             $subject = Subject::create([
+                'grade_id' => $request->grade_id,
+                'instructor_id' => $request->instructor_id,
                 'title' => $request->title,
                 'description' => $request->description
             ]);
@@ -327,11 +383,21 @@ class AdminContentController extends Controller
                 ], 400);
             }
 
+            // Get the chapter to find the subject's instructor
+            $chapter = Chapter::with('subject')->find($request->chapter_id);
+            if (!$chapter || !$chapter->subject) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Chapter or subject not found'
+                ], 404);
+            }
+
             $lesson = Lesson::create([
                 'chapter_id' => $request->chapter_id,
+                'instructor_id' => $chapter->subject->instructor_id,
                 'title' => $request->title,
                 'content' => $request->content,
-                'concept_slug' => $request->concept_slug
+                'concept_slugs' => $request->concept_slug ? json_encode([$request->concept_slug]) : null
             ]);
 
             return response()->json([

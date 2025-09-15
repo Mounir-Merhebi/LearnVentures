@@ -19,6 +19,8 @@ import {
 const AdminContentManagement = () => {
   const navigate = useNavigate();
   const [subjects, setSubjects] = useState([]);
+  const [grades, setGrades] = useState([]);
+  const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedSubjects, setExpandedSubjects] = useState(new Set());
@@ -41,7 +43,7 @@ const AdminContentManagement = () => {
   });
 
   // Form states
-  const [subjectForm, setSubjectForm] = useState({ title: '', description: '' });
+  const [subjectForm, setSubjectForm] = useState({ grade_id: '', instructor_id: '', title: '', description: '' });
   const [chapterForm, setChapterForm] = useState({ subject_id: '', title: '', description: '', cover_photo: '' });
   const [lessonForm, setLessonForm] = useState({ chapter_id: '', title: '', content: '', concept_slug: '' });
   const [quizForm, setQuizForm] = useState({
@@ -52,23 +54,38 @@ const AdminContentManagement = () => {
   });
 
   useEffect(() => {
-    fetchSubjects();
+    fetchInitialData();
   }, []);
 
-  const fetchSubjects = async () => {
+  const fetchInitialData = async () => {
     try {
       setLoading(true);
-      const response = await API.get('/admin/content/subjects');
-      if (response.data.success) {
-        setSubjects(response.data.data);
+      // Fetch subjects, grades, and instructors in parallel
+      const [subjectsResponse, gradesResponse, instructorsResponse] = await Promise.all([
+        API.get('/admin/content/subjects'),
+        API.get('/admin/grades'),
+        API.get('/admin/instructors')
+      ]);
+
+      if (subjectsResponse.data.success) {
+        setSubjects(subjectsResponse.data.data);
+      }
+
+      if (gradesResponse.data.success) {
+        setGrades(gradesResponse.data.data);
+      }
+
+      if (instructorsResponse.data.success) {
+        setInstructors(instructorsResponse.data.data);
       }
     } catch (err) {
       setError('Failed to fetch content');
-      console.error('Error fetching subjects:', err);
+      console.error('Error fetching data:', err);
     } finally {
       setLoading(false);
     }
   };
+
 
   // Subject operations
   const handleCreateSubject = async () => {
@@ -77,7 +94,7 @@ const AdminContentManagement = () => {
       if (response.data.success) {
         setSubjects([...subjects, response.data.data]);
         setShowSubjectModal(false);
-        setSubjectForm({ title: '', description: '' });
+        setSubjectForm({ grade_id: '', instructor_id: '', title: '', description: '' });
       }
     } catch (err) {
       console.error('Error creating subject:', err);
@@ -91,7 +108,7 @@ const AdminContentManagement = () => {
         setSubjects(subjects.map(s => s.id === editingItem.id ? response.data.data : s));
         setShowSubjectModal(false);
         setEditingItem(null);
-        setSubjectForm({ title: '', description: '' });
+        setSubjectForm({ grade_id: '', instructor_id: '', title: '', description: '' });
       }
     } catch (err) {
       console.error('Error updating subject:', err);
@@ -271,10 +288,15 @@ const AdminContentManagement = () => {
   const openSubjectModal = (subject = null) => {
     if (subject) {
       setEditingItem(subject);
-      setSubjectForm({ title: subject.title, description: subject.description || '' });
+      setSubjectForm({
+        grade_id: subject.grade_id || '',
+        instructor_id: subject.instructor_id || '',
+        title: subject.title,
+        description: subject.description || ''
+      });
     } else {
       setEditingItem(null);
-      setSubjectForm({ title: '', description: '' });
+      setSubjectForm({ grade_id: '', instructor_id: '', title: '', description: '' });
     }
     setShowSubjectModal(true);
   };
@@ -497,6 +519,32 @@ const AdminContentManagement = () => {
           <div className="modal-overlay">
             <div className="modal">
               <h3>{editingItem ? 'Edit Subject' : 'Add Subject'}</h3>
+              <div className="form-group">
+                <label>Grade</label>
+                <select
+                  value={subjectForm.grade_id}
+                  onChange={(e) => setSubjectForm({ ...subjectForm, grade_id: e.target.value })}
+                  disabled={editingItem} // Don't allow changing grade when editing
+                >
+                  <option value="">Select a grade</option>
+                  {grades.map(grade => (
+                    <option key={grade.id} value={grade.id}>{grade.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Instructor</label>
+                <select
+                  value={subjectForm.instructor_id}
+                  onChange={(e) => setSubjectForm({ ...subjectForm, instructor_id: e.target.value })}
+                  disabled={editingItem} // Don't allow changing instructor when editing
+                >
+                  <option value="">Select an instructor</option>
+                  {instructors.map(instructor => (
+                    <option key={instructor.id} value={instructor.id}>{instructor.name}</option>
+                  ))}
+                </select>
+              </div>
               <div className="form-group">
                 <label>Title</label>
                 <input

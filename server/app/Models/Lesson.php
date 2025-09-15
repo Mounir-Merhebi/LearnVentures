@@ -16,6 +16,7 @@ class Lesson extends Model
         'content',
         'order',
         'version',
+        'concept_slugs',
     ];
 
     // Relationships

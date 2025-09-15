@@ -46,60 +46,95 @@
 }
 
 .confirmation-footer {
-  padding: 16px 24px 20px;
+  padding: 20px 24px 24px;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
   border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
 }
 
 .btn {
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: none;
+  border: 2px solid transparent;
   font-size: 0.9rem;
+  min-width: 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.btn:active::before {
+  width: 300px;
+  height: 300px;
 }
 
 .btn-secondary {
-  background: #f3f4f6;
-  color: #374151;
-  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #6b7280;
+  border-color: #d1d5db;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .btn-secondary:hover {
-  background: #e5e7eb;
+  background: #f9fafb;
   border-color: #9ca3af;
+  color: #374151;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
 .btn-danger {
-  background: #dc2626;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
 }
 
 .btn-danger:hover {
-  background: #b91c1c;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(239, 68, 68, 0.4);
 }
 
 .btn-primary {
-  background: #10B981;
+  background: linear-gradient(135deg, #10B981, #059669);
   color: white;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
 }
 
 .btn-primary:hover {
-  background: #059669;
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(16, 185, 129, 0.4);
 }
 
 .btn:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 /* Animations */
