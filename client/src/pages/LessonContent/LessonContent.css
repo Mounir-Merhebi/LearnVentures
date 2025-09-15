@@ -7,6 +7,7 @@
 }
 
 .lesson-container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -14,10 +15,13 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 /* Lesson Header */
 .lesson-header {
+  width: 100%;
+  max-width: 800px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -54,13 +58,15 @@
 
 /* Main Content Area */
 .lesson-main-content {
-  flex: 1;
+  width: 100%;
+  max-width: 800px;
   background: white;
   border-radius: 12px;
   padding: 32px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   margin-bottom: 24px;
   min-height: 500px;
+  align-self: center;
 }
 
 /* Observation Content */
@@ -197,6 +203,8 @@
 
 /* Bottom Navigation */
 .lesson-navigation {
+  width: 100%;
+  max-width: 800px;
   background: #10B981;
   border-radius: 12px;
   padding: 16px 24px;
@@ -256,6 +264,28 @@
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.prev-button {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.prev-button:hover:not(:disabled) {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.next-button {
+  background: #10B981;
+  color: white;
+  border: 1px solid #10B981;
+}
+
+.next-button:hover:not(:disabled) {
+  background: #059669;
+  transform: translateY(-1px);
 }
 
 .home-button:hover {
@@ -327,11 +357,13 @@
   .nav-controls {
     width: 100%;
     justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
   }
 
   .nav-button {
-    flex: 1;
-    max-width: 80px;
+    flex: 0 0 auto;
+    min-width: 80px;
   }
 }
 

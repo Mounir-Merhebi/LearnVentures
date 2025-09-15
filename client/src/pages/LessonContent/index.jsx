@@ -11,15 +11,31 @@ const LessonContent = () => {
   const [lesson, setLesson] = useState(null);
   const [personalized, setPersonalized] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [chapterLessons, setChapterLessons] = useState([]);
+  const [currentLessonIndex, setCurrentLessonIndex] = useState(-1);
 
   useEffect(() => {
     const fetchLesson = async () => {
       try {
-        const res = await API.get(`/lessons/${lessonId}`);
-        const data = res.data;
+        // Fetch current lesson
+        const lessonRes = await API.get(`/lessons/${lessonId}`);
+        const lessonData = lessonRes.data;
 
-        setLesson({ title: data.title, content: data.content, chapter: data.chapter_id });
-        setPersonalized(data.personalized_lesson);
+        setLesson({ title: lessonData.title, content: lessonData.content, chapter: lessonData.chapter_id });
+        setPersonalized(lessonData.personalized_lesson);
+
+        // Fetch all lessons for this chapter to enable navigation
+        const chapterRes = await API.get(`/chapters/${chapterId}`);
+        const chapterData = chapterRes.data;
+
+        if (chapterData.lessons && chapterData.lessons.length > 0) {
+          const sortedLessons = chapterData.lessons.sort((a, b) => a.order - b.order);
+          setChapterLessons(sortedLessons);
+
+          // Find current lesson index
+          const currentIndex = sortedLessons.findIndex(lesson => lesson.id === parseInt(lessonId));
+          setCurrentLessonIndex(currentIndex);
+        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -28,10 +44,24 @@ const LessonContent = () => {
     };
 
     fetchLesson();
-  }, [lessonId]);
+  }, [lessonId, chapterId]);
 
   const handleHome = () => {
     navigate(`/subjects/chapter/${chapterId}`);
+  };
+
+  const handlePreviousLesson = () => {
+    if (currentLessonIndex > 0) {
+      const prevLesson = chapterLessons[currentLessonIndex - 1];
+      navigate(`/subjects/${subject}/chapter/${chapterId}/lesson/${prevLesson.id}`);
+    }
+  };
+
+  const handleNextLesson = () => {
+    if (currentLessonIndex < chapterLessons.length - 1) {
+      const nextLesson = chapterLessons[currentLessonIndex + 1];
+      navigate(`/subjects/${subject}/chapter/${chapterId}/lesson/${nextLesson.id}`);
+    }
   };
 
   if (loading) {
@@ -87,11 +117,25 @@ const LessonContent = () => {
         {/* Bottom Navigation */}
         <div className="lesson-navigation">
           <div className="nav-controls">
-            <button 
+            <button
               className="nav-button home-button"
               onClick={handleHome}
             >
               Home
+            </button>
+            <button
+              className="nav-button prev-button"
+              onClick={handlePreviousLesson}
+              disabled={currentLessonIndex <= 0}
+            >
+              ← Previous
+            </button>
+            <button
+              className="nav-button next-button"
+              onClick={handleNextLesson}
+              disabled={currentLessonIndex < 0 || currentLessonIndex >= chapterLessons.length - 1}
+            >
+              Next →
             </button>
           </div>
         </div>
