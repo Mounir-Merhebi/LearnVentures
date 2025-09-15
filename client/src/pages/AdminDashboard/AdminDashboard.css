@@ -4,6 +4,47 @@
   padding: 20px;
 }
 
+.admin-navigation {
+  background: white;
+  border-radius: 8px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-section {
+  display: flex;
+  gap: 16px;
+}
+
+.nav-btn {
+  padding: 10px 20px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  color: #6b7280;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #374151;
+}
+
+.nav-btn.active {
+  background: #10B981;
+  border-color: #10B981;
+  color: white;
+}
+
+.nav-btn.active:hover {
+  background: #059669;
+  border-color: #059669;
+}
+
 .dashboard-header {
   text-align: center;
   margin-bottom: 30px;

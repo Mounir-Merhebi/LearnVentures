@@ -47,7 +47,7 @@ const LessonContent = () => {
   }, [lessonId, chapterId]);
 
   const handleHome = () => {
-    navigate(`/subjects/chapter/${chapterId}`);
+    navigate(`/subjects/${subject}/chapter/${chapterId}`);
   };
 
   const handlePreviousLesson = () => {

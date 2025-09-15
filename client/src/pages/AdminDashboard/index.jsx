@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [selectedProposal, setSelectedProposal] = useState(null);
   const [filterStatus, setFilterStatus] = useState('pending');
 
@@ -238,6 +240,23 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
+      <div className="admin-navigation">
+        <div className="nav-section">
+          <button
+            className={`nav-btn ${window.location.pathname === '/admin/dashboard' ? 'active' : ''}`}
+            onClick={() => navigate('/admin/dashboard')}
+          >
+            Excel Moderation
+          </button>
+          <button
+            className={`nav-btn ${window.location.pathname === '/admin/content' ? 'active' : ''}`}
+            onClick={() => navigate('/admin/content')}
+          >
+            Content Management
+          </button>
+        </div>
+      </div>
+
       <div className="dashboard-header">
         <h1>Excel Moderation Dashboard</h1>
         <p>Review and manage bulk data change proposals</p>

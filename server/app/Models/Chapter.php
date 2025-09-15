@@ -27,4 +27,9 @@ class Chapter extends Model
     {
         return $this->hasMany(Lesson::class, 'chapter_id');
     }
+
+    public function quiz()
+    {
+        return $this->hasOne(Quiz::class, 'chapter_id');
+    }
 }

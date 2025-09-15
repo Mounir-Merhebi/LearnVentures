@@ -16,3 +16,15 @@ INFO:faster_whisper:Detected language 'en' with probability 0.62
 INFO:faster_whisper:Processing audio with duration 00:02.100
 INFO:faster_whisper:VAD filter removed 00:00.016 of audio
 INFO:faster_whisper:Detected language 'en' with probability 0.93
+INFO:faster_whisper:Processing audio with duration 00:05.340
+INFO:faster_whisper:VAD filter removed 00:00.112 of audio
+INFO:faster_whisper:Detected language 'en' with probability 0.78
+INFO:faster_whisper:Processing audio with duration 00:01.140
+INFO:faster_whisper:VAD filter removed 00:00.016 of audio
+INFO:faster_whisper:Detected language 'en' with probability 0.76
+INFO:faster_whisper:Processing audio with duration 00:02.220
+INFO:faster_whisper:VAD filter removed 00:00.000 of audio
+INFO:faster_whisper:Detected language 'en' with probability 0.77
+INFO:faster_whisper:Processing audio with duration 00:03.780
+INFO:faster_whisper:VAD filter removed 00:00.048 of audio
+INFO:faster_whisper:Detected language 'en' with probability 0.79

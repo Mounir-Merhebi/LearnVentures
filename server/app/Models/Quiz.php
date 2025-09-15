@@ -10,16 +10,16 @@ class Quiz extends Model
     use HasFactory;
 
     protected $fillable = [
-        'lesson_id',
+        'chapter_id',
         'title',
         'question_count',
         'time_limit_seconds',
     ];
 
     // Relationships
-    public function lesson()
+    public function chapter()
     {
-        return $this->belongsTo(Lesson::class, 'lesson_id');
+        return $this->belongsTo(Chapter::class, 'chapter_id');
     }
 
     public function questions()

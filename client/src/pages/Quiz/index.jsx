@@ -24,20 +24,8 @@ const Quiz = () => {
       setLoading(true);
       setError(null);
 
-      // First, get chapter data to find the lesson ID
-      const chapterResponse = await API.get(`/chapters/${chapterId}`);
-      const chapterData = chapterResponse.data;
-
-      if (!chapterData.lessons || chapterData.lessons.length === 0) {
-        setError('No lessons found for this chapter');
-        return;
-      }
-
-      // Use the first lesson to get the quiz
-      const lessonId = chapterData.lessons[0].id;
-
-      // Fetch quiz data
-      const quizResponse = await API.get(`/quiz/lesson/${lessonId}`);
+      // Fetch quiz data directly by chapter ID
+      const quizResponse = await API.get(`/quiz/chapter/${chapterId}`);
 
       if (!quizResponse.data.success) {
         setError(quizResponse.data.message || 'Failed to load quiz');

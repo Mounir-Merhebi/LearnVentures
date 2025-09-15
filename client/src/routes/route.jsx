@@ -9,6 +9,7 @@ import Chapter from "../pages/Chapter";
 import LessonContent from "../pages/LessonContent";
 import Quiz from "../pages/Quiz";
 import AdminDashboard from "../pages/AdminDashboard";
+import AdminContentManagement from "../pages/AdminDashboard/AdminContentManagement";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 const MyRoutes = () => {
@@ -93,6 +94,14 @@ const MyRoutes = () => {
         element={
           <ProtectedRoute requiredRole="Admin">
             <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/content"
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <AdminContentManagement />
           </ProtectedRoute>
         }
       />

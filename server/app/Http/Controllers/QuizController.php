@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\Validator;
 class QuizController extends Controller
 {
     /**
-     * Get quiz by lesson ID
+     * Get quiz by chapter ID
      */
-    public function getByLesson($lessonId): JsonResponse
+    public function getByChapter($chapterId): JsonResponse
     {
         try {
-            $quiz = Quiz::where('lesson_id', $lessonId)
+            $quiz = Quiz::where('chapter_id', $chapterId)
                 ->with(['questions' => function($query) {
                     $query->orderBy('order');
                 }])
@@ -30,7 +30,7 @@ class QuizController extends Controller
             if (!$quiz) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'No quiz found for this lesson'
+                    'message' => 'No quiz found for this chapter'
                 ], 404);
             }
 
@@ -353,7 +353,7 @@ class QuizController extends Controller
             }
 
             $attempts = StudentQuiz::where('user_id', $userId)
-                ->with('quiz.lesson.chapter.subject')
+                ->with('quiz.chapter.subject')
                 ->orderBy('created_at', 'desc')
                 ->get();
 
@@ -361,8 +361,8 @@ class QuizController extends Controller
                 return [
                     'id' => $attempt->id,
                     'quizTitle' => $attempt->quiz->title,
-                    'subjectName' => $attempt->quiz->lesson->chapter->subject->title,
-                    'chapterTitle' => $attempt->quiz->lesson->chapter->title,
+                    'subjectName' => $attempt->quiz->chapter->subject->title,
+                    'chapterTitle' => $attempt->quiz->chapter->title,
                     'score' => $attempt->score,
                     'startedAt' => $attempt->started_at,
                     'completedAt' => $attempt->completed_at,

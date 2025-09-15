@@ -36,28 +36,27 @@ class DashboardController extends Controller
         }])->get();
 
         $subjectData = $subjects->map(function ($subject) use ($user) {
-            // total lessons in subject
-            $totalLessonsInSubject = $subject->chapters()->join('lessons', 'chapters.id', '=', 'lessons.chapter_id')->count();
+            // total chapters in subject
+            $totalChaptersInSubject = $subject->chapters()->count();
 
-            // completed lessons in subject by user (via quizzes -> quiz.lesson_id)
-            $completedLessonsInSubject = StudentQuiz::where('user_id', $user->id)
+            // completed chapters in subject by user (via quizzes -> quiz.chapter_id)
+            $completedChaptersInSubject = StudentQuiz::where('user_id', $user->id)
                 ->whereNotNull('completed_at')
                 ->join('quizzes', 'student_quizzes.quiz_id', '=', 'quizzes.id')
-                ->where('quizzes.lesson_id', '!=', null)
-                ->whereIn('quizzes.lesson_id', function ($q) use ($subject) {
-                    $q->select('lessons.id')
-                        ->from('lessons')
-                        ->join('chapters', 'lessons.chapter_id', '=', 'chapters.id')
+                ->where('quizzes.chapter_id', '!=', null)
+                ->whereIn('quizzes.chapter_id', function ($q) use ($subject) {
+                    $q->select('chapters.id')
+                        ->from('chapters')
                         ->where('chapters.subject_id', $subject->id);
                 })->distinct('student_quizzes.quiz_id')->count();
 
-            $progressPercent = $totalLessonsInSubject > 0 ? round(($completedLessonsInSubject / $totalLessonsInSubject) * 100) : 0;
+            $progressPercent = $totalChaptersInSubject > 0 ? round(($completedChaptersInSubject / $totalChaptersInSubject) * 100) : 0;
 
             return [
                 'id' => $subject->id,
                 'name' => $subject->title,
                 'description' => $subject->description ?? null,
-                'chapters' => "$totalLessonsInSubject chapters",
+                'chapters' => "$totalChaptersInSubject chapters",
                 'progress' => $progressPercent,
             ];
         });

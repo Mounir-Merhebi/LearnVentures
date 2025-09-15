@@ -54,7 +54,7 @@ Route::group(["prefix" =>"v0.1"], function(){
 
         // Quiz endpoints
         Route::group(["prefix" => "quiz"], function(){
-            Route::get('/lesson/{lessonId}', [QuizController::class, 'getByLesson']);
+            Route::get('/chapter/{chapterId}', [QuizController::class, 'getByChapter']);
             Route::post('/{quizId}/start', [QuizController::class, 'startQuiz']);
             Route::post('/{quizId}/submit', [QuizController::class, 'submitQuiz']);
             Route::get('/attempt/{attemptId}', [QuizController::class, 'getResults']);
@@ -84,6 +84,31 @@ Route::group(["prefix" =>"v0.1"], function(){
             }
             return $next($request);
         }], function(){
+            // Content management routes
+            Route::group(["prefix" => "content"], function(){
+                // Subjects
+                Route::get('/subjects', [\App\Http\Controllers\AdminContentController::class, 'getSubjects']);
+                Route::post('/subjects', [\App\Http\Controllers\AdminContentController::class, 'createSubject']);
+                Route::put('/subjects/{subjectId}', [\App\Http\Controllers\AdminContentController::class, 'updateSubject']);
+                Route::delete('/subjects/{subjectId}', [\App\Http\Controllers\AdminContentController::class, 'deleteSubject']);
+
+                // Chapters
+                Route::post('/chapters', [\App\Http\Controllers\AdminContentController::class, 'createChapter']);
+                Route::put('/chapters/{chapterId}', [\App\Http\Controllers\AdminContentController::class, 'updateChapter']);
+                Route::delete('/chapters/{chapterId}', [\App\Http\Controllers\AdminContentController::class, 'deleteChapter']);
+
+                // Lessons
+                Route::post('/lessons', [\App\Http\Controllers\AdminContentController::class, 'createLesson']);
+                Route::put('/lessons/{lessonId}', [\App\Http\Controllers\AdminContentController::class, 'updateLesson']);
+                Route::delete('/lessons/{lessonId}', [\App\Http\Controllers\AdminContentController::class, 'deleteLesson']);
+
+                // Quizzes
+                Route::post('/quizzes', [\App\Http\Controllers\AdminContentController::class, 'createQuiz']);
+                Route::put('/quizzes/{quizId}', [\App\Http\Controllers\AdminContentController::class, 'updateQuiz']);
+                Route::delete('/quizzes/{quizId}', [\App\Http\Controllers\AdminContentController::class, 'deleteQuiz']);
+            });
+
+            // Existing admin routes
             Route::get('/proposals', [AdminChangeProposalController::class, 'index']);
             Route::get('/proposals/{id}', [AdminChangeProposalController::class, 'show']);
             Route::post('/proposals/{id}/decision', [AdminChangeProposalController::class, 'decision']);
