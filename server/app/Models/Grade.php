@@ -27,11 +27,6 @@ class Grade extends Model
         return $this->hasMany(StudentGradeEnrollment::class, 'grade_id');
     }
 
-    public function chatSessions()
-    {
-        return $this->hasMany(ChatSession::class, 'grade_id');
-    }
-
     protected static function newFactory()
     {
         return GradeFactory::new();

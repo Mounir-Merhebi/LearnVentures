@@ -2,12 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Common\AuthController;
-use App\Http\Controllers\Common\AIAgentController;
-use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ModeratorExcelController;
 use App\Http\Controllers\AdminChangeProposalController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DailyChatReportController;
 use App\Http\Controllers\QuizController;
 
 Route::group(["prefix" =>"v0.1"], function(){
@@ -19,31 +16,10 @@ Route::group(["prefix" =>"v0.1"], function(){
 
     // Authenticated routes
     Route::group(["middleware" => "auth:api"], function(){
-        Route::group(["prefix" => "user"], function(){
-            // AI Agent endpoints
-            Route::post('/analyze-performance', [AIAgentController::class, 'analyzePerformance']);
-            Route::post('/personalize-lesson', [AIAgentController::class, 'personalizeLesson']);
-            Route::get('/analyses/{userId}', [AIAgentController::class, 'getUserAnalyses']);
-            Route::get('/personalized-lessons/{userId}', [AIAgentController::class, 'getUserLessons']);
-            Route::get('/wrong-answers/{userId}', [AIAgentController::class, 'getWrongAnswers']);
-        });
-        
-        // AI Agent health check
-        Route::get('/ai-health', [AIAgentController::class, 'healthCheck']);
-        Route::get('/test-health', [AIAgentController::class, 'testHealth']);
-
-        // Chat endpoints
-        Route::post('/chat/sessions', [ChatController::class, 'createSession']);
-        Route::post('/chat/messages', [ChatController::class, 'sendMessage']);
 
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index']);
 
-        // Daily chat reports
-        Route::group(["prefix" => "reports"], function(){
-            Route::post('/daily', [DailyChatReportController::class, 'upsert']);
-            Route::get('/daily', [DailyChatReportController::class, 'index']);
-        });
 
         // Chapter
         Route::get('/chapters/{id}', [\App\Http\Controllers\ChapterController::class, 'show']);
@@ -61,9 +37,6 @@ Route::group(["prefix" =>"v0.1"], function(){
             Route::get('/attempts', [QuizController::class, 'getUserAttempts']);
         });
 
-        // Quiz performance analysis endpoints
-        Route::post('/quiz/analyze-performance', [AIAgentController::class, 'analyzeQuizPerformance']);
-        Route::get('/quiz/feedback/{studentQuizId}', [AIAgentController::class, 'getQuizFeedback']);
 
         // Excel Moderation routes
         // Moderator routes

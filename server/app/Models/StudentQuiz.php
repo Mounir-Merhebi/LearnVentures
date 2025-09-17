@@ -40,11 +40,6 @@ class StudentQuiz extends Model
         return $this->hasMany(StudentQuizAnswer::class, 'student_quiz_id');
     }
 
-    public function feedback()
-    {
-        return $this->hasOne(PostQuizFeedback::class, 'student_quiz_id');
-    }
-
     // Helper methods
     public function isCompleted()
     {

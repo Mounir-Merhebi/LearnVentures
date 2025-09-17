@@ -1,11 +1,9 @@
 // src/pages/AIChat/index.jsx
-//trying the ci
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/shared/Navbar';
 import './AIChat.css';
 import { ArrowLeft, Send, Mic, MicOff } from 'lucide-react';
-import API from '../../services/axios';
 import axios from 'axios';
 
 const AIChat = () => {
@@ -16,7 +14,7 @@ const AIChat = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const name = user?.name || user?.email || 'Student';
-    const greeting = `Hi ${name}, I'm Optimus your AI assistant. how can I help you today?`;
+    const greeting = `Hi ${name}, I'm Optimus your AI assistant. I'm here to help you with your learning journey! I can assist you with:\n\n• Explaining math concepts and solving problems\n• Providing study tips and learning strategies\n• Helping you understand difficult topics\n• Offering practice exercises and examples\n\nWhat would you like to learn about today?`;
     setMessages([
       {
         id: Date.now(),
@@ -42,6 +40,7 @@ const AIChat = () => {
   };
   useEffect(() => { scrollToBottom(); }, [messages]);
 
+
   useEffect(() => {
     // enumerate audio input devices
     const updateDevices = async () => {
@@ -60,7 +59,7 @@ const AIChat = () => {
     updateDevices();
     navigator.mediaDevices.addEventListener('devicechange', updateDevices);
     return () => navigator.mediaDevices.removeEventListener('devicechange', updateDevices);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -78,22 +77,81 @@ const AIChat = () => {
     setIsLoading(true);
 
     try {
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      // Get OpenAI API key from environment variable
+      const openaiApiKey = process.env.REACT_APP_OPENAI_API_KEY;
 
-      // Ensure we have a chat session for this user/grade
-      let sessionId = localStorage.getItem('chat_session_id');
-      if (!sessionId) {
-        const gradeId = user.grade_id || 2; // default fallback
-        const sessionRes = await API.post('/chat/sessions', { grade_id: gradeId });
-        const sessionData = sessionRes.data;
-        sessionId = sessionData?.data?.session_id;
-        if (sessionId) localStorage.setItem('chat_session_id', sessionId);
+      if (!openaiApiKey) {
+        throw new Error('OpenAI API key not configured. Please set REACT_APP_OPENAI_API_KEY in your environment variables.');
       }
 
-      // Send message to backend chat API
-      const msgRes = await API.post('/chat/messages', { session_id: Number(sessionId), message: userMessage.content });
-      const msgData = msgRes.data;
-      const aiText = msgData?.data?.response || "I'm sorry, I couldn't get an answer right now.";
+      // Prepare conversation history for context
+      const conversationHistory = messages.slice(-10).map(msg => ({
+        role: msg.type === 'user' ? 'user' : 'assistant',
+        content: msg.content
+      }));
+
+      // Add the current user message
+      conversationHistory.push({
+        role: 'user',
+        content: userMessage.content
+      });
+
+      // Create system prompt for educational AI assistant
+      const systemPrompt = {
+        role: 'system',
+        content: `You are Optimus, a friendly and knowledgeable AI assistant specialized in education and learning. You help students with their studies, particularly in math and academic subjects.
+
+Your personality:
+- Friendly and encouraging
+- Patient and supportive
+- Clear and concise in explanations
+- Adapt explanations to the student's level
+- Use examples and analogies when helpful
+- Encourage critical thinking and problem-solving
+
+Your capabilities:
+- Explain math concepts and solve problems
+- Provide study tips and learning strategies
+- Help with homework and assignments
+- Offer practice exercises and examples
+- Answer questions about various academic subjects
+- Guide students through complex topics step by step
+
+Guidelines:
+- Always be encouraging and positive
+- Break down complex concepts into smaller, understandable parts
+- Use relatable examples and real-world applications
+- Ask clarifying questions when needed
+- Suggest additional resources when appropriate
+- Maintain a supportive and motivating tone
+
+Remember: You're helping students learn and grow, so focus on building their confidence and understanding.`
+      };
+
+      const messagesForAPI = [systemPrompt, ...conversationHistory];
+
+      // Call OpenAI API
+      const response = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: 'gpt-3.5-turbo',
+          messages: messagesForAPI,
+          max_tokens: 1000,
+          temperature: 0.7,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${openaiApiKey}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const aiText = response.data.choices[0]?.message?.content;
+
+      if (!aiText) {
+        throw new Error('No response received from OpenAI');
+      }
 
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
@@ -102,11 +160,17 @@ const AIChat = () => {
         timestamp: new Date(),
       }]);
     } catch (err) {
-      console.error(err);
+      console.error('Send message error:', err);
+
+      // Display error message to user
+      const errorMessage = err.response?.data?.error?.message ||
+                          err.message ||
+                          'An unknown error occurred while communicating with the AI assistant';
+
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         type: 'ai',
-        content: "I'm sorry, I'm having trouble connecting right now. Please try again later.",
+        content: `Error: ${errorMessage}`,
         timestamp: new Date(),
       }]);
     } finally {
@@ -136,8 +200,19 @@ const AIChat = () => {
       mediaRecorder.addEventListener('stop', async () => {
         const blob = new Blob(recordedChunksRef.current, { type: 'audio/webm' });
 
-        // send to STT endpoint
-        await sendAudioToSTT(blob);
+        try {
+          // send to STT endpoint
+          await sendAudioToSTT(blob);
+        } catch (sttErr) {
+          console.error('STT transcription failed:', sttErr);
+          // Show error to user
+          setMessages(prev => [...prev, {
+            id: Date.now() + 1,
+            type: 'ai',
+            content: `Speech-to-text error: ${sttErr.message}`,
+            timestamp: new Date(),
+          }]);
+        }
 
         // stop all tracks
         stream.getTracks().forEach((t) => t.stop());
@@ -147,7 +222,7 @@ const AIChat = () => {
       setIsRecording(true);
     } catch (err) {
       console.error('Failed to start recording', err);
-      alert('Could not start audio recording. Check microphone permissions.');
+      throw new Error(`Recording failed: ${err.message}`);
     }
   };
 
@@ -173,23 +248,23 @@ const AIChat = () => {
       });
       const data = res.data;
       const text = data.text || data.transcription || '';
-      if (text.trim()) {
-        // append transcription to existing input instead of replacing and do NOT auto-send
-        setInputMessage((prev) => (prev && prev.trim() ? `${prev.trim()} ${text}` : text));
-      } else {
-        // no transcription returned
-        console.warn('No transcription returned', data);
+
+      if (!text || !text.trim()) {
+        throw new Error('No transcription received from speech-to-text service');
       }
+
+      // append transcription to existing input instead of replacing and do NOT auto-send
+      setInputMessage((prev) => (prev && prev.trim() ? `${prev.trim()} ${text}` : text));
     } catch (err) {
-      console.error(err);
+      console.error('Transcription error:', err);
+      throw err; // Re-throw to let parent handle the error
     } finally {
       setIsTranscribing(false);
     }
   };
 
-  // The client no longer calls Gemini directly — requests go through the backend
-  // which handles embeddings, retrieval and Gemini calls. This keeps the API key
-  // and context management secure on the server.
+  // The client now calls OpenAI API directly using the provided API key
+  // This allows for a simpler architecture without backend AI processing
 
   return (
     <div className="ai-chat-page">

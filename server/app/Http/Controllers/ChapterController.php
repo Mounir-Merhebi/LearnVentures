@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chapter;
-use App\Models\PersonalizedLesson;
 use App\Models\StudentQuiz;
 use App\Models\Quiz;
 use Illuminate\Http\Request;
@@ -22,20 +21,7 @@ class ChapterController extends Controller
         // so we'll return lessons as a single topic for now.
         $userId = Auth::id();
 
-        // Preload any personalized lessons for this user that belong to this chapter
-        $personalizedMap = collect([]);
-        if ($userId) {
-            $lessonIds = $chapter->lessons->pluck('id')->toArray();
-            $personalized = PersonalizedLesson::where('user_id', $userId)
-                ->whereIn('lesson_id', $lessonIds)
-                ->orderBy('generated_at', 'desc')
-                ->get()
-                ->keyBy('lesson_id');
-
-            $personalizedMap = $personalized;
-        }
-
-        $lessons = $chapter->lessons->map(function ($lesson) use ($userId, $personalizedMap, $chapter) {
+        $lessons = $chapter->lessons->map(function ($lesson) use ($userId, $chapter) {
             // determine type roughly from content
             $type = 'lesson';
             if (!empty($lesson->content) && (stripos($lesson->content, '<iframe') !== false || stripos($lesson->content, '<video') !== false)) {
@@ -55,25 +41,12 @@ class ChapterController extends Controller
                 }
             }
 
-            $personalizedEntry = null;
-            if ($personalizedMap->has($lesson->id)) {
-                $p = $personalizedMap->get($lesson->id);
-                $personalizedEntry = [
-                    'id' => $p->id,
-                    'personalized_title' => $p->personalized_title,
-                    'personalized_content' => $p->personalized_content,
-                    'practical_examples' => $p->practical_examples,
-                    'generated_at' => $p->generated_at,
-                ];
-            }
-
             return [
                 'id' => $lesson->id,
                 'title' => $lesson->title,
                 'type' => $type,
                 'isCompleted' => $completed,
                 'duration' => null,
-                'personalized' => $personalizedEntry,
             ];
         });
 
