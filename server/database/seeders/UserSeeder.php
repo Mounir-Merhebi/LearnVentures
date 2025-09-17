@@ -23,7 +23,6 @@ class UserSeeder extends Seeder
                 'hobbies' => 'Reading, Chess',
                 'preferences' => 'Dark mode; email alerts',
                 'bio' => 'Curious learner.',
-                'excel_sheet_path' => null,
                 'created_at' => $now,
             ],
             [
@@ -35,7 +34,6 @@ class UserSeeder extends Seeder
                 'hobbies' => 'Hiking',
                 'preferences' => 'Light mode',
                 'bio' => 'Teaches math & physics.',
-                'excel_sheet_path' => 'storage/excels/instructor_jane.xlsx',
                 'created_at' => $now,
             ],
             [
@@ -47,7 +45,6 @@ class UserSeeder extends Seeder
                 'hobbies' => null,
                 'preferences' => null,
                 'bio' => 'Keeps things tidy.',
-                'excel_sheet_path' => null,
                 'created_at' => $now,
             ],
             [
@@ -59,7 +56,6 @@ class UserSeeder extends Seeder
                 'hobbies' => 'Running',
                 'preferences' => 'Email alerts only',
                 'bio' => 'System administrator.',
-                'excel_sheet_path' => null,
                 'created_at' => $now,
             ],
         ]);
