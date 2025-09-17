@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Common\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ModeratorExcelController;
 use App\Http\Controllers\AdminChangeProposalController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DailyChatReportController;
 use App\Http\Controllers\QuizController;
 
 Route::group(["prefix" =>"v0.1"], function(){
@@ -20,6 +22,19 @@ Route::group(["prefix" =>"v0.1"], function(){
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index']);
 
+        // Chat endpoints
+        Route::post('/chat/sessions', [ChatController::class, 'createSession']);
+        Route::post('/chat/messages', [ChatController::class, 'sendMessage']);
+        Route::get('/chat/sessions/{sessionId}/history', [ChatController::class, 'getChatHistory']);
+        Route::post('/chat/sessions/{sessionId}/end', [ChatController::class, 'endSession']);
+
+        // Daily chat reports
+        Route::group(["prefix" => "reports"], function(){
+            Route::post('/daily', [DailyChatReportController::class, 'upsert']);
+            Route::get('/daily', [DailyChatReportController::class, 'index']);
+            Route::get('/daily/{id}', [DailyChatReportController::class, 'show']);
+            Route::post('/daily/{id}/mark-analyzed', [DailyChatReportController::class, 'markAnalyzed']);
+        });
 
         // Chapter
         Route::get('/chapters/{id}', [\App\Http\Controllers\ChapterController::class, 'show']);

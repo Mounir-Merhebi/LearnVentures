@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/shared/Navbar';
 import './AIChat.css';
 import { ArrowLeft, Send, Mic, MicOff } from 'lucide-react';
-import axios from 'axios';
+import API from '../../services/axios';
 
 const AIChat = () => {
   const navigate = useNavigate();
@@ -77,80 +77,46 @@ const AIChat = () => {
     setIsLoading(true);
 
     try {
-      // Get OpenAI API key from environment variable
-      const openaiApiKey = process.env.REACT_APP_OPENAI_API_KEY;
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-      if (!openaiApiKey) {
-        throw new Error('OpenAI API key not configured. Please set REACT_APP_OPENAI_API_KEY in your environment variables.');
+      // Ensure we have a chat session for this user/grade
+      let sessionId = localStorage.getItem('chat_session_id');
+      console.log('Existing sessionId from localStorage:', sessionId);
+
+      if (!sessionId) {
+        const gradeId = user.grade_id || 2; // default fallback
+        console.log('Creating new session with grade_id:', gradeId);
+        const sessionRes = await API.post('/chat/sessions', { grade_id: gradeId });
+        console.log('sessionRes:', sessionRes.data);
+        const sessionData = sessionRes.data;
+        sessionId = sessionData?.data?.session_id;
+        console.log('New sessionId:', sessionId);
+        if (sessionId) {
+          localStorage.setItem('chat_session_id', sessionId);
+          console.log('Stored sessionId in localStorage:', sessionId);
+        } else {
+          console.error('Failed to get sessionId from response');
+        }
       }
 
-      // Prepare conversation history for context
-      const conversationHistory = messages.slice(-10).map(msg => ({
-        role: msg.type === 'user' ? 'user' : 'assistant',
-        content: msg.content
-      }));
+      // Guard: check if we have a valid session ID
+      if (!sessionId) {
+        throw new Error('No valid chat session found. Please try logging in again.');
+      }
 
-      // Add the current user message
-      conversationHistory.push({
-        role: 'user',
-        content: userMessage.content
+      // Send message to backend chat API - this will save to database for n8n workflow
+      console.log('About to send message with session_id:', sessionId, 'type:', typeof sessionId);
+      console.log('Converted session_id:', Number(sessionId), 'message:', userMessage.content);
+      const msgRes = await API.post('/chat/messages', {
+        session_id: Number(sessionId),
+        message: userMessage.content
       });
 
-      // Create system prompt for educational AI assistant
-      const systemPrompt = {
-        role: 'system',
-        content: `You are Optimus, a friendly and knowledgeable AI assistant specialized in education and learning. You help students with their studies, particularly in math and academic subjects.
-
-Your personality:
-- Friendly and encouraging
-- Patient and supportive
-- Clear and concise in explanations
-- Adapt explanations to the student's level
-- Use examples and analogies when helpful
-- Encourage critical thinking and problem-solving
-
-Your capabilities:
-- Explain math concepts and solve problems
-- Provide study tips and learning strategies
-- Help with homework and assignments
-- Offer practice exercises and examples
-- Answer questions about various academic subjects
-- Guide students through complex topics step by step
-
-Guidelines:
-- Always be encouraging and positive
-- Break down complex concepts into smaller, understandable parts
-- Use relatable examples and real-world applications
-- Ask clarifying questions when needed
-- Suggest additional resources when appropriate
-- Maintain a supportive and motivating tone
-
-Remember: You're helping students learn and grow, so focus on building their confidence and understanding.`
-      };
-
-      const messagesForAPI = [systemPrompt, ...conversationHistory];
-
-      // Call OpenAI API
-      const response = await axios.post(
-        'https://api.openai.com/v1/chat/completions',
-        {
-          model: 'gpt-3.5-turbo',
-          messages: messagesForAPI,
-          max_tokens: 1000,
-          temperature: 0.7,
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${openaiApiKey}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      const aiText = response.data.choices[0]?.message?.content;
+      const msgData = msgRes.data;
+      const aiText = msgData?.data?.response;
 
       if (!aiText) {
-        throw new Error('No response received from OpenAI');
+        throw new Error('No response received from AI service');
       }
 
       setMessages(prev => [...prev, {
@@ -160,12 +126,19 @@ Remember: You're helping students learn and grow, so focus on building their con
         timestamp: new Date(),
       }]);
     } catch (err) {
-      console.error('Send message error:', err);
+      console.error('Send message error:', err.response?.data || err);
 
-      // Display error message to user
-      const errorMessage = err.response?.data?.error?.message ||
+      // Clear invalid session ID so a new one will be created next time
+      if (err.response?.data?.errors?.session_id) {
+        console.log('Clearing invalid session ID from localStorage');
+        localStorage.removeItem('chat_session_id');
+      }
+
+      // Display actual error message to user
+      const errorMessage = err.response?.data?.message ||
+                          err.response?.data?.error ||
                           err.message ||
-                          'An unknown error occurred while communicating with the AI assistant';
+                          'An unknown error occurred';
 
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
