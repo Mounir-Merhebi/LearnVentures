@@ -58,12 +58,6 @@ const Navbar = () => {
           >
             Optimus
           </button>
-          <button
-            className="nav-item"
-            onClick={() => handleNavigation('/group-chat')}
-          >
-            Group Chat
-          </button>
         </div>
 
         {/* User Profile */}

@@ -157,6 +157,7 @@
 }
 
 .subject-header {
+  border-radius: 10px;
   display: flex;
   align-items: center;
   margin-bottom: 20px;

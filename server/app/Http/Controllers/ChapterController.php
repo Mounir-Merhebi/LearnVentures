@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chapter;
 use App\Models\StudentQuiz;
 use App\Models\Quiz;
+use App\Models\PersonalizedLesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,9 +42,17 @@ class ChapterController extends Controller
                 }
             }
 
+            $title = $lesson->title;
+            if ($userId) {
+                $pl = PersonalizedLesson::where('user_id', $userId)->where('lesson_id', $lesson->id)->first();
+                if ($pl && $pl->personalized_title) {
+                    $title = $pl->personalized_title;
+                }
+            }
+
             return [
                 'id' => $lesson->id,
-                'title' => $lesson->title,
+                'title' => $title,
                 'type' => $type,
                 'isCompleted' => $completed,
                 'duration' => null,
