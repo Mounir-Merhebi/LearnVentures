@@ -50,6 +50,8 @@ Route::group(["prefix" =>"v0.1"], function(){
             Route::post('/{quizId}/submit', [QuizController::class, 'submitQuiz']);
             Route::get('/attempt/{attemptId}', [QuizController::class, 'getResults']);
             Route::get('/attempts', [QuizController::class, 'getUserAttempts']);
+            Route::post('/analyze-performance', [QuizController::class, 'analyzePerformance']);
+            Route::get('/feedback/{studentQuizId}', [QuizController::class, 'getFeedback']);
         });
 
 

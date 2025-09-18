@@ -549,7 +549,9 @@ class AdminContentController extends Controller
                         'body' => $questionData['body'],
                         'options_json' => $questionData['options_json'],
                         'correct_option' => $questionData['correct_option'],
-                        'order' => $questionData['order'] ?? ($index + 1)
+                        // Enforce unique sequential order per quiz to avoid unique index violations
+                        'order' => $index + 1,
+                        'concept_slug' => $questionData['concept_slug'] ?? null,
                     ]);
                 }
 

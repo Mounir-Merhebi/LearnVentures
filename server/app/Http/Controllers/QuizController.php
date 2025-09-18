@@ -6,12 +6,15 @@ use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use App\Models\StudentQuiz;
 use App\Models\StudentQuizAnswer;
+use App\Models\PostQuizFeedback;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class QuizController extends Controller
 {
@@ -382,5 +385,205 @@ class QuizController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Analyze a quiz attempt and generate AI feedback (OpenAI with fallback), then persist to post_quiz_feedback
+     */
+    public function analyzePerformance(Request $request): JsonResponse
+    {
+        $userId = Auth::id();
+        if (!$userId) {
+            return response()->json(['success' => false, 'message' => 'User not authenticated'], 401);
+        }
+
+        $data = $request->validate([
+            'student_quiz_id' => 'required|integer',
+        ]);
+
+        $attempt = StudentQuiz::with(['answers.question', 'quiz'])
+            ->where('id', $data['student_quiz_id'])
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$attempt) {
+            return response()->json(['success' => false, 'message' => 'Quiz attempt not found'], 404);
+        }
+
+        // If feedback already exists, return it
+        $existing = PostQuizFeedback::where('student_quiz_id', $attempt->id)->first();
+        if ($existing) {
+            return response()->json(['success' => true, 'data' => $existing]);
+        }
+
+        // Prepare data for analysis (only wrong answers sent to AI)
+        $total = max(1, $attempt->answers->count());
+        $wrong = $attempt->answers->where('is_correct', false);
+        $wrongItems = [];
+        foreach ($wrong as $ans) {
+            $q = $ans->question;
+            if ($q) {
+                $wrongItems[] = [
+                    'question' => $q->body,
+                    'user_answer' => $ans->selected_answer,
+                    'correct_answer' => $ans->correct_option_snapshot,
+                    'concept' => $q->concept_slug ?? null,
+                ];
+            }
+        }
+
+        // Try OpenAI first
+        $aiPayload = null;
+        $openaiApiKey = env('OPENAI_API_KEY');
+        if ($openaiApiKey) {
+            $instructions = [
+                'role' => 'system',
+                'content' => 'You are an educational assistant that returns STRICT JSON only. Analyze the student\'s quiz performance using the wrong answers provided. Output a compact JSON object with keys: overall_performance (string), weak_areas (array of objects with concept, description, missed, total), recommendations (array of objects with type, description, priority), study_plan (object with duration_weeks, daily_study_time, schedule array of {day, focus, estimated_time}), recommended_lesson_ids (array of integers). Do NOT include any additional text outside the JSON.'
+            ];
+
+            $userMsg = [
+                'role' => 'user',
+                'content' => json_encode([
+                    'quiz_title' => $attempt->quiz->title ?? 'Quiz',
+                    'score' => $attempt->score,
+                    'wrong_answers' => $wrongItems,
+                    'total_questions' => $total,
+                ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+            ];
+
+            try {
+                $response = Http::withHeaders([
+                    'Authorization' => "Bearer {$openaiApiKey}",
+                    'Content-Type' => 'application/json',
+                ])->post('https://api.openai.com/v1/chat/completions', [
+                    'model' => env('QUIZ_FEEDBACK_MODEL', 'gpt-3.5-turbo'),
+                    'messages' => [$instructions, $userMsg],
+                    'temperature' => 0.2,
+                    'max_tokens' => 600,
+                ]);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    $text = $data['choices'][0]['message']['content'] ?? '';
+
+                    // Attempt to extract JSON (in case the model wraps it)
+                    $jsonText = $text;
+                    $first = strpos($jsonText, '{');
+                    $last = strrpos($jsonText, '}');
+                    if ($first !== false && $last !== false && $last >= $first) {
+                        $jsonText = substr($jsonText, $first, $last - $first + 1);
+                    }
+                    $decoded = json_decode($jsonText, true);
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                        // Normalize minutes fields to integers so the UI doesn't double-append units
+                        $normalizeMinutes = function ($value) {
+                            if (is_numeric($value)) {
+                                return (int)$value;
+                            }
+                            if (is_string($value)) {
+                                if (preg_match('/(\\d+(?:\\.\\d+)?)\\s*(hour|hours|hr|h)/i', $value, $m)) {
+                                    return (int)round(((float)$m[1]) * 60);
+                                }
+                                if (preg_match('/(\\d+(?:\\.\\d+)?)\\s*(min|mins|minute|minutes|m)/i', $value, $m)) {
+                                    return (int)round((float)$m[1]);
+                                }
+                                if (preg_match('/\\d+/', $value, $m)) {
+                                    return (int)$m[0];
+                                }
+                            }
+                            return null;
+                        };
+
+                        $planIn = isset($decoded['study_plan']) && is_array($decoded['study_plan']) ? $decoded['study_plan'] : [];
+                        $scheduleIn = isset($planIn['schedule']) && is_array($planIn['schedule']) ? $planIn['schedule'] : [];
+                        $schedule = [];
+                        foreach ($scheduleIn as $item) {
+                            $schedule[] = [
+                                'day' => isset($item['day']) && is_string($item['day']) ? $item['day'] : '',
+                                'focus' => isset($item['focus']) && is_string($item['focus']) ? $item['focus'] : '',
+                                'estimated_time' => $normalizeMinutes($item['estimated_time'] ?? null),
+                            ];
+                        }
+
+                        $studyPlan = [
+                            'duration_weeks' => (int)($planIn['duration_weeks'] ?? 1),
+                            'daily_study_time' => $normalizeMinutes($planIn['daily_study_time'] ?? null),
+                            'schedule' => $schedule,
+                        ];
+
+                        $aiPayload = [
+                            'student_quiz_id' => $attempt->id,
+                            'chapter_id' => $attempt->quiz->chapter_id ?? null,
+                            'overall_performance' => $decoded['overall_performance'] ?? null,
+                            'weak_areas' => $decoded['weak_areas'] ?? [],
+                            'recommendations' => $decoded['recommendations'] ?? [],
+                            'study_plan' => $studyPlan,
+                            'recommended_lesson_ids' => $decoded['recommended_lesson_ids'] ?? [],
+                            'analyzed_at' => now(),
+                        ];
+                        Log::info('OpenAI quiz feedback generated', [
+                            'attempt_id' => $attempt->id,
+                        ]);
+                    } else {
+                        Log::warning('OpenAI feedback JSON parse failed; falling back', [
+                            'content_preview' => substr($text, 0, 200)
+                        ]);
+                    }
+                } else {
+                    Log::error('OpenAI API error for quiz feedback', [
+                        'status' => $response->status(),
+                        'body' => $response->body()
+                    ]);
+                }
+            } catch (\Exception $e) {
+                Log::error('OpenAI API call failed for quiz feedback', ['error' => $e->getMessage()]);
+            }
+        }
+
+        // If AI failed, return error (no heuristic fallback)
+        if (!$aiPayload) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to generate AI feedback. Please try again shortly.',
+            ], 502);
+        }
+
+        $payload = $aiPayload;
+
+        $feedback = PostQuizFeedback::create($payload);
+        $generatedBy = 'openai';
+
+        return response()->json([
+            'success' => true,
+            'data' => $feedback,
+            'generatedBy' => $generatedBy,
+            'message' => 'Feedback generated',
+        ]);
+    }
+
+    /**
+     * Fetch stored feedback for a quiz attempt
+     */
+    public function getFeedback($studentQuizId): JsonResponse
+    {
+        $userId = Auth::id();
+        if (!$userId) {
+            return response()->json(['success' => false, 'message' => 'User not authenticated'], 401);
+        }
+
+        $attempt = StudentQuiz::where('id', $studentQuizId)
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$attempt) {
+            return response()->json(['success' => false, 'message' => 'Quiz attempt not found'], 404);
+        }
+
+        $feedback = PostQuizFeedback::where('student_quiz_id', $attempt->id)->first();
+        if (!$feedback) {
+            return response()->json(['success' => false, 'message' => 'Feedback not found'], 404);
+        }
+
+        return response()->json(['success' => true, 'data' => $feedback]);
     }
 }
