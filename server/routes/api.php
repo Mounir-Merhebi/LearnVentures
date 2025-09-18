@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminChangeProposalController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DailyChatReportController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\ProfileController;
 
 Route::group(["prefix" =>"v0.1"], function(){
     // Guest routes (no auth required)
@@ -18,6 +19,9 @@ Route::group(["prefix" =>"v0.1"], function(){
 
     // Authenticated routes
     Route::group(["middleware" => "auth:api"], function(){
+        // Profile
+        Route::get('/profile/me', [ProfileController::class, 'me']);
+        Route::put('/profile', [ProfileController::class, 'update']);
 
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index']);

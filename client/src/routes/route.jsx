@@ -11,6 +11,7 @@ import Quiz from "../pages/Quiz";
 import AdminDashboard from "../pages/AdminDashboard";
 import AdminContentManagement from "../pages/AdminDashboard/AdminContentManagement";
 import ProtectedRoute from "../components/ProtectedRoute";
+import Profile from "../pages/Profile";
 
 const MyRoutes = () => {
   return (
@@ -86,6 +87,14 @@ const MyRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={["Student", "Instructor", "Moderator"]}>
             <Quiz />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute allowedRoles={["Student", "Instructor", "Moderator"]}>
+            <Profile />
           </ProtectedRoute>
         }
       />
