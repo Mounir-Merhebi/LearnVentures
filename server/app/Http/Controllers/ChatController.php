@@ -161,7 +161,7 @@ class ChatController extends Controller
     private function generateAIResponse(string $query, string $gradeName): string
     {
         // Get OpenAI API key from environment
-        $openaiApiKey = env('OPENAI_API_KEY') ?: env('REACT_APP_OPENAI_API_KEY');
+        $openaiApiKey = env('OPENAI_API_KEY');
 
         if (!$openaiApiKey) {
             Log::error('OpenAI API key not configured');

@@ -216,10 +216,16 @@ const AIChat = () => {
       const form = new FormData();
       form.append('audio', blob, 'recording.webm');
 
-      const res = await axios.post(`${API_BASE}/transcribe`, form, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const res = await fetch(`${API_BASE}/transcribe`, {
+        method: 'POST',
+        body: form,
       });
-      const data = res.data;
+
+      if (!res.ok) {
+        throw new Error(`STT service error: ${res.status}`);
+      }
+
+      const data = await res.json();
       const text = data.text || data.transcription || '';
 
       if (!text || !text.trim()) {
