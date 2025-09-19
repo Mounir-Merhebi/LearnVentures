@@ -245,7 +245,19 @@ const AdminDashboard = () => {
           <h1>Admin Dashboard</h1>
           <p>Manage content and monitor the platform</p>
         </div>
-        <div>
+        <div style={{ display: 'flex', gap: 12 }}>
+          <button
+            className="nav-btn"
+            onClick={() => navigate('/admin/content')}
+          >
+            Manage Content
+          </button>
+          <button
+            className="nav-btn"
+            onClick={() => navigate('/admin/reports/daily')}
+          >
+            Daily Reports
+          </button>
           <button
             className="nav-btn"
             onClick={() => {

@@ -66,33 +66,38 @@ class DailyChatReportController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $q = DailyChatReport::query()->with('user:id,name');
+            $q = DailyChatReport::query()
+                ->leftJoin('users', 'users.id', '=', 'daily_chat_reports.user_id')
+                ->select('daily_chat_reports.*', 'users.name as student_name');
 
             if ($request->filled('student_id')) {
-                $q->where('student_id', (int) $request->integer('student_id'));
+                $q->where('daily_chat_reports.user_id', (int) $request->integer('student_id'));
+            }
+            if ($request->filled('user_id')) {
+                $q->where('daily_chat_reports.user_id', (int) $request->integer('user_id'));
             }
 
             if ($request->filled('date')) {
-                $q->whereDate('report_date', $request->date('date'));
+                $q->whereDate('daily_chat_reports.report_date', $request->date('date'));
             }
 
             if ($request->filled('date_from')) {
-                $q->whereDate('report_date', '>=', $request->date('date_from'));
+                $q->whereDate('daily_chat_reports.report_date', '>=', $request->date('date_from'));
             }
 
             if ($request->filled('date_to')) {
-                $q->whereDate('report_date', '<=', $request->date('date_to'));
+                $q->whereDate('daily_chat_reports.report_date', '<=', $request->date('date_to'));
             }
 
             if ($request->filled('analyzed')) {
                 if ($request->boolean('analyzed')) {
-                    $q->whereNotNull('analyzed_at');
+                    $q->whereNotNull('daily_chat_reports.analyzed_at');
                 } else {
-                    $q->whereNull('analyzed_at');
+                    $q->whereNull('daily_chat_reports.analyzed_at');
                 }
             }
 
-            $reports = $q->orderByDesc('report_date')->paginate(50);
+            $reports = $q->orderByDesc('daily_chat_reports.report_date')->paginate(50);
 
             return response()->json([
                 'success' => true,

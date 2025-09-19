@@ -10,6 +10,7 @@ import LessonContent from "../pages/LessonContent";
 import Quiz from "../pages/Quiz";
 import AdminDashboard from "../pages/AdminDashboard";
 import AdminContentManagement from "../pages/AdminDashboard/AdminContentManagement";
+import AdminDailyReports from "../pages/AdminDashboard/AdminDailyReports";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Profile from "../pages/Profile";
 
@@ -111,6 +112,14 @@ const MyRoutes = () => {
         element={
           <ProtectedRoute requiredRole="Admin">
             <AdminContentManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/reports/daily"
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <AdminDailyReports />
           </ProtectedRoute>
         }
       />
