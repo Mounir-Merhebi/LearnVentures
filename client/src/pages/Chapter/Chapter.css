@@ -1,10 +1,10 @@
-.chapter-page {
+.cc-chapter-page {
   min-height: 100vh;
   background: #f5f5f5;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.chapter-container {
+.cc-chapter-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -12,7 +12,7 @@
 }
 
 /* Back Button */
-.back-button {
+.cc-back-button {
   display: flex;
   align-items: center;
   background: none;
@@ -26,17 +26,17 @@
   transition: color 0.2s ease;
 }
 
-.back-button:hover {
+.cc-back-button:hover {
   color: #374151;
 }
 
-.back-arrow {
+.cc-back-arrow {
   margin-right: 8px;
   font-size: 16px;
 }
 
 /* Chapter Header */
-.chapter-header {
+.cc-chapter-header {
   background: linear-gradient(135deg, #10B981 0%, #059669 100%);
   border-radius: 12px;
   padding: 24px;
@@ -44,13 +44,13 @@
   color: white;
 }
 
-.chapter-video-section {
+.cc-chapter-video-section {
   display: flex;
   align-items: center;
   gap: 24px;
 }
 
-.video-thumbnail {
+.cc-video-thumbnail {
   position: relative;
   width: 120px;
   height: 80px;
@@ -60,14 +60,14 @@
   flex-shrink: 0;
 }
 
-.chapter-image {
+.cc-chapter-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.chapter-badge {
+.cc-chapter-badge {
   position: absolute;
   top: 8px;
   left: 8px;
@@ -81,7 +81,7 @@
   z-index: 2;
 }
 
-.video-placeholder {
+.cc-video-placeholder {
   width: 100%;
   height: 100%;
   display: flex;
@@ -90,7 +90,7 @@
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
 }
 
-.play-button {
+.cc-play-button {
   width: 32px;
   height: 32px;
   background: rgba(255, 255, 255, 0.9);
@@ -102,24 +102,24 @@
   color: #374151;
 }
 
-.chapter-info {
+.cc-chapter-info {
   flex: 1;
 }
 
-.chapter-title {
+.cc-chapter-title {
   font-size: 2rem;
   font-weight: 700;
   margin: 0 0 12px 0;
   color: white;
 }
 
-.chapter-stats {
+.cc-chapter-stats {
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
 }
 
-.stat-item {
+.cc-stat-item {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -129,20 +129,20 @@
 }
 
 /* Main Content */
-.chapter-main {
+.cc-chapter-main {
   display: grid;
   grid-template-columns: 1fr 300px;
   gap: 32px;
 }
 
 /* Topics Section */
-.topics-section {
+.cc-topics-section {
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
 
-.topic-section {
+.cc-topic-section {
   background: white;
   border-radius: 12px;
   padding: 24px;
@@ -150,7 +150,7 @@
 }
 
 /* Topic Header */
-.topic-header {
+.cc-topic-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -159,41 +159,41 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-.topic-title-section {
+.cc-topic-title-section {
   flex: 1;
 }
 
-.topic-title {
+.cc-topic-title {
   font-size: 1.25rem;
   font-weight: 600;
   color: #1F2937;
   margin: 0 0 8px 0;
 }
 
-.topic-description {
+.cc-topic-description {
   font-size: 14px;
   color: #6B7280;
   margin: 0 0 12px 0;
 }
 
-.topic-stats {
+.cc-topic-stats {
   display: flex;
   gap: 16px;
   font-size: 12px;
   color: #6B7280;
 }
 
-.topic-stats span {
+.cc-topic-stats span {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.topic-progress-section {
+.cc-topic-progress-section {
   margin-left: 20px;
 }
 
-.progress-circle {
+.cc-progress-circle {
   padding: 15px;
   width:70px;
   height: 70px;
@@ -205,7 +205,7 @@
   position: relative;
 }
 
-.progress-circle::before {
+.cc-progress-circle::before {
   content: '';
   width: 60px;
   height: 60px;
@@ -214,7 +214,7 @@
   position: absolute;
 }
 
-.progress-text {
+.cc-progress-text {
   font-size: 10px;
   font-weight: 600;
   color: #374151;
@@ -225,18 +225,18 @@
 }
 
 /* Topic 1 - 100% completed */
-.topic-section:first-child .progress-circle {
+.cc-topic-section:first-child .cc-progress-circle {
   background: conic-gradient(#10B981 0deg 360deg, #e5e7eb 360deg 360deg);
 }
 
 /* Lessons List */
-.lessons-list {
+.cc-lessons-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.lesson-item {
+.cc-lesson-item {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -246,20 +246,20 @@
   cursor: pointer;
 }
 
-.lesson-item:hover {
+.cc-lesson-item:hover {
   background-color: #f8fafc;
 }
 
-.lesson-item.completed {
+.cc-lesson-item.cc-completed {
   background-color: #f0fdf4;
 }
 
-.lesson-status {
+.cc-lesson-status {
   display: flex;
   align-items: center;
 }
 
-.status-icon {
+.cc-status-icon {
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -270,42 +270,52 @@
   font-weight: 600;
 }
 
-.status-icon.completed {
+.cc-status-icon.cc-completed {
   background: #10B981;
   color: white;
 }
 
-.status-icon.pending {
+.cc-status-icon.cc-pending {
   background: #e5e7eb;
   color: #6B7280;
   border: 2px solid #d1d5db;
 }
 
-.lesson-content {
+.cc-lesson-content {
   display: flex;
   align-items: center;
   gap: 12px;
   flex: 1;
 }
 
-.lesson-type-icon {
+.cc-lesson-type-icon {
   font-size: 16px;
 }
 
-.lesson-title {
+.cc-lesson-title {
   font-size: 14px;
   font-weight: 500;
   color: #374151;
 }
 
-.lesson-duration {
+.cc-lesson-duration {
   font-size: 12px;
   color: #6B7280;
   font-weight: 500;
 }
 
+.cc-personalized-badge {
+  background: #10B981;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
 /* Sidebar */
-.chapter-sidebar {
+.cc-chapter-sidebar {
   background: white;
   border-radius: 12px;
   padding: 24px;
@@ -315,14 +325,18 @@
   top: 120px;
 }
 
-.sidebar-title {
+.cc-sidebar-title {
   font-size: 1rem;
   font-weight: 600;
   color: #1F2937;
   margin: 0 0 16px 0;
 }
 
-.objectives-list {
+.cc-learning-objectives {
+  margin-bottom: 24px;
+}
+
+.cc-objectives-list {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -331,7 +345,7 @@
   gap: 12px;
 }
 
-.objective-item {
+.cc-objective-item {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -340,20 +354,20 @@
   line-height: 1.4;
 }
 
-.bullet {
+.cc-bullet {
   color: #10B981;
   font-weight: 600;
   margin-top: 2px;
 }
 
 /* Chapter Actions */
-.chapter-actions {
+.cc-chapter-actions {
   margin-top: 24px;
   padding-top: 24px;
   border-top: 1px solid #e5e7eb;
 }
 
-.quiz-button {
+.cc-quiz-button {
   width: 100%;
   background: linear-gradient(135deg, #10B981 0%, #059669 100%);
   color: white;
@@ -370,85 +384,85 @@
   gap: 8px;
 }
 
-.quiz-button:hover {
+.cc-quiz-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
 }
 
-.quiz-icon {
+.cc-quiz-icon {
   font-size: 16px;
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .chapter-main {
+  .cc-chapter-main {
     grid-template-columns: 1fr;
   }
   
-  .chapter-sidebar {
+  .cc-chapter-sidebar {
     position: static;
   }
 }
 
 @media (max-width: 768px) {
-  .chapter-container {
+  .cc-chapter-container {
     padding: 16px;
     padding-top: 80px;
   }
 
-  .chapter-video-section {
+  .cc-chapter-video-section {
     flex-direction: column;
     text-align: center;
     gap: 16px;
   }
 
-  .chapter-title {
+  .cc-chapter-title {
     font-size: 1.5rem;
   }
 
-  .chapter-stats {
+  .cc-chapter-stats {
     justify-content: center;
     gap: 16px;
   }
 
-  .topic-header {
+  .cc-topic-header {
     flex-direction: column;
     gap: 16px;
     align-items: center;
     text-align: center;
   }
 
-  .topic-progress-section {
+  .cc-topic-progress-section {
     margin-left: 0;
   }
 
-  .lesson-item {
+  .cc-lesson-item {
     padding: 12px;
   }
 
-  .lesson-content {
+  .cc-lesson-content {
     gap: 8px;
   }
 }
 
 @media (max-width: 480px) {
-  .chapter-header {
+  .cc-chapter-header {
     padding: 16px;
   }
 
-  .topic-section {
+  .cc-topic-section {
     padding: 16px;
   }
 
-  .chapter-sidebar {
+  .cc-chapter-sidebar {
     padding: 16px;
   }
 
-  .stat-item {
+  .cc-stat-item {
     font-size: 12px;
   }
 
-  .topic-stats {
+  .cc-topic-stats {
     flex-direction: column;
     gap: 8px;
   }

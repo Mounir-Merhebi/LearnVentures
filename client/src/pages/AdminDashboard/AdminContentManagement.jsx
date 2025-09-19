@@ -11,6 +11,7 @@ import {
   FileText,
   ChevronDown,
   ChevronRight,
+  ChevronLeft,
   CheckCircle,
   XCircle
 } from 'lucide-react';
@@ -381,18 +382,14 @@ const AdminContentManagement = () => {
 
   return (
     <div className="admin-content-page">
-      <div className="admin-navigation" style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 16px' }}>
-        <button
-          className="nav-btn"
-          onClick={() => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            navigate('/auth');
-          }}
-        >
-          Logout
-        </button>
-      </div>
+      <button
+        className="btn-green"
+        onClick={() => navigate('/admin/dashboard')}
+        style={{ margin: '12px 16px' }}
+      >
+        <ChevronLeft size={16} style={{ marginRight: 8 }} />
+        Back to Dashboard
+      </button>
 
       <div className="admin-content-container">
         <div className="admin-content-header">

@@ -100,29 +100,29 @@ const Chapter = () => {
   };
 
   return (
-    <div className="chapter-page">
+    <div className="cc-chapter-page">
       <Navbar />
 
-      <div className="chapter-container">
+      <div className="cc-chapter-container">
         {/* Back Button */}
-        <button className="back-button" onClick={handleBackToMathematics}>
-          <ArrowLeft className="back-arrow" size={18} />
+        <button className="cc-back-button" onClick={handleBackToMathematics}>
+          <ArrowLeft className="cc-back-arrow" size={18} />
           {subjectName ? `Back to ${subjectName}` : 'Back to Subjects'}
         </button>
 
         {/* Chapter Header */}
-        <div className="chapter-header">
-          <div className="chapter-video-section">
-            <div className="video-thumbnail">
-              <img className="chapter-image" src={getCoverSrc(chapterData.cover_photo)} alt={chapterData.chapterTitle} />
+        <div className="cc-chapter-header">
+          <div className="cc-chapter-video-section">
+            <div className="cc-video-thumbnail">
+              <img className="cc-chapter-image" src={getCoverSrc(chapterData.cover_photo)} alt={chapterData.chapterTitle} />
             </div>
-            <div className="chapter-info">
-              <h1 className="chapter-title">{chapterData.chapterTitle}</h1>
-              <div className="chapter-stats">
-                <span className="stat-item">
+            <div className="cc-chapter-info">
+              <h1 className="cc-chapter-title">{chapterData.chapterTitle}</h1>
+              <div className="cc-chapter-stats">
+                <span className="cc-stat-item">
                   <BookOpen size={16} /> {chapterData.totalLessons} lessons
                 </span>
-                <span className="stat-item">
+                <span className="cc-stat-item">
                   <HelpCircle size={16} /> {chapterData.totalQuiz} quiz
                 </span>
               </div>
@@ -131,17 +131,17 @@ const Chapter = () => {
         </div>
 
         {/* Main Content */}
-        <div className="chapter-main">
+        <div className="cc-chapter-main">
           {/* Topics Section */}
-          <div className="topics-section">
+          <div className="cc-topics-section">
             {chapterData.topics.map((topic) => (
-              <div key={topic.id} className="topic-section">
+              <div key={topic.id} className="cc-topic-section">
                 {/* Topic Header */}
-                <div className="topic-header">
-                  <div className="topic-title-section">
-                    <h2 className="topic-title">{topic.title}</h2>
-                    <p className="topic-description">{topic.description}</p>
-                    <div className="topic-stats">
+                <div className="cc-topic-header">
+                  <div className="cc-topic-title-section">
+                    <h2 className="cc-topic-title">{topic.title}</h2>
+                    <p className="cc-topic-description">{topic.description}</p>
+                    <div className="cc-topic-stats">
                       <span>
                         <List size={16} /> {topic.totalEpisodes} Episodes
                       </span>
@@ -150,38 +150,38 @@ const Chapter = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="topic-progress-section">
-                    <div className="progress-circle">
-                      <span className="progress-text">{topic.progress}% completed</span>
+                  <div className="cc-topic-progress-section">
+                    <div className="cc-progress-circle">
+                      <span className="cc-progress-text">{topic.progress}% completed</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Lessons List */}
-                <div className="lessons-list">
+                <div className="cc-lessons-list">
                   {topic.lessons.map((lesson) => (
                     <div
                       key={lesson.id}
-                      className={`lesson-item ${lesson.isCompleted ? 'completed' : 'pending'}`}
+                      className={`cc-lesson-item ${lesson.isCompleted ? 'cc-completed' : 'cc-pending'}`}
                       onClick={() => handleLessonClick(lesson)}
                     >
-                      <div className="lesson-status">
-                        <div className={`status-icon ${lesson.isCompleted ? 'completed' : 'pending'}`}>
+                      <div className="cc-lesson-status">
+                        <div className={`cc-status-icon ${lesson.isCompleted ? 'cc-completed' : 'cc-pending'}`}>
                           {lesson.isCompleted ? <CheckCircle size={16} /> : <Circle size={20} />}
                         </div>
                       </div>
-                      <div className="lesson-content">
-                        <div className="lesson-type-icon">
+                      <div className="cc-lesson-content">
+                        <div className="cc-lesson-type-icon">
                           {lesson.type === 'video' ? <Video size={16} /> : <FileText size={16} />}
                         </div>
-                        <span className="lesson-title">
+                        <span className="cc-lesson-title">
                           {lesson.personalized ? lesson.personalized.personalized_title : lesson.title}
                         </span>
                         {lesson.personalized && (
-                          <span className="personalized-badge">Personalized</span>
+                          <span className="cc-personalized-badge">Personalized</span>
                         )}
                       </div>
-                      <div className="lesson-duration">{lesson.duration}</div>
+                      <div className="cc-lesson-duration">{lesson.duration}</div>
                     </div>
                   ))}
                 </div>
@@ -190,22 +190,22 @@ const Chapter = () => {
           </div>
 
           {/* Sidebar */}
-          <div className="chapter-sidebar">
-            <div className="learning-objectives">
-              <h3 className="sidebar-title">What you will learn</h3>
-              <ul className="objectives-list">
+          <div className="cc-chapter-sidebar">
+            <div className="cc-learning-objectives">
+              <h3 className="cc-sidebar-title">What you will learn</h3>
+              <ul className="cc-objectives-list">
                 {chapterData.learningObjectives.map((objective, index) => (
-                  <li key={index} className="objective-item">
-                    <span className="bullet">•</span>
+                  <li key={index} className="cc-objective-item">
+                    <span className="cc-bullet">•</span>
                     {objective}
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="chapter-actions">
-              <button className="quiz-button" onClick={handleQuizClick}>
-                <Target className="quiz-icon" size={18} />
+            <div className="cc-chapter-actions">
+              <button className="cc-quiz-button" onClick={handleQuizClick}>
+                <Target className="cc-quiz-icon" size={18} />
                 <span>Take Chapter Quiz</span>
               </button>
             </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../../services/axios';
 import './AdminDashboard.css';
+import { ChevronLeft } from 'lucide-react';
 
 const AdminDailyReports = () => {
   const navigate = useNavigate();
@@ -15,12 +16,13 @@ const AdminDailyReports = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [reports, setReports] = useState([]);
+  const [nameQuery, setNameQuery] = useState('');
 
-  const fetchReports = useMemo(() => async (selectedDate) => {
+  const fetchReports = useMemo(() => async (selectedDate, q) => {
     try {
       setLoading(true);
       setError(null);
-      const res = await API.get('/reports/daily', { params: { date: selectedDate } });
+      const res = await API.get('/reports/daily', { params: { date: selectedDate, student_name: q || undefined } });
       if (res.data && res.data.success) {
         const payload = Array.isArray(res.data.data)
           ? res.data.data
@@ -38,31 +40,44 @@ const AdminDailyReports = () => {
   }, []);
 
   useEffect(() => {
-    fetchReports(date);
-  }, [date, fetchReports]);
+    const handler = setTimeout(() => {
+      fetchReports(date, nameQuery.trim());
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [date, nameQuery, fetchReports]);
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/auth');
+  // navigation back to admin dashboard
+  const goDashboard = () => {
+    navigate('/admin/dashboard');
   };
 
   return (
     <div className="admin-dashboard">
       <div className="dashboard-header">
-        <div>
-          <h1>Daily Chat Reports</h1>
-          <p>Filter by date and review student summaries</p>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <h1>Daily Chat Reports</h1>
+        <p>Filter by date and review student summaries</p>
+        <div className="header-controls">
+          <input
+            type="text"
+            placeholder="Search student by name..."
+            value={nameQuery}
+            onChange={(e) => setNameQuery(e.target.value)}
+            className="search-input"
+          />
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
             className="date-input"
           />
-          <button className="nav-btn" onClick={logout}>Logout</button>
         </div>
+      </div>
+
+      <div className="back-button-container">
+        <button className="btn-green" onClick={goDashboard}>
+          <ChevronLeft size={16} style={{ marginRight: 6 }} />
+          Back to Dashboard
+        </button>
       </div>
 
       <div className="dashboard-content">

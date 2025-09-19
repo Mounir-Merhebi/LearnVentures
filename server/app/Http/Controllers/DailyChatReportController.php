@@ -97,6 +97,16 @@ class DailyChatReportController extends Controller
                 }
             }
 
+            // Optional name filter
+            if ($request->filled('student_name')) {
+                $term = $request->get('student_name');
+                $q->where('users.name', 'like', "%{$term}%");
+            }
+            if ($request->filled('name')) {
+                $term = $request->get('name');
+                $q->where('users.name', 'like', "%{$term}%");
+            }
+
             $reports = $q->orderByDesc('daily_chat_reports.report_date')->paginate(50);
 
             return response()->json([
