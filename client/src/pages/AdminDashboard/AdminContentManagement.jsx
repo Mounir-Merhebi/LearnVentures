@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminContentManagement.css';
-import Navbar from '../../components/shared/Navbar/Navbar';
 import ConfirmationPopup from '../../components/shared/ConfirmationPopup';
 import API from '../../services/axios';
 import {
@@ -359,7 +358,6 @@ const AdminContentManagement = () => {
   if (loading) {
     return (
       <div className="admin-content-page">
-        <Navbar />
         <div className="admin-content-container">
           <div className="loading">Loading content management...</div>
         </div>
@@ -370,7 +368,6 @@ const AdminContentManagement = () => {
   if (error) {
     return (
       <div className="admin-content-page">
-        <Navbar />
         <div className="admin-content-container">
           <div className="error">
             <h2>Error</h2>
@@ -384,23 +381,17 @@ const AdminContentManagement = () => {
 
   return (
     <div className="admin-content-page">
-      <Navbar />
-
-      <div className="admin-navigation">
-        <div className="nav-section">
-          <button
-            className={`nav-btn ${window.location.pathname === '/admin/dashboard' ? 'active' : ''}`}
-            onClick={() => navigate('/admin/dashboard')}
-          >
-            Excel Moderation
-          </button>
-          <button
-            className={`nav-btn ${window.location.pathname === '/admin/content' ? 'active' : ''}`}
-            onClick={() => navigate('/admin/content')}
-          >
-            Content Management
-          </button>
-        </div>
+      <div className="admin-navigation" style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 16px' }}>
+        <button
+          className="nav-btn"
+          onClick={() => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            navigate('/auth');
+          }}
+        >
+          Logout
+        </button>
       </div>
 
       <div className="admin-content-container">

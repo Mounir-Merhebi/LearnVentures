@@ -194,9 +194,10 @@
 }
 
 .progress-circle {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  padding: 15px;
+  width:70px;
+  height: 70px;
+  border-radius: 60%;
   background: conic-gradient(#10B981 0deg 216deg, #e5e7eb 216deg 360deg); /* 60% = 216 degrees */
   display: flex;
   align-items: center;

@@ -240,30 +240,28 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
-      <div className="admin-navigation">
-        <div className="nav-section">
+      <div className="dashboard-header">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>Manage content and monitor the platform</p>
+        </div>
+        <div>
           <button
-            className={`nav-btn ${window.location.pathname === '/admin/dashboard' ? 'active' : ''}`}
-            onClick={() => navigate('/admin/dashboard')}
+            className="nav-btn"
+            onClick={() => {
+              // Clear auth and redirect to login
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              navigate('/auth');
+            }}
           >
-            Excel Moderation
-          </button>
-          <button
-            className={`nav-btn ${window.location.pathname === '/admin/content' ? 'active' : ''}`}
-            onClick={() => navigate('/admin/content')}
-          >
-            Content Management
+            Logout
           </button>
         </div>
       </div>
 
-      <div className="dashboard-header">
-        <h1>Excel Moderation Dashboard</h1>
-        <p>Review and manage bulk data change proposals</p>
-      </div>
-
       <div className="dashboard-content">
-        <div className="filters-section">
+        <div className="filters-section" style={{ display: 'none' }}>
           <div className="filter-buttons">
             <button
               className={`filter-btn ${filterStatus === 'all' ? 'active' : ''}`}
@@ -292,7 +290,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="proposals-grid">
+        <div className="proposals-grid" style={{ display: 'none' }}>
           {filteredProposals.map(proposal => (
             <div key={proposal.id} className="proposal-card">
               <div className="proposal-header">
@@ -369,7 +367,7 @@ const AdminDashboard = () => {
           ))}
         </div>
 
-        {selectedProposal && (
+        {false && selectedProposal && (
           <div className="proposal-detail-modal">
             <div className="modal-content">
               <div className="modal-header">

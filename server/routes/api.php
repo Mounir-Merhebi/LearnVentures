@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Common\AuthController;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\ModeratorExcelController;
 use App\Http\Controllers\AdminChangeProposalController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DailyChatReportController;
@@ -59,17 +58,7 @@ Route::group(["prefix" =>"v0.1"], function(){
         });
 
 
-        // Excel Moderation routes
-        // Moderator routes
-        Route::group(["prefix" => "mod", "middleware" => function ($request, $next) {
-            if (!in_array(auth()->user()->role, ['Moderator', 'Admin'])) {
-                return response()->json(['message' => 'Access denied'], 403);
-            }
-            return $next($request);
-        }], function(){
-            Route::get('/excel/baseline', [ModeratorExcelController::class, 'baseline']);
-            Route::post('/proposals', [ModeratorExcelController::class, 'storeProposal']);
-        });
+        // Excel Moderation routes removed
 
         // Admin routes
         Route::group(["prefix" => "admin", "middleware" => function ($request, $next) {

@@ -25,7 +25,6 @@ const Chapter = () => {
     chapterTitle: '',
     totalLessons: 0,
     totalVideos: 0,
-    totalQuiz: 0,
     topics: [],
     learningObjectives: [],
   });
