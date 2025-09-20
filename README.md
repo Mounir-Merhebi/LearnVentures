@@ -62,13 +62,20 @@ Instructors receive a daily report summarizing every conversation between studen
 
 | Optimus studying Assistant                           | Personilized Lesssons                       |Quizz System                      |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/chatbot.gif) | ![fsdaf](./readme/demo/personilized.gif) | ![fsdaf](./readme/demo/profile.png) |
+| ![Landing](./readme/demo/chatbot.gif) | ![fsdaf](./readme/demo/personilized.gif) | ![fsdaf](./readme/demo/quizz.gif) |
 
 ### Admin Screens (Web)
 
 | Content managment                             | Chat daily Report                       |
 | --------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+
+### Automation Workflow
+
+| n8n workflow                             | 
+| --------------------------------------- | 
+| ![Landing](./readme/demo/1440x1024.png) | 
+
 
 
 <br><br>
