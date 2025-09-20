@@ -52,9 +52,9 @@ Instructors receive a daily report summarizing every conversation between studen
 
 ### User Screens (Mobile)
 
-| Login                             | Register                        |Landing Page 1                     |
-| --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/Login.png) | ![fsdaf](./readme/demo/register.png) | ![fsdaf](./readme/demo/Landing1.png) |
+| Landing Page 1                     | Login                             | Register                        |
+| ---------------------------------- | --------------------------------- | -------------------------------- |
+| ![Landing](./readme/demo/Landing1.png) | ![Login](./readme/demo/Login.png) | ![Register](./readme/demo/register.png) |
 
 | Landing page 2                            | User Dashboard                       |Student Profile                      |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
