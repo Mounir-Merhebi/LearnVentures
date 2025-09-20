@@ -62,7 +62,7 @@ Instructors receive a daily report summarizing every conversation between studen
 
 | Optimus studying Assistant                           | Personilized Lesssons                       |Quizz System                      |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/chatbot.gif) | ![fsdaf](./readme/demo/Dashboard.png) | ![fsdaf](./readme/demo/profile.png) |
+| ![Landing](./readme/demo/chatbot.gif) | ![fsdaf](./readme/demo/personilized.png) | ![fsdaf](./readme/demo/profile.png) |
 
 ### Admin Screens (Web)
 
