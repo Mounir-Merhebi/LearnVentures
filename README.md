@@ -23,7 +23,7 @@ Our platform transforms static lessons into *personalized learning experiences*.
 
 ### SYSTEM Architecture
 
-<img src="./readme/Architecture.svg"/>
+<img src="./readme/Architecture.png"/>
 <br><br>
 
 <!-- Project Highlights -->
