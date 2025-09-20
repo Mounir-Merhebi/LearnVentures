@@ -60,6 +60,9 @@ Instructors receive a daily report summarizing every conversation between studen
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/Landing2.png) | ![fsdaf](./readme/demo/Dashboard.png) | ![fsdaf](./readme/demo/profile.png) |
 
+| Optimus studying Assistant                           | User Dashboard                       |Student Profile                      |
+| --------------------------------------- | ------------------------------------- | ------------------------------------- |
+| ![Landing](./readme/demo/chatbot.mp4) | ![fsdaf](./readme/demo/Dashboard.png) | ![fsdaf](./readme/demo/profile.png) |
 
 ### Admin Screens (Web)
 
