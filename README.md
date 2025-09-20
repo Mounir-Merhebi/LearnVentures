@@ -17,10 +17,13 @@ Our platform transforms static lessons into *personalized learning experiences*.
 <!-- System Design -->
 <img src="./readme/title3.svg"/>
 
-### Add Title Here
+### ER DIAGRAM
 
 - To be decided on later on.
 
+### Add Title Here
+
+- To be decided on later on.
 <br><br>
 
 <!-- Project Highlights -->
@@ -31,17 +34,14 @@ Our platform transforms static lessons into *personalized learning experiences*.
 - ✨ *AI-Personalized Lessons*
 Students don’t just read, they connect. A football fan sees math problems framed as game stats, while a gamer sees them as power-ups. Same core concept, different engagement.
 
-- 💬 *A GroupChat Section that has Course Helper Bot called Optimus*
- A GroupChat where all the students can talk and exchange information, help each other, and invoke a class-specific chatbot by tagging @optimus that will help students with definitions and clarifications, keeping them supported without pulling instructors away.
-
 - 🤖 *A PrivateChat Section between the student and Optimus*
- A section for the student to chat privately with Optimus and ask them about definitions and clarifications.
+ A section for the student to chat privately with Optimus and ask them about definitions and clarifications. also it includes voice transcribtion where the student can record a voice and the voice will be transcribed to text message before the student can send it to optimus.
 
-- 📈 Progress Tracking That Feels Personal
- Students don’t just see grades, they get a dynamic progress tracker showing completed lessons, quiz performance, and AI-powered “areas to improve.” It’s like having a personal coach whispering, “You’ve nailed algebra, but geometry needs love.”
+- 📈 *Quiz Performance Analysis*
+The AI analyzes each quiz within the chapters to provide detailed performance insights. Students don’t just get scores. they receive a personalized performance analysis and a tailored study plan that highlights strengths, pinpoints weaknesses, and recommends next steps for improvement.
 
-- 🛡️ Smart Moderation & Admin Control(Automation)
- Moderators manage updates through a simple Google Sheet ; no complex backend needed. Every 24 hours, an AI agent (or a robust code) automatically scans and compares the database with the sheet, generating a clean “change log” (update or delete requests, tied to moderator emails). Admins get a sleek approval dashboard to accept or reject changes with a click, keeping the system accurate, transparent, and secure.
+- 📝 *Daily Conversation Report Automation*
+Instructors receive a daily report summarizing every conversation between students and the AI chatbot Optimus. Each report is automatically generated every 24 hours, providing a clear record of student–AI interactions. This keeps instructors informed, ensures transparency in learning progress, and helps maintain accountability in how students engage with the AI.
 
 
 
