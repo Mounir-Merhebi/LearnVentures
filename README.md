@@ -19,7 +19,7 @@ Our platform transforms static lessons into *personalized learning experiences*.
 
 ### ER DIAGRAM
 
-- To be decided on later on.
+<img src="./readme/er_diagram.svg"/>
 
 ### Add Title Here
 
