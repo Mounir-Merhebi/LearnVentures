@@ -50,7 +50,7 @@ Instructors receive a daily report summarizing every conversation between studen
 <!-- Demo -->
 <img src="./readme/title5.svg"/>
 
-### User Screens (Mobile)
+### User Screens (Web)
 
 | Landing Page 1                     | Login                             | Register                        |
 | ---------------------------------- | --------------------------------- | -------------------------------- |
@@ -68,13 +68,13 @@ Instructors receive a daily report summarizing every conversation between studen
 
 | Content managment                             | Chat daily Report                       |
 | --------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+| ![Landing](./readme/demo/managment.gif) | ![fsdaf](./readme/demo/Chat_report.gif) |
 
 ### Automation Workflow
 
 | n8n workflow                             | 
 | --------------------------------------- | 
-| ![Landing](./readme/demo/1440x1024.png) | 
+| ![Landing](./readme/demo/n8n.gif) | 
 
 
 
