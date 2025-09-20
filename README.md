@@ -17,11 +17,11 @@ Our platform transforms static lessons into *personalized learning experiences*.
 <!-- System Design -->
 <img src="./readme/title3.svg"/>
 
-### ER DIAGRAM
+### ER Diagram
 
 <img src="./readme/er_diagram.svg"/>
 
-### Add Title Here
+### SYSTEM Architecture
 
 - To be decided on later on.
 <br><br>
@@ -54,7 +54,7 @@ Instructors receive a daily report summarizing every conversation between studen
 
 | Login screen                            | Register screen                       | Register screen                       |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+| ![Landing](./readme/demo/Login.png) | ![fsdaf](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
 
 
 ### Admin Screens (Web)
