@@ -123,7 +123,8 @@ Instructors receive a daily report summarizing every conversation between studen
 5. **Production Release**
    - Once the feature is approved, staging is merged into the main branch.
    - GitHub Actions reruns the same pipeline steps, but deployment is directed to the production EC2 instance.
-
+   
+<br><br>
 
    <img src="./readme/demo/deployment.png"/>
 
