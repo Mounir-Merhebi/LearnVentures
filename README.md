@@ -96,17 +96,34 @@ Instructors receive a daily report summarizing every conversation between studen
 <!-- Deployment -->
 <img src="./readme/title7.svg"/>
 
-### CI/CD workflow
+### Development → Deployment Flow
 
-- Local Branch → Push → Remote Branch → Merge → Staging
-        ↓                         ↓
-   GitHub Actions (CI: DB + Migrate + Test + Serve)
-        ↓
-  Deploy to Staging EC2 → Docker Build (Laravel, Node, DB, React)
-        ↓
-    Merge Staging → Main
-        ↓
-  GitHub Actions (repeat CI/CD flow for Production)
+1. **Feature Development**
+   - Work begins on a new feature inside a local branch.
+   - The branch is pushed to its remote equivalent on GitHub.
+
+2. **Integration to Staging**
+   - The remote feature branch is merged into the staging branch.
+   - This triggers GitHub Actions.
+
+3. **CI on Staging**
+   - GitHub Actions provisions a temporary database.
+   - Migrations run, automated tests execute, and the app is booted in a test environment.
+   - If all checks pass, the pipeline continues.
+
+4. **Staging Deployment**
+   - GitHub Actions pushes code to the staging EC2 instance.
+   - A deployment script builds Docker containers:
+     - Laravel backend
+     - Node services
+     - Database
+     - React frontend
+   - Containers spin up, serving the staging environment.
+
+5. **Production Release**
+   - Once the feature is approved, staging is merged into the main branch.
+   - GitHub Actions reruns the same pipeline steps, but deployment is directed to the production EC2 instance.
+
 
 
 
