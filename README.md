@@ -125,6 +125,7 @@ Instructors receive a daily report summarizing every conversation between studen
    - GitHub Actions reruns the same pipeline steps, but deployment is directed to the production EC2 instance.
 
 
+   <img src="./readme/deployment.png"/>
 
 
 | Swagger API 1                            | Swagger API 2                       | Swagger API 3                        |
