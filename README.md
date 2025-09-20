@@ -52,7 +52,7 @@ Instructors receive a daily report summarizing every conversation between studen
 
 ### User Screens (Mobile)
 
-| Login screen                            | Register screen                       |Landing Page 1                     |
+| Login                             | Register                        |Landing Page 1                     |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/Login.png) | ![fsdaf](./readme/demo/register.png) | ![fsdaf](./readme/demo/Landing1.png) |
 
@@ -60,13 +60,13 @@ Instructors receive a daily report summarizing every conversation between studen
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/Landing2.png) | ![fsdaf](./readme/demo/Dashboard.png) | ![fsdaf](./readme/demo/profile.png) |
 
-| Optimus studying Assistant                           | User Dashboard                       |Student Profile                      |
+| Optimus studying Assistant                           | Personilized Lesssons                       |Quizz System                      |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/chatbot.mp4) | ![fsdaf](./readme/demo/Dashboard.png) | ![fsdaf](./readme/demo/profile.png) |
+| ![Landing](./readme/demo/chatbot.gif) | ![fsdaf](./readme/demo/Dashboard.png) | ![fsdaf](./readme/demo/profile.png) |
 
 ### Admin Screens (Web)
 
-| Login screen                            | Register screen                       |
+| Content managment                             | Chat daily Report                       |
 | --------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
 
