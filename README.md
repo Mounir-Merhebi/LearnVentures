@@ -68,7 +68,7 @@ Instructors receive a daily report summarizing every conversation between studen
 
 | Content managment                             | Chat daily Report                       |
 | --------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/managment.gif) | ![fsdaf](./readme/demo/Chat_report.gif) |
+| ![Landing](./readme/demo/managment.gif) | ![fsdaf](./readme/demo/report.gif) |
 
 ### Automation Workflow
 
