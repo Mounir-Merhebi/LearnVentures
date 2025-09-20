@@ -96,12 +96,21 @@ Instructors receive a daily report summarizing every conversation between studen
 <!-- Deployment -->
 <img src="./readme/title7.svg"/>
 
-### Add Title Here
+### CI/CD workflow
 
-- Description here.
+- Local Branch → Push → Remote Branch → Merge → Staging
+        ↓                         ↓
+   GitHub Actions (CI: DB + Migrate + Test + Serve)
+        ↓
+  Deploy to Staging EC2 → Docker Build (Laravel, Node, DB, React)
+        ↓
+    Merge Staging → Main
+        ↓
+  GitHub Actions (repeat CI/CD flow for Production)
 
 
-| Postman API 1                            | Postman API 2                       | Postman API 3                        |
+
+| Swagger API 1                            | Swagger API 2                       | Swagger API 3                        |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/api1.png) | ![fsdaf](./readme/demo/api2.png) | ![fsdaf](./readme/demo/api3.png) |
 
