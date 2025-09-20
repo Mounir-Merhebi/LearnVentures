@@ -56,9 +56,9 @@ Instructors receive a daily report summarizing every conversation between studen
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/Login.png) | ![fsdaf](./readme/demo/register.png) | ![fsdaf](./readme/demo/Landing1.png) |
 
-| Landing page 2                            | User Dashboard                       |Landing Page                      |
+| Landing page 2                            | User Dashboard                       |Student Profile                      |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/Landing2.png) | ![fsdaf](./readme/demo/Dashboard.png) | ![fsdaf](./readme/demo/Landing1.png) |
+| ![Landing](./readme/demo/Landing2.png) | ![fsdaf](./readme/demo/Dashboard.png) | ![fsdaf](./readme/demo/profile.png) |
 
 
 ### Admin Screens (Web)
