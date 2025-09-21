@@ -202,7 +202,6 @@ If you are using Docker, ensure the backend container is running (it will expose
 ```
 ```
 
-
 | Swagger API 1                            | Swagger API 2                       | Swagger API 3                        |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/api1.png) | ![fsdaf](./readme/demo/api2.png) | ![fsdaf](./readme/demo/api3.png) |
