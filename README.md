@@ -87,7 +87,7 @@ Instructors receive a daily report summarizing every conversation between studen
 
 | CI 1                             | CI 2                       |
 | --------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/ci1.gif) | ![fsdaf](./readme/demo/ci2.gif) |
+| ![Landing](./readme/demo/ci1.png) | ![fsdaf](./readme/demo/ci2.png) |
 
 
 | Services                            | Validation                       | Testing                        |
