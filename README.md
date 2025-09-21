@@ -162,6 +162,8 @@ Eraser was chosen because:
 
 <br> 
 
+
+````
 ## Swagger Documentation
 Swagger is included for API exploration and testing.
 
