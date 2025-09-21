@@ -170,6 +170,35 @@ Swagger is included for API exploration and testing.
    Start the Laravel development server using Artisan:  
    ```bash
    php artisan serve
+````
+
+By default, this will serve the app on `http://localhost:8000`.
+If you want to run it on a different port, you can specify it:
+
+```bash
+php artisan serve --port=8080
+```
+
+If you are using Docker, ensure the backend container is running (it will expose the configured port, usually 8000 inside the container mapped to your host machine).
+
+2. **Access Swagger UI**
+   Once the server is running, open your browser and navigate to:
+
+   ```
+   http://localhost:8000/api/documentation
+   ```
+
+   (Replace `8000` with the port you configured if it’s different.)
+
+### Usage
+
+* **Interactive API testing**: Send test requests directly from Swagger UI without needing Postman or curl.
+* **Endpoint reference**: View all available API endpoints, grouped by controller/module.
+* **Request/Response details**: See the required parameters, request body examples, and the expected response schema.
+* **Authentication support**: If your API uses tokens or authentication headers, you can enter them once and test secured endpoints.
+
+```
+```
 
 
 | Swagger API 1                            | Swagger API 2                       | Swagger API 3                        |
