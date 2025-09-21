@@ -83,12 +83,17 @@ Instructors receive a daily report summarizing every conversation between studen
 <!-- Development & Testing -->
 <img src="./readme/title6.svg"/>
 
-### Add Title Here
+### CI Workflow
+
+| CI 1                             | CI 2                       |
+| --------------------------------------- | ------------------------------------- |
+| ![Landing](./readme/demo/ci1.gif) | ![fsdaf](./readme/demo/ci2.gif) |
 
 
 | Services                            | Validation                       | Testing                        |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/service.png) | ![fsdaf](./readme/demo/request.png) | ![fsdaf](./readme/demo/test.png) |
+
 
 
 <br><br>
