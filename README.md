@@ -43,7 +43,7 @@ The AI analyzes each quiz within the chapters to provide detailed performance in
 - 📝 *Daily Conversation Report Automation*
 Instructors receive a daily report summarizing every conversation between students and the AI chatbot Optimus. Each report is automatically generated every 24 hours, providing a clear record of student–AI interactions. This keeps instructors informed, ensures transparency in learning progress, and helps maintain accountability in how students engage with the AI.
 
-
+<img src="./readme/demo/features.png"/>
 
 <br><br>
 
@@ -123,10 +123,12 @@ Instructors receive a daily report summarizing every conversation between studen
 5. **Production Release**
    - Once the feature is approved, staging is merged into the main branch.
    - GitHub Actions reruns the same pipeline steps, but deployment is directed to the production EC2 instance.
-   
-<br><br>
+
+<br>
 
    <img src="./readme/demo/deployment.png"/>
+
+<br> 
 
 
 | Swagger API 1                            | Swagger API 2                       | Swagger API 3                        |
