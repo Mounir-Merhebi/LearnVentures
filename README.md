@@ -108,6 +108,16 @@ Eraser was chosen because:
 
 [Eraser Public Board Link](https://app.eraser.io/workspace/3zg4gXt67Cxc4bqKBnSu)
 
+## Swagger Documentation
+Swagger is included for API exploration and testing.
+
+### How to launch
+1. **Run the application locally**  
+   Start the Laravel development server using Artisan:  
+   ```bash
+   php artisan serve
+
+
 ### CI Workflow
 
 | CI 1                             | CI 2                       |
