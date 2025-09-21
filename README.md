@@ -52,17 +52,26 @@ Instructors receive a daily report summarizing every conversation between studen
 
 ### User Screens (Web)
 
-| Landing Page 1                     | Login                             | Register                        |
-| ---------------------------------- | --------------------------------- | -------------------------------- |
-| ![Landing](./readme/demo/Landing1.png) | ![Login](./readme/demo/Login.png) | ![Register](./readme/demo/register.png) |
+| Landing Page 1                     | Landing Page 2                    |
+| ---------------------------------- | --------------------------------- |
+| ![Landing1](./readme/demo/Landing1.png) | ![Landing2](./readme/demo/Landing2.png) |
 
-| Landing page 2                            | User Dashboard                       |Student Profile                      |
-| --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/Landing2.png) | ![fsdaf](./readme/demo/Dashboard.png) | ![fsdaf](./readme/demo/profile.png) |
+| Login                              | Register                          |
+| ---------------------------------- | --------------------------------- |
+| ![Login](./readme/demo/Login.png)  | ![Register](./readme/demo/register.png) |
 
-| Optimus studying Assistant                           | Personilized Lesssons                       |Quizz System                      |
-| --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/chatbot.gif) | ![fsdaf](./readme/demo/personilized.gif) | ![fsdaf](./readme/demo/quizz.gif) |
+| User Dashboard                     | Student Profile                   |
+| ---------------------------------- | --------------------------------- |
+| ![Dashboard](./readme/demo/Dashboard.png) | ![Profile](./readme/demo/profile.png) |
+
+| Optimus Studying Assistant         | Personalized Lessons              |
+| ---------------------------------- | --------------------------------- |
+| ![Chatbot](./readme/demo/chatbot.gif) | ![Personalized](./readme/demo/personilized.gif) |
+
+| Quiz System                        |                                   |
+| ---------------------------------- | --------------------------------- |
+| ![Quiz](./readme/demo/quizz.gif)   |                                   |
+
 
 ### Admin Screens (Web)
 
