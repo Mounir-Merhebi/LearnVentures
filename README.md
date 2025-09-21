@@ -24,6 +24,13 @@ Our platform transforms static lessons into *personalized learning experiences*.
 ### System Architecture
 
 <img src="./readme/demo/Architecture.png"/>
+
+### Automation Workflow
+
+| n8n workflow                             | 
+| --------------------------------------- | 
+| ![Landing](./readme/demo/n8n.gif) | 
+
 <br><br>
 
 <!-- Project Highlights -->
@@ -78,13 +85,6 @@ Instructors receive a daily report summarizing every conversation between studen
 | Content managment                             | Chat daily Report                       |
 | --------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/managment.gif) | ![fsdaf](./readme/demo/report.gif) |
-
-### Automation Workflow
-
-| n8n workflow                             | 
-| --------------------------------------- | 
-| ![Landing](./readme/demo/n8n.gif) | 
-
 
 
 <br><br>
