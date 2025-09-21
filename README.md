@@ -136,6 +136,31 @@ Instructors receive a daily report summarizing every conversation between studen
 
 <br> 
 
+###  Linear Workflow
+
+Below is a screenshot of our Linear board, which we used to manage tasks throughout development:
+
+![Linear Board Screenshot](./readme/demo/linear.png)
+
+**Workflow steps:**
+- Create ticket in Linear  
+- Make a branch following Linear naming standards  
+- Commit changes with task IDs mentioned in commit messages  
+- Push branch to remote  
+- Open a pull request  
+- Merge pull request once approved  
+
+---
+
+## Eraser Diagrams
+We used [Eraser](https://app.eraser.io/) to design and maintain our architecture and database diagrams.  
+Eraser was chosen because:
+- **Diagram-as-code**: diagrams are represented in a simple code-like format, making them version-controllable.  
+- **Ease of use**: allows quick edits and sharing without heavy tools.  
+- **Collaboration**: teammates can easily view or update diagrams.  
+
+[Eraser Public Board Link](https://app.eraser.io/workspace/3zg4gXt67Cxc4bqKBnSu)
+
 
 | Swagger API 1                            | Swagger API 2                       | Swagger API 3                        |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
