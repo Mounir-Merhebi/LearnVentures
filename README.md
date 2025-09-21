@@ -131,47 +131,6 @@ Eraser was chosen because:
 | ![Landing](./readme/demo/service.png) | ![fsdaf](./readme/demo/request.png) | ![fsdaf](./readme/demo/test.png) |
 
 
-
-<br><br>
-
-<!-- Deployment -->
-<img src="./readme/title7.svg"/>
-
-### Development → Deployment Flow
-
-1. **Feature Development**
-   - Work begins on a new feature inside a local branch.
-   - The branch is pushed to its remote equivalent on GitHub.
-
-2. **Integration to Staging**
-   - The remote feature branch is merged into the staging branch.
-   - This triggers GitHub Actions.
-
-3. **CI on Staging**
-   - GitHub Actions provisions a temporary database.
-   - Migrations run, automated tests execute, and the app is booted in a test environment.
-   - If all checks pass, the pipeline continues.
-
-4. **Staging Deployment**
-   - GitHub Actions pushes code to the staging EC2 instance.
-   - A deployment script builds Docker containers:
-     - Laravel backend
-     - Node services
-     - Database
-     - React frontend
-   - Containers spin up, serving the staging environment.
-
-5. **Production Release**
-   - Once the feature is approved, staging is merged into the main branch.
-   - GitHub Actions reruns the same pipeline steps, but deployment is directed to the production EC2 instance.
-
-<br>
-
-   <img src="./readme/demo/deployment.png"/>
-
-<br> 
-
-
 ````
 ## Swagger Documentation
 Swagger is included for API exploration and testing.
@@ -214,5 +173,48 @@ If you are using Docker, ensure the backend container is running (it will expose
 | Swagger API 1                            | Swagger API 2                       | Swagger API 3                        |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/api1.png) | ![fsdaf](./readme/demo/api2.png) | ![fsdaf](./readme/demo/api3.png) |
+
+
+<br><br>
+
+<!-- Deployment -->
+<img src="./readme/title7.svg"/>
+
+### Development → Deployment Flow
+
+1. **Feature Development**
+   - Work begins on a new feature inside a local branch.
+   - The branch is pushed to its remote equivalent on GitHub.
+
+2. **Integration to Staging**
+   - The remote feature branch is merged into the staging branch.
+   - This triggers GitHub Actions.
+
+3. **CI on Staging**
+   - GitHub Actions provisions a temporary database.
+   - Migrations run, automated tests execute, and the app is booted in a test environment.
+   - If all checks pass, the pipeline continues.
+
+4. **Staging Deployment**
+   - GitHub Actions pushes code to the staging EC2 instance.
+   - A deployment script builds Docker containers:
+     - Laravel backend
+     - Node services
+     - Database
+     - React frontend
+   - Containers spin up, serving the staging environment.
+
+5. **Production Release**
+   - Once the feature is approved, staging is merged into the main branch.
+   - GitHub Actions reruns the same pipeline steps, but deployment is directed to the production EC2 instance.
+
+<br>
+
+   <img src="./readme/demo/deployment.png"/>
+
+<br> 
+
+
+
 
 <br><br>
