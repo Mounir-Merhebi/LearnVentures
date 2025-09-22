@@ -132,27 +132,39 @@ Eraser was chosen because:
 
 
 
-## Swagger Documentation
-Swagger is included for API exploration and testing.
+###AI Agents
 
-### Usage
+## Lessons Personalization AI Agent
+- **What it uses:** Student’s interests, hobbies, and preferences, plus lessons prepared by the instructor.  
+- **What it does:** Looks at the student’s profile and adapts the lessons to match their style and interests.  
+- **What comes out:** Each student gets a personalized version of the lesson made just for them.  
 
-* **Interactive API testing**: Send test requests directly from Swagger UI without needing Postman or curl.
-* **Endpoint reference**: View all available API endpoints, grouped by controller/module.
-* **Request/Response details**: See the required parameters, request body examples, and the expected response schema.
-* **Authentication support**: If your API uses tokens or authentication headers, you can enter them once and test secured endpoints.
+<img src="./readme/demo/personilzed_lessons_bpmn.png"/>
 
-| Swagger API 1                            | Swagger API 2                       | Swagger API 3                        |
-| --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/api1.png) | ![fsdaf](./readme/demo/api2.png) | ![fsdaf](./readme/demo/api3.png) |
+---
 
+## Quiz Performance Analysis AI Agent
+- **What it uses:** The student’s quiz answers and the correct answers.  
+- **What it does:** After a quiz is finished, it reviews the student’s mistakes, explains weak points, and prepares a study plan.  
+- **What comes out:** A clear report with performance insights and advice on how to improve.  
 
-<br><br>
+<img src="./readme/demo/quiz_performance_bpmn.png"/>
+---
 
+## AI Study Assistant
+- **What it uses:** All the lessons for the student’s grade.  
+- **What it does:** Acts like a smart helper that answers the student’s questions using the lesson material.  
+- **What comes out:** Helpful, easy-to-understand answers to support the student’s learning.  
 
-<!-- AI Agents -->
-<img src="./readme/title8.svg"/>
+<img src="./readme/demo/chat_assistant_bpmn.png"/>
+---
 
+## Daily Chat Reports AI Agent
+- **What it uses:** The daily chat conversations between each student and the AI assistant Optimus.  
+- **What it does:** Every 24 hours, it reviews the chats, summarizes them, and prepares a report.  
+- **What comes out:** Instructors receive a daily report for each student showing their progress and activity.  
+
+<img src="./readme/demo/chat_report_bpmn.png"/>
 
 <br><br>
 
@@ -191,8 +203,22 @@ Swagger is included for API exploration and testing.
 
    <img src="./readme/demo/deployment.png"/>
 
-<br> 
+<br>
 
+
+## Swagger Documentation
+Swagger is included for API exploration and testing.
+
+### Usage
+
+* **Interactive API testing**: Send test requests directly from Swagger UI without needing Postman or curl.
+* **Endpoint reference**: View all available API endpoints, grouped by controller/module.
+* **Request/Response details**: See the required parameters, request body examples, and the expected response schema.
+* **Authentication support**: If your API uses tokens or authentication headers, you can enter them once and test secured endpoints.
+
+| Swagger API 1                            | Swagger API 2                       | Swagger API 3                        |
+| --------------------------------------- | ------------------------------------- | ------------------------------------- |
+| ![Landing](./readme/demo/api1.png) | ![fsdaf](./readme/demo/api2.png) | ![fsdaf](./readme/demo/api3.png) |
 
 
 
