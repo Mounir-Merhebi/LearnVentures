@@ -52,8 +52,16 @@ Instructors receive a daily report summarizing every conversation between studen
 
 <img src="./readme/demo/features.png"/>
 
-### Future Adjustments
+## Upcoming Features
 
+👨‍👩‍👦 **Parent Portal**  
+Introduce a dedicated parent user type where parents can view their children’s grades, track performance, and communicate directly with instructors through a chat page.  
+
+💬 **Grade Group Chat**  
+Create a group chat space for each grade, allowing students to collaborate, share ideas, and build community — all under the supervision of their instructor.  
+
+📅 **Agenda & Homework Tracker**  
+Provide students with a daily agenda showing tasks and homework to complete. This will be linked with Google Calendar, sending automated reminders to help students stay on track.  
 
 
 <br><br>
