@@ -141,7 +141,7 @@ Eraser was chosen because:
 
 <img src="./readme/demo/personilzed_lessons_bpmn.png"/>
 
----
+
 
 ## Quiz Performance Analysis AI Agent
 - **What it uses:** The student’s quiz answers and the correct answers.  
@@ -149,7 +149,7 @@ Eraser was chosen because:
 - **What comes out:** A clear report with performance insights and advice on how to improve.  
 
 <img src="./readme/demo/quiz_performance_bpmn.png"/>
----
+
 
 ## AI Study Assistant
 - **What it uses:** All the lessons for the student’s grade.  
@@ -157,7 +157,7 @@ Eraser was chosen because:
 - **What comes out:** Helpful, easy-to-understand answers to support the student’s learning.  
 
 <img src="./readme/demo/chat_assistant_bpmn.png"/>
----
+
 
 ## Daily Chat Reports AI Agent
 - **What it uses:** The daily chat conversations between each student and the AI assistant Optimus.  
