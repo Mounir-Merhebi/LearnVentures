@@ -136,7 +136,7 @@ Eraser was chosen because:
 
 
 
-###AI Agents
+### AI Agents
 
 ## Lessons Personalization AI Agent
 - **What it uses:** Student’s interests, hobbies, and preferences, plus lessons prepared by the instructor.  
