@@ -52,6 +52,10 @@ Instructors receive a daily report summarizing every conversation between studen
 
 <img src="./readme/demo/features.png"/>
 
+### Future Adjustments
+
+
+
 <br><br>
 
 <!-- Demo -->
