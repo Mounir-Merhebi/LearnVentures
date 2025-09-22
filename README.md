@@ -36,7 +36,7 @@ Our platform transforms static lessons into *personalized learning experiences*.
 <!-- Project Highlights -->
 <img src="./readme/title4.svg"/>
 
-### LearnVentures Sexy Features
+## LearnVentures Sexy Features
 
 - ✨ *AI-Personalized Lessons*
 Students don’t just read, they connect. A football fan sees math problems framed as game stats, while a gamer sees them as power-ups. Same core concept, different engagement.
