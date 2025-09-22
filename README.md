@@ -213,7 +213,7 @@ Eraser was chosen because:
 
 <br>
 
-   <img src="./readme/"/>
+   <img src="./readme/demo/deployment.png"/>
 
 <br>
 
