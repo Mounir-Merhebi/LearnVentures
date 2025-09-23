@@ -74,9 +74,9 @@ Provide students with a daily agenda showing tasks and homework to complete. Thi
 | ---------------------------------- | --------------------------------- |
 | ![Chatbot](./readme/demo/chatbot.gif) | ![Personalized](./readme/demo/personilized.gif) |
 
-| Quiz System                        |                                   |
-| ---------------------------------- | --------------------------------- |
-| ![Quiz](./readme/demo/quizz1.gif)   |                                   |
+| Quiz System                        |                                   
+| ---------------------------------- | 
+| ![Quiz](./readme/demo/quizz1.gif)   |                                  
 
 
 ### Admin Screens (Web)
