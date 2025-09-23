@@ -29,7 +29,7 @@ Our platform transforms static lessons into *personalized learning experiences*.
 
 | n8n workflow                             | 
 | --------------------------------------- | 
-| ![Landing](./readme/demo/n8n.gif) | 
+| ![Landing](./readme/demo/n8n.png) | 
 
 <br><br>
 
