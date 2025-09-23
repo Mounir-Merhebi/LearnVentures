@@ -73,7 +73,7 @@ Provide students with a daily agenda showing tasks and homework to complete. Thi
 
 | Landing Page 1                     | Landing Page 2                    |
 | ---------------------------------- | --------------------------------- |
-| ![Landing1](./readme/demo/Landing1.png) | ![Landing2](./readme/demo/Landing2.png) |
+| ![Landing1](./readme/demo/Landing0.png) | ![Landing2](./readme/demo/Landing2.png) |
 
 | Login                              | Register                          |
 | ---------------------------------- | --------------------------------- |
