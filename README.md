@@ -127,36 +127,19 @@ Eraser was chosen because:
 
 # AI Agents
 
-## Lessons Personalization AI Agent
-- **What it uses:** Student’s interests, hobbies, and preferences, plus lessons prepared by the instructor.  
-- **What it does:** Looks at the student’s profile and adapts the lessons to match their style and interests.  
-- **What comes out:** Each student gets a personalized version of the lesson made just for them.  
-
+## Lessons Personalization AI Agent 
 <img src="./readme/demo/personilzed_lessons.png"/>
 
 
-
 ## Quiz Performance Analysis AI Agent
-- **What it uses:** The student’s quiz answers and the correct answers.  
-- **What it does:** After a quiz is finished, it reviews the student’s mistakes, explains weak points, and prepares a study plan.  
-- **What comes out:** A clear report with performance insights and advice on how to improve.  
-
 <img src="./readme/demo/quiz_performance.png"/>
 
 
 ## AI Study Assistant
-- **What it uses:** All the lessons for the student’s grade.  
-- **What it does:** Acts like a smart helper that answers the student’s questions using the lesson material.  
-- **What comes out:** Helpful, easy-to-understand answers to support the student’s learning.  
-
 <img src="./readme/demo/chat_assistant.png"/>
 
 
 ## Daily Chat Reports AI Agent
-- **What it uses:** The daily chat conversations between each student and the AI assistant Optimus.  
-- **What it does:** Every 24 hours, it reviews the chats, summarizes them, and prepares a report.  
-- **What comes out:** Instructors receive a daily report for each student showing their progress and activity.  
-
 <img src="./readme/demo/chat_report.png"/>
 
 <br><br>
