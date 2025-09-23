@@ -127,19 +127,9 @@ Eraser was chosen because:
 
 # AI Agents
 
-## Lessons Personalization AI Agent 
 <img src="./readme/demo/personilzed_lessons.png"/>
-
-
-## Quiz Performance Analysis AI Agent
 <img src="./readme/demo/quiz_performance.png"/>
-
-
-## AI Study Assistant
 <img src="./readme/demo/chat_assistant.png"/>
-
-
-## Daily Chat Reports AI Agent
 <img src="./readme/demo/chat_report.png"/>
 
 <br><br>
