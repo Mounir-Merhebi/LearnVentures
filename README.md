@@ -117,12 +117,6 @@ Eraser was chosen because:
 [Eraser Public Board Link](https://app.eraser.io/workspace/3zg4gXt67Cxc4bqKBnSu)
 
 
-### CI Workflow
-
-| CI 1                             | CI 2                       |
-| --------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/ci1.png) | ![fsdaf](./readme/demo/ci2.png) |
-
 ### Services, Validation and Testing
 
 | Services                            | Validation                       | Testing                        |
