@@ -132,7 +132,7 @@ Eraser was chosen because:
 - **What it does:** Looks at the student’s profile and adapts the lessons to match their style and interests.  
 - **What comes out:** Each student gets a personalized version of the lesson made just for them.  
 
-<img src="./readme/demo/personilzed_lessons_bpmn.png"/>
+<img src="./readme/demo/personilzed_lessons.png"/>
 
 
 
@@ -141,7 +141,7 @@ Eraser was chosen because:
 - **What it does:** After a quiz is finished, it reviews the student’s mistakes, explains weak points, and prepares a study plan.  
 - **What comes out:** A clear report with performance insights and advice on how to improve.  
 
-<img src="./readme/demo/quiz_performance_bpmn.png"/>
+<img src="./readme/demo/quiz_performance.png"/>
 
 
 ## AI Study Assistant
@@ -149,7 +149,7 @@ Eraser was chosen because:
 - **What it does:** Acts like a smart helper that answers the student’s questions using the lesson material.  
 - **What comes out:** Helpful, easy-to-understand answers to support the student’s learning.  
 
-<img src="./readme/demo/chat_assistant_bpmn.png"/>
+<img src="./readme/demo/chat_assistant.png"/>
 
 
 ## Daily Chat Reports AI Agent
@@ -157,7 +157,7 @@ Eraser was chosen because:
 - **What it does:** Every 24 hours, it reviews the chats, summarizes them, and prepares a report.  
 - **What comes out:** Instructors receive a daily report for each student showing their progress and activity.  
 
-<img src="./readme/demo/chat_report_bpmn.png"/>
+<img src="./readme/demo/chat_report.png"/>
 
 <br><br>
 
