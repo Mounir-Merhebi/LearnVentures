@@ -127,7 +127,7 @@ Eraser was chosen because:
 
 # AI Agents
 
-| Personilzed Lessons Agent                           | Quiz Analysis Agent                     |
+| Personilzed Lessons Agent                | Quiz Analysis Agent                     |
 | --------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/personilzed_lessons.png) | ![fsdaf](./readme/demo/quiz_performance.png) |
 
