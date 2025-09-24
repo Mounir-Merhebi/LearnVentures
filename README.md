@@ -127,10 +127,13 @@ Eraser was chosen because:
 
 # AI Agents
 
-<img src="./readme/demo/personilzed_lessons.png"/>
-<img src="./readme/demo/quiz_performance.png"/>
-<img src="./readme/demo/chat_assistant.png"/>
-<img src="./readme/demo/chat_report.png"/>
+| Personilzed Lessons Agent                           | Quiz Analysis Agent                     |
+| --------------------------------------- | ------------------------------------- |
+| ![Landing](./readme/demo/personilzed_lessons.png) | ![fsdaf](./readme/demo/quiz_performance.png) |
+
+| Chat Assistant                           | Chat Daily Report Automated Agent                    |
+| --------------------------------------- | ------------------------------------- |
+| ![Landing](./readme/demo/chat_assistant.png) | ![fsdaf](./readme/demo/chat_report.png) |
 
 <br><br>
 
