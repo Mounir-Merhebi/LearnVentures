@@ -182,7 +182,7 @@ Swagger is included for API exploration and testing.
 * **Request/Response details**: See the required parameters, request body examples, and the expected response schema.
 * **Authentication support**: If your API uses tokens or authentication headers, you can enter them once and test secured endpoints.
 
-| Swagger API 1                            | Swagger API 2                       | Swagger API 3                        |
+| Analyze-Performance API                            | Chat-messages API                      | Register API                        |
 | --------------------------------------- | ------------------------------------- | ------------------------------------- |
 | ![Landing](./readme/demo/api1.png) | ![fsdaf](./readme/demo/api2.png) | ![fsdaf](./readme/demo/api3.png) |
 
