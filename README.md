@@ -36,7 +36,7 @@ Our platform transforms static lessons into *personalized learning experiences*.
 <!-- Project Highlights -->
 <img src="./readme/title4.svg"/>
 
-## LearnVentures Sexy Features
+## LearnVentures Main Features
 <img src="./readme/demo/features.png"/>
 
 ## Upcoming Features
